@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Base.csproj" />
+    <ProjectReference Include="..\Controller\Controller.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\Reference Assemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\Reference Assemblies\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo f | xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)..\..\RQ3D_2.Unity\RQ3D.Unity\Assets\Plugins\Editor\&quot; /Y&#xD;&#xA;echo f | xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)..\..\RQ3D_2.Unity\RQ3D.Unity\Assets\Plugins\Editor\&quot; /Y" />
+  </Target>
+
+</Project>
