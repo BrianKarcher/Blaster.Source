@@ -13,7 +13,7 @@ using System.Text;
 //using RQ.Model.ObjectPool;
 using UnityEngine;
 
-namespace RQ.Messaging
+namespace BlueOrb.Messaging
 {
     //[AddComponentMenu("RQ/Components/Message Dispatcher2")]
     public class MessageDispatcher

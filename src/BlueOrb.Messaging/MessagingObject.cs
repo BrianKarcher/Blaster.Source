@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Messaging
+namespace BlueOrb.Messaging
 {
     public class MessagingObject : MonoBehaviour, IMessagingObject
 // : BaseObject, IMessagingObject

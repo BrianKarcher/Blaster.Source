@@ -1,4 +1,4 @@
-﻿namespace RQ.Messaging
+﻿namespace BlueOrb.Messaging
 {
     public interface IMessagingObject
     {

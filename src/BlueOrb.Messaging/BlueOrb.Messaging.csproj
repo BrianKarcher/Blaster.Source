@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\Reference Assemblies\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo f | xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)..\..\Blaster_Unity\Blaster.Unity\Assets\Plugins\&quot; /Y&#xD;&#xA;echo f | xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)..\..\Blaster_UnityUnity\Blaster.Unity\Assets\Plugins\&quot; /Y&#xD;&#xA;" />
+  </Target>
+
+</Project>

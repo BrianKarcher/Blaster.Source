@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RQ.Messaging
+namespace BlueOrb.Messaging
 {
     //------------------------------------------------------------------------
     //
