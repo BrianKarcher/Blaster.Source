@@ -1,10 +1,10 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller
+namespace BlueOrb.Controller
 {
     [AddComponentMenu("RQ/Components/Animation Component")]
     public class AnimationComponent : ComponentBase<AnimationComponent>

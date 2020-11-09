@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RQ.Base.Item
+namespace BlueOrb.Base.Item
 {
     public enum ItemTypeEnum
     {

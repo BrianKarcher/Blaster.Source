@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Base.SpawnPoint
+namespace BlueOrb.Base.SpawnPoint
 {
     [AddComponentMenu("RQ/Components/Spawn Point")]
     public class SpawnPointComponent : MonoBehaviour

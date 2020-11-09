@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RQ.Base.Global
+namespace BlueOrb.Base.Global
 {
     public static class GlobalStatic
     {

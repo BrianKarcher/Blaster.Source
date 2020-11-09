@@ -1,9 +1,9 @@
-﻿using RQ.Base.Config;
+﻿using BlueOrb.Base.Config;
 using UnityEngine;
-using RQ.Base.Item;
+using BlueOrb.Base.Item;
 using System.Collections.Generic;
 
-namespace RQ.Controller.Scene
+namespace BlueOrb.Controller.Scene
 {
     public class SceneConfig : RQBaseConfig
     {

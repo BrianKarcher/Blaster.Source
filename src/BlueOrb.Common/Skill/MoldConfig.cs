@@ -1,9 +1,9 @@
-﻿using RQ.Base.Config;
-using RQ.Base.Item;
+﻿using BlueOrb.Base.Config;
+using BlueOrb.Base.Item;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Base.Skill
+namespace BlueOrb.Base.Skill
 {
     public class MoldConfig : ItemConfig
     {

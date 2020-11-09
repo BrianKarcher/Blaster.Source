@@ -1,7 +1,7 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Controller.Inventory
+namespace BlueOrb.Controller.Inventory
 {
     [AddComponentMenu("RQ/Components/Bare")]
     public class BareComponent : ComponentBase<BareComponent>

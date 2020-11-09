@@ -1,10 +1,10 @@
-﻿using RQ.Base.Attributes;
+﻿using BlueOrb.Base.Attributes;
 using System;
 using UnityEngine;
 
-namespace RQ.Base.Config
+namespace BlueOrb.Base.Config
 {
-    public class RQBaseConfig : ScriptableObject, IRQConfig
+    public class BaseConfig : ScriptableObject, IRQConfig
     {
         [UniqueIdentifier]
         public string UniqueId;

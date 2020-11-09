@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Base.UI
+namespace BlueOrb.Base.UI
 {
     public class ShardHUDData
     {

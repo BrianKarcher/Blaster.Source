@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Base.VariableClasses
+namespace BlueOrb.Base.VariableClasses
 {
     [Serializable]
     public class StringVariable : Variable<string> { }

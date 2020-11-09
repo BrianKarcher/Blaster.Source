@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Base.UI
+namespace BlueOrb.Base.UI
 {
     public class ChangeMoldData
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Base.Extensions
+namespace BlueOrb.Base.Extensions
 {
     public static class VectorExtensions
     {

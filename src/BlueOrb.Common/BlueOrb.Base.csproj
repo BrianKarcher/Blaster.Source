@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Messaging\Messaging.csproj" />
+    <ProjectReference Include="..\BlueOrb.Messaging\BlueOrb.Messaging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
-﻿using RQ.Base.Item;
+﻿using BlueOrb.Base.Item;
 using System;
 
-namespace RQ.Base.Item
+namespace BlueOrb.Base.Item
 {
     [Serializable]
     public class ItemDesc

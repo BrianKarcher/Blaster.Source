@@ -9,8 +9,8 @@
   </Target>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Base.csproj" />
-    <ProjectReference Include="..\Physics\Physics.csproj" />
+    <ProjectReference Include="..\BlueOrb.Common\BlueOrb.Base.csproj" />
+    <ProjectReference Include="..\BlueOrb.Physics\BlueOrb.Physics.csproj" />
   </ItemGroup>
 
   <ItemGroup>

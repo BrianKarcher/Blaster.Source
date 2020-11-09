@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RQ.Common.Components;
-using RQ.Messaging;
+using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
 
-namespace RQ.Common.Container
+namespace BlueOrb.Common.Container
 {
     public interface IEntityContainer
     {

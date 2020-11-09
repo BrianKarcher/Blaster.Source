@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using RQ.Common.Container;
-using RQ.Messaging;
+using BlueOrb.Common.Container;
+using BlueOrb.Messaging;
 
-namespace RQ.Common.Components
+namespace BlueOrb.Common.Components
 {
     public class ComponentRegistrar : IComponentRegistrar
     {

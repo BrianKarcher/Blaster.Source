@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Base.Attributes
+namespace BlueOrb.Base.Attributes
 {
     public class TagAttribute : PropertyAttribute { }
 }

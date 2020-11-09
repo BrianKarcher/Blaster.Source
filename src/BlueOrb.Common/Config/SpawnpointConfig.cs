@@ -1,10 +1,10 @@
-﻿using RQ.Base.Attributes;
+﻿using BlueOrb.Base.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Base.Config
+namespace BlueOrb.Base.Config
 {
     [Serializable]
     public class SpawnPointConfig

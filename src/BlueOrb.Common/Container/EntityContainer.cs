@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Common.Container
+namespace BlueOrb.Common.Container
 {
     public class EntityContainer : IEntityContainer
     {

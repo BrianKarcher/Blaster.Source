@@ -1,12 +1,12 @@
-﻿using RQ.Messaging;
+﻿using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using RQ.Common.Components;
+using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Common.Container
+namespace BlueOrb.Common.Container
 {
     public class ComponentRepository : MessagingObject, IEntity
     {

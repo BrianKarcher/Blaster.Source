@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Base.VariableClasses
+namespace BlueOrb.Base.VariableClasses
 {
     [Serializable]
     public class Variables

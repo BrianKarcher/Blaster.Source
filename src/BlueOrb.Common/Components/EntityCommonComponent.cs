@@ -1,11 +1,11 @@
-﻿using RQ.Common.Container;
-using RQ.Messaging;
+﻿using BlueOrb.Common.Container;
+using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Base.Components
+namespace BlueOrb.Base.Components
 {
     [AddComponentMenu("RQ/Components/Entity Common")]
     [Serializable]

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace RQ.Base.Input
+namespace BlueOrb.Base.Input
 {
     [Serializable]
     public class AxisInput

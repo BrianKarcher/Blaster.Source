@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RQ.Base.Config
+namespace BlueOrb.Base.Config
 {
     public interface IRQConfig
     {

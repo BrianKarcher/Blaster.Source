@@ -1,7 +1,7 @@
-﻿using RQ.Base.Config;
+﻿using BlueOrb.Base.Config;
 using UnityEngine;
 
-namespace RQ.Base.Item
+namespace BlueOrb.Base.Item
 {
     public class ItemConfig : RQBaseConfig
     {

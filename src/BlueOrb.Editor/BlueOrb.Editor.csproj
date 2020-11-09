@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Base.csproj" />
-    <ProjectReference Include="..\Controller\Controller.csproj" />
+    <ProjectReference Include="..\BlueOrb.Common\BlueOrb.Base.csproj" />
+    <ProjectReference Include="..\BlueOrb.Controller\BlueOrb.Controller.csproj" />
   </ItemGroup>
 
   <ItemGroup>

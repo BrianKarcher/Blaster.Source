@@ -1,8 +1,8 @@
-﻿using RQ.Common.Container;
-using RQ.Messaging;
+﻿using BlueOrb.Common.Container;
+using BlueOrb.Messaging;
 using UnityEngine;
 
-namespace RQ.Common.Components
+namespace BlueOrb.Common.Components
 {
     public interface IComponentBase : IMessagingObject
     {
