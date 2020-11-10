@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Physics.SteeringBehaviors2D
+namespace BlueOrb.Physics.SteeringBehaviors2D
 {
     public class Interpose2 : SteeringBehaviorBase2
     {

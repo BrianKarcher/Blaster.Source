@@ -1,4 +1,4 @@
-﻿namespace RQ.Physics.SteeringBehaviors2D
+﻿namespace BlueOrb.Physics.SteeringBehaviors2D
 {
     public class Constants2
     {

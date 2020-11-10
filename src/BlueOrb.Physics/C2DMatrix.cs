@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     public struct C2DMatrix
     {

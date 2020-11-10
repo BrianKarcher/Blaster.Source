@@ -1,7 +1,7 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     public interface IPhysicsComponent : IComponentBase
     {

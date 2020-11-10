@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using RQ.Physics.Enums;
+using BlueOrb.Physics.Enums;
 using UnityEngine;
 
-namespace RQ.AI
+namespace BlueOrb.AI
 {
     public class Path2
     {

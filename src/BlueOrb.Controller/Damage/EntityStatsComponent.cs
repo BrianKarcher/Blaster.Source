@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using RQ.Common.Components;
-using RQ.Messaging;
+using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
 using UnityEngine;
 
-namespace RQ.Controller.Damage
+namespace BlueOrb.Controller.Damage
 {
     [AddComponentMenu("RQ/Components/Entity Stats Component")]
     public class EntityStatsComponent : ComponentBase<EntityStatsComponent>

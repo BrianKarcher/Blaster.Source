@@ -1,13 +1,13 @@
-﻿using RQ.Base.SpawnPoint;
-using RQ.Controller.Manager;
-using RQ.Editor.UnityExtensions;
+﻿using BlueOrb.Base.SpawnPoint;
+using BlueOrb.Controller.Manager;
+using BlueOrb.Editor.UnityExtensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor.SpawnPoint
+namespace BlueOrb.Editor.SpawnPoint
 {
     [CustomEditor(typeof(SpawnPointComponent), true)]
     public class SpawnPointComponentEditor : UnityEditor.Editor

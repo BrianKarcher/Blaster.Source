@@ -1,14 +1,14 @@
-﻿using Assets.RQ_Assets.Scripts.Components;
-using RQ.Base.Attributes;
-using RQ.Common.Components;
-using RQ.Common.Container;
-using RQ.Messaging;
+﻿using BlueOrb.Components;
+using BlueOrb.Base.Attributes;
+using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
+using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     /// <summary>
     /// Determines whether or not the player can currently parry an attack

@@ -1,7 +1,7 @@
-﻿using RQ.Base.Item;
+﻿using BlueOrb.Base.Item;
 using UnityEditor;
 
-namespace RQ.Editor.Skill
+namespace BlueOrb.Editor.Skill
 {
     [CustomEditor(typeof(ItemConfig), true)]
     public class ItemConfigEditor : ConfigEditorBase<ItemConfig>

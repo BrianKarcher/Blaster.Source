@@ -1,10 +1,10 @@
-﻿using RQ.AI;
+﻿using BlueOrb.AI;
 using UnityEngine;
-using RQ.Base.Extensions;
-using RQ.Common.Container;
-using RQ.Common.Components;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Common.Container;
+using BlueOrb.Common.Components;
 
-namespace RQ.Physics.SteeringBehaviors2D
+namespace BlueOrb.Physics.SteeringBehaviors2D
 {
     // Many of the Steering Behavior calculations call one another, so placing them all here
     public static class SteeringBehaviorCalculations2

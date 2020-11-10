@@ -1,6 +1,6 @@
 ﻿using BlueOrb.Messaging;
 using System;
-using RQ.Common.Container;
+using BlueOrb.Common.Container;
 using UnityEngine;
 
 namespace BlueOrb.Common.Components

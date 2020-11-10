@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using RQ.Base.Extensions;
-using RQ.Physics.SteeringBehaviors2D;
-using RQ.Physics.SteeringBehaviors3D;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Physics.SteeringBehaviors2D;
+using BlueOrb.Physics.SteeringBehaviors3D;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     [Serializable]
     public class SteeringBehaviorManager : ISteeringBehaviorManager

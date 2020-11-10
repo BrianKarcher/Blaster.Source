@@ -1,11 +1,11 @@
 ﻿using Rewired;
-using RQ.Base.Extensions;
-using RQ.Common.Components;
-using RQ.Messaging;
-using RQ.Physics;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using UnityEngine;
 
-namespace RQ.Controller.Ladder
+namespace BlueOrb.Controller.Ladder
 {
     [AddComponentMenu("RQ/Components/User Ladder")]
     public class UserLadderComponent : ComponentBase<UserLadderComponent>

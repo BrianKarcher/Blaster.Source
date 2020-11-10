@@ -1,5 +1,5 @@
-﻿using RQ.Common.Container;
-using RQ.Controller.AI;
+﻿using BlueOrb.Common.Container;
+using BlueOrb.Controller.AI;
 
 namespace UtilityManager.Decisions
 {

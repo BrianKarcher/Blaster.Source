@@ -1,16 +1,16 @@
 ﻿using Rewired;
-using RQ.Base.Attributes;
-using RQ.Base.Extensions;
-using RQ.Common.Components;
-using RQ.Common.Container;
-using RQ.Controller.Player;
-using RQ.Physics.Helpers;
+using BlueOrb.Base.Attributes;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller.Player;
+using BlueOrb.Physics.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.RQ_Assets.Scripts.Components
+namespace BlueOrb.Components
 {
     [AddComponentMenu("RQ/Components/Lock On Component")]
     public class LockOnComponent : ComponentBase<LockOnComponent>
@@ -38,7 +38,7 @@ namespace Assets.RQ_Assets.Scripts.Components
         [Tag]
         private string[] _tags;
 
-        private RQ.Controller.Player.PlayerController _playerController;
+        private BlueOrb.Controller.Player.PlayerController _playerController;
         private Rewired.Player _rewiredPlayer;
         private Dictionary<int, GameObject> tempGameObjectDict = new Dictionary<int, GameObject>();        
 
@@ -48,7 +48,7 @@ namespace Assets.RQ_Assets.Scripts.Components
         public void Start()
         {
             if (_playerController == null)
-                _playerController = _componentRepository.Components.GetComponent<RQ.Controller.Player.PlayerController>();
+                _playerController = _componentRepository.Components.GetComponent<BlueOrb.Controller.Player.PlayerController>();
             if (_rewiredPlayer == null)
                 _rewiredPlayer = ReInput.players.GetPlayer(0);
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     [Serializable]
     public class PhysicsData

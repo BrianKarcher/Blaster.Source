@@ -1,4 +1,4 @@
-﻿namespace RQ.Controller.Player
+﻿namespace BlueOrb.Controller.Player
 {
     public interface ILockOnLogic
     {

@@ -1,7 +1,7 @@
-﻿using RQ.Base.Skill;
+﻿using BlueOrb.Base.Skill;
 using UnityEditor;
 
-namespace RQ.Editor.Skill
+namespace BlueOrb.Editor.Skill
 {
     [CustomEditor(typeof(MoldConfig), true)]
     public class MoldConfigEditor : ConfigEditorBase<MoldConfig>

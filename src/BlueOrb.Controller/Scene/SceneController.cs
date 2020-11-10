@@ -1,7 +1,7 @@
-﻿using RQ.Base.Global;
-using RQ.Base.Manager;
-using RQ.Common.Container;
-using RQ.Controller.Manager;
+﻿using BlueOrb.Base.Global;
+using BlueOrb.Base.Manager;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller.Manager;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace RQ.Controller
+namespace BlueOrb.Controller
 {
     [AddComponentMenu("RQ/Manager/Scene Controller")]
     public class SceneController : MonoBehaviour

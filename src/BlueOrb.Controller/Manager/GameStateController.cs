@@ -1,14 +1,14 @@
-﻿using RQ.Base.Skill;
-using RQ.Base.VariableClasses;
-using RQ.Common.Components;
-using RQ.Common.Container;
-using RQ.Controller;
-using RQ.Controller.Inventory;
-using RQ.Controller.Player;
-using RQ.Controller.Scene;
+﻿using BlueOrb.Base.Skill;
+using BlueOrb.Base.VariableClasses;
+using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller;
+using BlueOrb.Controller.Inventory;
+using BlueOrb.Controller.Player;
+using BlueOrb.Controller.Scene;
 using UnityEngine;
 
-namespace RQ.Base.Manager
+namespace BlueOrb.Base.Manager
 {
     // We are keeping this a MonoBehavior because it not only keeps this alive, but it keeps alive
     // everything within this gameObject, such as the AudioSource object so the sounds and music don't stop or skip

@@ -1,12 +1,12 @@
-﻿using Assets.RQ_Assets.Scripts.Components;
-using RQ.Controller.Camera;
-using RQ.Messaging;
+﻿using BlueOrb.Components;
+using BlueOrb.Controller.Camera;
+using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     [Serializable]
     public class LockOnHoldLogic : ILockOnLogic

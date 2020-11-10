@@ -1,19 +1,19 @@
-﻿using Assets.RQ_Assets.Scripts.Components;
+﻿using BlueOrb.Components;
 using Rewired;
-using RQ.Base.Components;
-using RQ.Base.Extensions;
-using RQ.Base.Item;
-using RQ.Base.Skill;
-using RQ.Common.Components;
-using RQ.Controller.Camera;
-using RQ.Controller.Component;
-using RQ.Messaging;
-using RQ.Physics;
+using BlueOrb.Base.Components;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Base.Item;
+using BlueOrb.Base.Skill;
+using BlueOrb.Common.Components;
+using BlueOrb.Controller.Camera;
+using BlueOrb.Controller.Component;
+using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using System;
 using System.Collections;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     //[Serializable]
     //public class StaminaCosts

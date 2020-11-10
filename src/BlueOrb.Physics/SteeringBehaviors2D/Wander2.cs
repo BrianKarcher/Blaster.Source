@@ -1,7 +1,7 @@
-﻿using RQ.Base.Extensions;
+﻿using BlueOrb.Base.Extensions;
 using UnityEngine;
 
-namespace RQ.Physics.SteeringBehaviors2D
+namespace BlueOrb.Physics.SteeringBehaviors2D
 {
     public class Wander2 : SteeringBehaviorBase2
     {

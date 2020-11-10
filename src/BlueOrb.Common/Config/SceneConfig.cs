@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BlueOrb.Controller.Scene
 {
-    public class SceneConfig : RQBaseConfig
+    public class SceneConfig : BaseConfig
     {
         /// <summary>
         /// Pointer to the Scene file (.unity)

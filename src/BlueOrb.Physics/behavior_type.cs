@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     public enum behavior_type
     {

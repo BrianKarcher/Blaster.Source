@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RQ.Controller.Damage
+namespace BlueOrb.Controller.Damage
 {
     [Serializable]
     public class ActionStaminaTuple

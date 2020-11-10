@@ -1,10 +1,10 @@
-﻿using RQ.AI;
-using RQ.Base.Extensions;
+﻿using BlueOrb.AI;
+using BlueOrb.Base.Extensions;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Physics.SteeringBehaviors2D
+namespace BlueOrb.Physics.SteeringBehaviors2D
 {
     public class FollowPath2 : SteeringBehaviorBase2
     {

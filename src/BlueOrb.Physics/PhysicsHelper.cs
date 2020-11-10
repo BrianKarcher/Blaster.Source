@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     public static class PhysicsHelper
     {

@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RQ.Base.Components;
-using RQ.Common.Components;
-using RQ.Common.Container;
-using RQ.Controller.Damage;
-using RQ.Messaging;
-using RQ.Physics;
-using RQ.Physics.Helpers;
+using BlueOrb.Base.Components;
+using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller.Damage;
+using BlueOrb.Messaging;
+using BlueOrb.Physics;
+using BlueOrb.Physics.Helpers;
 using UnityEngine;
 
-namespace RQ.Controller.Attack
+namespace BlueOrb.Controller.Attack
 {
     [AddComponentMenu("RQ/Components/Attack Component")]
     public class AttackComponent : ComponentBase<AttackComponent>

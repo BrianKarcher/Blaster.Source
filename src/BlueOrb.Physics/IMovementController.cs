@@ -1,7 +1,7 @@
-﻿using RQ.Common.Container;
+﻿using BlueOrb.Common.Container;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     public interface IMovementController
     {

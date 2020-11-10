@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueOrb.Controller", "BlueO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueOrb.Editor", "BlueOrb.Editor\BlueOrb.Editor.csproj", "{F1AA7255-A6C5-4C10-90D4-6429CF67D068}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaster.Source", "Blaster.Source\Blaster.Source.csproj", "{002A8B6A-9CE5-4D34-BB55-9B9260D347EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F1AA7255-A6C5-4C10-90D4-6429CF67D068}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1AA7255-A6C5-4C10-90D4-6429CF67D068}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1AA7255-A6C5-4C10-90D4-6429CF67D068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002A8B6A-9CE5-4D34-BB55-9B9260D347EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002A8B6A-9CE5-4D34-BB55-9B9260D347EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002A8B6A-9CE5-4D34-BB55-9B9260D347EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002A8B6A-9CE5-4D34-BB55-9B9260D347EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,14 +1,14 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Controller.Damage
+namespace BlueOrb.Controller.Damage
 {
     [AddComponentMenu("RQ/Components/Collision Component")]
     public class CollisionComponent : ComponentBase<CollisionComponent>
     {
         [SerializeField]
-        private RQ.Physics.Data.CollisionData _collisionData = null;
-        public RQ.Physics.Data.CollisionData CollisionData => _collisionData;
+        private CollisionData _collisionData = null;
+        public CollisionData CollisionData => _collisionData;
 
     }
 }

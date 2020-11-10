@@ -1,12 +1,12 @@
-﻿using RQ.Base.Components;
-using RQ.Base.Extensions;
-using RQ.Controller.Camera;
-using RQ.Controller.Damage;
-using RQ.Messaging;
-using RQ.Physics;
+﻿using BlueOrb.Base.Components;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Controller.Camera;
+using BlueOrb.Controller.Damage;
+using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     public class LockOnMovementLogic : IPlayerMovementLogic
     {

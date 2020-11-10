@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Damage
+namespace BlueOrb.Controller.Damage
 {
     [Serializable]
     public class DamageComponentData

@@ -1,11 +1,11 @@
-﻿using RQ.Messaging;
-using RQ.Physics;
+﻿using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     public class ThirdPersonMovementLogic : IPlayerMovementLogic
     {

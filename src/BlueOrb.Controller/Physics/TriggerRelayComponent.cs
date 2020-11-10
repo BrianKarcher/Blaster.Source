@@ -1,7 +1,7 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Controller.Physics
+namespace BlueOrb.Controller.Physics
 {
     [AddComponentMenu("RQ/Components/Trigger Relay")]
     public class TriggerRelayComponent : ComponentBase<TriggerRelayComponent>

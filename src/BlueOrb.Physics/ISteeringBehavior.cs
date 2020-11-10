@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     public interface ISteeringBehavior
     {

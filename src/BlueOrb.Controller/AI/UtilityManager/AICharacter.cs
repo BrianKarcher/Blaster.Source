@@ -1,5 +1,5 @@
-﻿using RQ.Common.Container;
-using RQ.Controller.Damage;
+﻿using BlueOrb.Common.Container;
+using BlueOrb.Controller.Damage;
 using UnityEngine;
 
 namespace UtilityManager

@@ -1,12 +1,12 @@
-﻿using RQ.Base.Config;
+﻿using BlueOrb.Base.Config;
 using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor
+namespace BlueOrb.Editor
 {
-    public class ConfigEditorBase<T> : UnityEditor.Editor where T : RQBaseConfig
+    public class ConfigEditorBase<T> : UnityEditor.Editor where T : BaseConfig
     {
         protected T agent;
 

@@ -1,9 +1,9 @@
-﻿using RQ.Common.Components;
-using RQ.Physics.Path;
+﻿using BlueOrb.Common.Components;
+using BlueOrb.Physics.Path;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Controller.Physics
+namespace BlueOrb.Controller.Physics
 {
     [AddComponentMenu("RQ/Components/Waypoint Component")]
     public class WaypointComponent : ComponentBase<WaypointComponent>

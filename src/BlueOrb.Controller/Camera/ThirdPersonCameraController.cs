@@ -1,13 +1,13 @@
 ﻿using Rewired;
-using RQ.Base.Components;
-using RQ.Base.Extensions;
-using RQ.Common.Components;
-using RQ.Messaging;
+using BlueOrb.Base.Components;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
 using UnityEngine;
 using System.Collections.Generic;
-using RQ.Common.Container;
+using BlueOrb.Common.Container;
 
-namespace RQ.Controller.Camera
+namespace BlueOrb.Controller.Camera
 {
     [AddComponentMenu("RQ/Components/Third Person Camera Controller")]
     public class ThirdPersonCameraController : ComponentBase<ThirdPersonCameraController>
@@ -120,7 +120,7 @@ namespace RQ.Controller.Camera
         private Rewired.Player _player;
         public Rewired.Player Player => _player;
 
-        private RQ.Controller.Player.PlayerController _playerController;
+        private BlueOrb.Controller.Player.PlayerController _playerController;
 
 
         private float _distance;
@@ -151,7 +151,7 @@ namespace RQ.Controller.Camera
             if (target == null)
                 target = EntityContainer.Instance.GetMainCharacter().gameObject;
             _currentTargetPos = target.transform.position;
-            _playerController = target.GetComponent<RQ.Controller.Player.PlayerController>();
+            _playerController = target.GetComponent<BlueOrb.Controller.Player.PlayerController>();
             //_rotation = _camera.transform.rotation;
             //SetCameraRotation();
         }

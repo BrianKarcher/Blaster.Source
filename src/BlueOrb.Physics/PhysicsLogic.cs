@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using RQ.Base.Extensions;
-using RQ.Common.Components;
-using RQ.Common.Container;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     /// <summary>
     /// Testable version of the Physics logic

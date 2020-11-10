@@ -4,7 +4,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor.UnityExtensions
+namespace BlueOrb.Editor.UnityExtensions
 {
     public static class ControlExtensions
     {

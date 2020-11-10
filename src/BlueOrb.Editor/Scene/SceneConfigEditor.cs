@@ -1,17 +1,17 @@
-﻿using RQ.Base.Config;
-using RQ.Base.Skill;
-using RQ.Base.SpawnPoint;
-using RQ.Controller.Manager;
-using RQ.Controller.Scene;
-using RQ.Editor.GUIStyles;
-using RQ.Editor.UnityExtensions;
+﻿using BlueOrb.Base.Config;
+using BlueOrb.Base.Skill;
+using BlueOrb.Base.SpawnPoint;
+using BlueOrb.Controller.Manager;
+using BlueOrb.Controller.Scene;
+using BlueOrb.Editor.GUIStyles;
+using BlueOrb.Editor.UnityExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor.Skill
+namespace BlueOrb.Editor.Skill
 {
     [CustomEditor(typeof(SceneConfig), true)]
     public class SceneConfigEditor : ConfigEditorBase<SceneConfig>

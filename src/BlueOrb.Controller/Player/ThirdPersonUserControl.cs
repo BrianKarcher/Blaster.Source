@@ -1,12 +1,12 @@
 ﻿using Rewired;
-using RQ.Base.Extensions;
-using RQ.Common.Components;
-using RQ.Messaging;
-using RQ.Physics;
+using BlueOrb.Base.Extensions;
+using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using System;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     public enum MovementType
     {

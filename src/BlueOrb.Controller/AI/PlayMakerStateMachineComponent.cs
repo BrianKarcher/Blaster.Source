@@ -1,7 +1,7 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Controller.AI
+namespace BlueOrb.Controller.AI
 {
     public class PlayMakerStateMachineComponent : ComponentBase<PlayMakerStateMachineComponent>
     {

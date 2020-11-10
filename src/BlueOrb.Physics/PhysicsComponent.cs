@@ -1,11 +1,11 @@
-﻿using RQ.Common.Components;
-using RQ.Common.Container;
+﻿using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
 using System.Collections.Generic;
-using RQ.Base.Extensions;
+using BlueOrb.Base.Extensions;
 using UnityEngine;
-using RQ.Controller;
+using BlueOrb.Controller;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     [AddComponentMenu("RQ/Components/Physics")]
     public class PhysicsComponent : ComponentBase<PhysicsComponent>, IPhysicsComponent, IMovementController

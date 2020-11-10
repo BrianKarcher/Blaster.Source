@@ -1,4 +1,4 @@
-﻿namespace RQ.Physics.SteeringBehaviors3D
+﻿namespace BlueOrb.Physics.SteeringBehaviors3D
 {
     public class Constants3
     {

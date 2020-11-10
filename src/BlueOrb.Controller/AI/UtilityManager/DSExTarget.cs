@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RQ.Common;
-using RQ.Common.Container;
+using BlueOrb.Common;
+using BlueOrb.Common.Container;
 
 namespace UtilityManager
 {

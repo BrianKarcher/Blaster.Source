@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Physics
+namespace BlueOrb.Physics
 {
     //[Obsolete("Obsolete... maybe.  Must test this vs. Unity's functions or another library.  Would like to avoid Unity's functions since those can't be unit tested.")]
     /// <summary>

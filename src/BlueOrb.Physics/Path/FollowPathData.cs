@@ -1,9 +1,9 @@
-﻿using RQ.Physics.Enums;
+﻿using BlueOrb.Physics.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RQ.Physics.Path
+namespace BlueOrb.Physics.Path
 {
     [Serializable]
     public class FollowPathData

@@ -1,10 +1,10 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Ladder
+namespace BlueOrb.Controller.Ladder
 {
     [AddComponentMenu("RQ/Components/Ladder")]
     public class LadderComponent : ComponentBase<LadderComponent>

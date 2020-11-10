@@ -1,4 +1,4 @@
-﻿namespace RQ.Physics.Enums
+﻿namespace BlueOrb.Physics.Enums
 {
     public enum PathWalkingDirection
     {

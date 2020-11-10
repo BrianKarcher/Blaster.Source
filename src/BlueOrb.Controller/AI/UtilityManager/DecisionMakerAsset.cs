@@ -1,11 +1,11 @@
-﻿using RQ.Base.Config;
+﻿using BlueOrb.Base.Config;
 using System;
 using UnityEngine;
 
 namespace UtilityManager
 {
     [Serializable]
-    public class DecisionMakerAsset : RQBaseConfig
+    public class DecisionMakerAsset : BaseConfig
     {
         [SerializeField]
         private DecisionMaker _dm;

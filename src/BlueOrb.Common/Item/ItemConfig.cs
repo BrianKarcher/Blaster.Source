@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BlueOrb.Base.Item
 {
-    public class ItemConfig : RQBaseConfig
+    public class ItemConfig : BaseConfig
     {
         public ItemTypeEnum ItemType;
         public string DisplayName;

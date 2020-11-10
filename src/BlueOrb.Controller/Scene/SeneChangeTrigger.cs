@@ -1,9 +1,9 @@
-﻿using RQ.Base.Attributes;
-using RQ.Base.Global;
-using RQ.Base.Manager;
-using RQ.Common.Container;
-using RQ.Controller.Manager;
-using RQ.Controller.Scene;
+﻿using BlueOrb.Base.Attributes;
+using BlueOrb.Base.Global;
+using BlueOrb.Base.Manager;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller.Manager;
+using BlueOrb.Controller.Scene;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace RQ.Controller
+namespace BlueOrb.Controller
 {
     [AddComponentMenu("RQ/Components/Scene Change Trigger")]
     public class SeneChangeTrigger : MonoBehaviour

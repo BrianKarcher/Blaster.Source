@@ -1,8 +1,8 @@
-﻿using RQ.Base.Attributes;
+﻿using BlueOrb.Base.Attributes;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor
+namespace BlueOrb.Editor
 {
     // Place this file inside Assets/Editor
     [CustomPropertyDrawer(typeof(TagAttribute))]

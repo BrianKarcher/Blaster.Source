@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RQ.Physics.SteeringBehaviors3D
+namespace BlueOrb.Physics.SteeringBehaviors3D
 {
     public class Evade3 : SteeringBehaviorBase3
     {

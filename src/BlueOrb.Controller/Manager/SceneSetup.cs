@@ -1,15 +1,15 @@
-﻿using RQ.Base.Item;
-using RQ.Base.Manager;
-using RQ.Base.Skill;
-using RQ.Base.SpawnPoint;
-using RQ.Common.Container;
-using RQ.Controller.Scene;
-using RQ.Messaging;
+﻿using BlueOrb.Base.Item;
+using BlueOrb.Base.Manager;
+using BlueOrb.Base.Skill;
+using BlueOrb.Base.SpawnPoint;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller.Scene;
+using BlueOrb.Messaging;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace RQ.Controller.Manager
+namespace BlueOrb.Controller.Manager
 {
     [AddComponentMenu("RQ/Common/Scene Setup")]
     public class SceneSetup : MonoBehaviour

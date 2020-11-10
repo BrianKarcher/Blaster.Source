@@ -1,11 +1,11 @@
-﻿using RQ.Base.Config;
+﻿using BlueOrb.Base.Config;
 using System;
 using UnityEngine;
 
 namespace UtilityManager
 {
     [Serializable]
-    public class DSEAsset : RQBaseConfig
+    public class DSEAsset : BaseConfig
     {
         [SerializeField]
         private DSE _dse;

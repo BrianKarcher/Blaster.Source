@@ -1,7 +1,7 @@
-﻿using RQ.Common.Components;
+﻿using BlueOrb.Common.Components;
 using UnityEngine;
 
-namespace RQ.Controller.Block
+namespace BlueOrb.Controller.Block
 {
     [AddComponentMenu("RQ/Components/Block")]
     public class BlockComponent : ComponentBase<BlockComponent>

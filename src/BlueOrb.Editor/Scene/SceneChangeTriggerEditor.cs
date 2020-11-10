@@ -1,11 +1,11 @@
-﻿using RQ.Controller;
-using RQ.Controller.Manager;
-using RQ.Editor.UnityExtensions;
+﻿using BlueOrb.Controller;
+using BlueOrb.Controller.Manager;
+using BlueOrb.Editor.UnityExtensions;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor.Skill
+namespace BlueOrb.Editor.Skill
 {
     [CustomEditor(typeof(SeneChangeTrigger), true)]
     public class SeneChangeTriggerEditor : EditorBase<SeneChangeTrigger>

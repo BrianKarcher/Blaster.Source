@@ -1,10 +1,10 @@
-﻿using RQ.Base.Manager;
-using RQ.Common.Components;
-using RQ.Controller.Player;
+﻿using BlueOrb.Base.Manager;
+using BlueOrb.Common.Components;
+using BlueOrb.Controller.Player;
 using System;
 using UnityEngine;
 
-namespace RQ.Controller.Component
+namespace BlueOrb.Controller.Component
 {
     [AddComponentMenu("RQ/Components/Shooter")]
     public class ShooterComponent : ComponentBase<ShooterComponent>

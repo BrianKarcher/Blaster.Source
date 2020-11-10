@@ -1,9 +1,9 @@
-﻿using RQ.Base.Extensions;
-using RQ.Controller.Camera;
-using RQ.Physics;
+﻿using BlueOrb.Base.Extensions;
+using BlueOrb.Controller.Camera;
+using BlueOrb.Physics;
 using UnityEngine;
 
-namespace RQ.Controller.Player
+namespace BlueOrb.Controller.Player
 {
     public class OverShoulderMovementLogic : IPlayerMovementLogic
     {

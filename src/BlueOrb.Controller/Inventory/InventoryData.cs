@@ -1,10 +1,10 @@
-﻿using RQ.Base.Item;
+﻿using BlueOrb.Base.Item;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Inventory
+namespace BlueOrb.Controller.Inventory
 {
     /// <summary>
     /// This gets "owned" by the InventoryComponent, as well as getting saved and loaded with the game

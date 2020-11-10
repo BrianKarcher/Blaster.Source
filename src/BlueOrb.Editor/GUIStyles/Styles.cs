@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Editor.GUIStyles
+namespace BlueOrb.Editor.GUIStyles
 {
     public class Styles
     {

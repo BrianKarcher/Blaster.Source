@@ -1,9 +1,9 @@
-﻿using RQ.AI;
+﻿using BlueOrb.AI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RQ.Physics.SteeringBehaviors3D
+namespace BlueOrb.Physics.SteeringBehaviors3D
 {
     public class FollowPath3 : SteeringBehaviorBase3
     {

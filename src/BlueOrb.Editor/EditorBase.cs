@@ -1,10 +1,10 @@
-﻿using RQ.Base.Config;
+﻿using BlueOrb.Base.Config;
 using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor
+namespace BlueOrb.Editor
 {
     public class EditorBase<T> : UnityEditor.Editor where T : class
     {

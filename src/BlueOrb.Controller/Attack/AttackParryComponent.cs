@@ -1,11 +1,11 @@
-﻿using RQ.Common.Components;
-using RQ.Messaging;
+﻿using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Attack
+namespace BlueOrb.Controller.Attack
 {
     [Serializable]
     [AddComponentMenu("RQ/Components/Attack Parry Component")]

@@ -1,14 +1,14 @@
-﻿using RQ.Base.Item;
-using RQ.Base.Skill;
-using RQ.Common.Components;
-using RQ.Messaging;
+﻿using BlueOrb.Base.Item;
+using BlueOrb.Base.Skill;
+using BlueOrb.Common.Components;
+using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace RQ.Controller.Inventory
+namespace BlueOrb.Controller.Inventory
 {
     [AddComponentMenu("RQ/Components/Inventory")]
     public class InventoryComponent : ComponentBase<InventoryComponent>

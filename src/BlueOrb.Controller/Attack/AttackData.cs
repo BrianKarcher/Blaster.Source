@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RQ.Base.Attributes;
+using BlueOrb.Base.Attributes;
 using UnityEngine;
 
-namespace RQ.Controller.Attack
+namespace BlueOrb.Controller.Attack
 {
     [Serializable]
     public class AttackData

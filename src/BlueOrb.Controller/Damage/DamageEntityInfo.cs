@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RQ.Common.Container;
+using BlueOrb.Common.Container;
 using UnityEngine;
 
-namespace RQ.Controller.Damage
+namespace BlueOrb.Controller.Damage
 {
     /// <summary>
     /// Sent to an entity to tell them that they have been damaged, by who, damage position, etc.

@@ -1,7 +1,7 @@
-﻿using RQ.Base.Attributes;
+﻿using BlueOrb.Base.Attributes;
 using UnityEngine;
 
-namespace RQ.Physics.Data
+namespace BlueOrb.Physics.Data
 {
     public class CollisionData
     {

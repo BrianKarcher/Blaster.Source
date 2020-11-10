@@ -1,7 +1,7 @@
-﻿using RQ.Base.Skill;
+﻿using BlueOrb.Base.Skill;
 using UnityEditor;
 
-namespace RQ.Editor.Skill
+namespace BlueOrb.Editor.Skill
 {
     [CustomEditor(typeof(ShardConfig), true)]
     public class ShardConfigEditor : ConfigEditorBase<ShardConfig>

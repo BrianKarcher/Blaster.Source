@@ -1,5 +1,5 @@
-﻿using RQ.Base.Global;
-using RQ.Controller.Manager;
+﻿using BlueOrb.Base.Global;
+using BlueOrb.Controller.Manager;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +8,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RQ.Editor
+namespace BlueOrb.Editor
 {
     [InitializeOnLoad]
     public class AutoPlayFirstSceneAtStartOfGame

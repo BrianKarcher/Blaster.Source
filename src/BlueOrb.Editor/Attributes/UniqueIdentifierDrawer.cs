@@ -1,11 +1,11 @@
-﻿using RQ.Base.Attributes;
+﻿using BlueOrb.Base.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace RQ.Editor.Attributes
+namespace BlueOrb.Editor.Attributes
 {
     // Place this file inside Assets/Editor
     [CustomPropertyDrawer(typeof(UniqueIdentifierAttribute))]

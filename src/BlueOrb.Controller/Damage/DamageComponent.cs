@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RQ.Base.Attributes;
-using RQ.Base.Components;
-using RQ.Common.Components;
-using RQ.Common.Container;
-using RQ.Messaging;
-using RQ.Physics;
+using BlueOrb.Base.Attributes;
+using BlueOrb.Base.Components;
+using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
+using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using UnityEngine;
 
-namespace RQ.Controller.Damage
+namespace BlueOrb.Controller.Damage
 {
     [AddComponentMenu("RQ/Components/Damage Component")]
     public class DamageComponent : ComponentBase<DamageComponent>
