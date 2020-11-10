@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="echo f | xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)..\..\RQ3D_2.Unity\RQ3D.Unity\Assets\Plugins\&quot; /Y&#xD;&#xA;echo f | xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)..\..\RQ3D_2.Unity\RQ3D.Unity\Assets\Plugins\&quot; /Y&#xD;&#xA;" />
+    <Exec Command="echo f | xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)..\..\Blaster.Unity\Blaster.Unity\Assets\Plugins\&quot; /Y&#xD;&#xA;echo f | xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)..\..\Blaster.Unity\Blaster.Unity\Assets\Plugins\&quot; /Y&#xD;&#xA;" />
   </Target>
 
 </Project>
