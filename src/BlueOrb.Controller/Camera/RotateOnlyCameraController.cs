@@ -1,4 +1,5 @@
-﻿using Rewired;
+﻿using BlueOrb.Common.Components;
+using Rewired;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace BlueOrb.Controller.Camera
 {
     [AddComponentMenu("BlueOrb/Components/Rotate Only Camera Controller")]
-    public class RotateOnlyCameraController : MonoBehaviour
+    public class RotateOnlyCameraController : ComponentBase<RotateOnlyCameraController>, ICameraController
     {
         class CameraState
         {
@@ -83,9 +84,13 @@ namespace BlueOrb.Controller.Camera
 
         private Rewired.Player _player;
 
-        private void Awake()
-        {
+        private UnityEngine.Camera _camera;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            if (_camera == null)
+                _camera = GetComponent<UnityEngine.Camera>();
         }
 
         private void Start()
@@ -98,8 +103,9 @@ namespace BlueOrb.Controller.Camera
             _player = ReInput.players.Players[0];
         }
 
-        void OnEnable()
+        public override void OnEnable()
         {
+            base.OnEnable();
             m_TargetCameraState.SetFromTransform(transform);
             m_InterpolatingCameraState.SetFromTransform(transform);
         }
@@ -218,6 +224,26 @@ namespace BlueOrb.Controller.Camera
             {
                 return new Vector2(_player.GetAxis(_horizontalAxisName), _player.GetAxis(_verticalAxisName) * (invertY ? 1 : -1));
             }
+        }
+
+        public bool Raycast(float maxDistance, int layerMask, out RaycastHit hitInfo)
+        {
+            // Example usage:
+            //     Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+            // RaycastHit hit;
+            // if (Physics.Raycast(ray, out hit))
+            //     print("I'm looking at " + hit.transform.name);
+            // else
+            //     print("I'm looking at nothing!");
+
+            Ray ray = _camera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+            // Create a vector at the center of our camera's viewport
+            // Vector3 rayOrigin = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+
+            // var rtn = UnityEngine.Physics.Raycast(rayOrigin, _camera.transform.forward, out hitInfo, maxDistance, layerMask);
+            var rtn = UnityEngine.Physics.Raycast(ray, out hitInfo, maxDistance, layerMask);
+            Debug.DrawRay(ray.origin, ray.direction, Color.green, 1.0f);
+            return rtn;
         }
     }
 }
