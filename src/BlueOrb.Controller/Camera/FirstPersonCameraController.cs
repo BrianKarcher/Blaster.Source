@@ -74,6 +74,9 @@ namespace BlueOrb.Controller.Camera
         [Tooltip("Whether or not to invert our Y axis for mouse input to rotation.")]
         public bool invertY = false;
 
+        public float MinPitch = -45f;
+        public float MaxPitch = 45f;
+
         void OnEnable()
         {
             m_TargetCameraState.SetFromTransform(transform);

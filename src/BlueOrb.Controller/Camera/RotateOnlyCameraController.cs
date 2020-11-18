@@ -82,6 +82,11 @@ namespace BlueOrb.Controller.Camera
         [SerializeField]
         private string _horizontalAxisName;
 
+        [SerializeField]
+        public float _minPitch = -45f;
+        [SerializeField]
+        public float _maxPitch = 45f;
+
         private Rewired.Player _player;
 
         private UnityEngine.Camera _camera;
@@ -200,6 +205,8 @@ namespace BlueOrb.Controller.Camera
 
             m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
             m_TargetCameraState.pitch += mouseMovement.y * mouseSensitivityFactor;
+
+            m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch, _minPitch, _maxPitch);
 #endif
 
             //m_TargetCameraState.Translate(translation);
