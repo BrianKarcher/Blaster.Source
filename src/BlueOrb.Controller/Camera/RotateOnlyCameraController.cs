@@ -100,6 +100,8 @@ namespace BlueOrb.Controller.Camera
         private float _yawMin;
         private float _yawMax;
 
+        //private CinemachineVirtualCamera cam
+
         protected override void Awake()
         {
             base.Awake();
@@ -124,6 +126,8 @@ namespace BlueOrb.Controller.Camera
         public override void OnEnable()
         {
             base.OnEnable();
+            transform.position = _camera.transform.position;
+            transform.rotation = _camera.transform.rotation;
             m_TargetCameraState.SetFromTransform(transform);
             m_InterpolatingCameraState.SetFromTransform(transform);
             if (!_360Yaw)
