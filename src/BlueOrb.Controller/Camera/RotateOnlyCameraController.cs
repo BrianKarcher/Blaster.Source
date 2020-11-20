@@ -83,19 +83,32 @@ namespace BlueOrb.Controller.Camera
         private string _horizontalAxisName;
 
         [SerializeField]
-        public float _minPitch = -45f;
+        public float _pitchMin = -45f;
         [SerializeField]
-        public float _maxPitch = 45f;
+        public float _pitchMax = 45f;
+
+        [SerializeField]
+        private bool _360Yaw = false;
+
+        [SerializeField]
+        public float _yawRange = 180f;
 
         private Rewired.Player _player;
 
         private UnityEngine.Camera _camera;
 
+        private float _yawMin;
+        private float _yawMax;
+
         protected override void Awake()
         {
             base.Awake();
             if (_camera == null)
-                _camera = GetComponent<UnityEngine.Camera>();
+            {
+                //_camera = GetComponent<UnityEngine.Camera>();
+                _camera = UnityEngine.Camera.main;
+            }
+                
         }
 
         private void Start()
@@ -113,6 +126,11 @@ namespace BlueOrb.Controller.Camera
             base.OnEnable();
             m_TargetCameraState.SetFromTransform(transform);
             m_InterpolatingCameraState.SetFromTransform(transform);
+            if (!_360Yaw)
+            {
+                _yawMin = transform.rotation.eulerAngles.y - (_yawRange / 2.0f);
+                _yawMax = transform.rotation.eulerAngles.y + (_yawRange / 2.0f);
+            }
         }
 
         Vector3 GetInputTranslationDirection()
@@ -206,7 +224,11 @@ namespace BlueOrb.Controller.Camera
             m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
             m_TargetCameraState.pitch += mouseMovement.y * mouseSensitivityFactor;
 
-            m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch, _minPitch, _maxPitch);
+            m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch, _pitchMin, _pitchMax);
+            if (!_360Yaw)
+            {
+                m_TargetCameraState.yaw = Mathf.Clamp(m_TargetCameraState.yaw, _yawMin, _yawMax);
+            }
 #endif
 
             //m_TargetCameraState.Translate(translation);
