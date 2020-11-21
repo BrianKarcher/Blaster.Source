@@ -14,6 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Cinemachine">
+      <HintPath>..\..\Reference Assemblies\Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="PlayMaker">
       <HintPath>..\..\Reference Assemblies\PlayMaker.dll</HintPath>
     </Reference>

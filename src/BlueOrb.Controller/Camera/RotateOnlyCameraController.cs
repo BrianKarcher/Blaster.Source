@@ -1,4 +1,5 @@
 ﻿using BlueOrb.Common.Components;
+using Cinemachine;
 using Rewired;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,13 @@ namespace BlueOrb.Controller.Camera
             public float x;
             public float y;
             public float z;
+            public float fov;
+            private CinemachineVirtualCamera _virtualCam;
 
+            public void SetVirtualCamera(CinemachineVirtualCamera virtualCam)
+            {
+                _virtualCam = virtualCam;
+            }
             public void SetFromTransform(Transform t)
             {
                 pitch = t.eulerAngles.x;
@@ -38,11 +45,13 @@ namespace BlueOrb.Controller.Camera
                 z += rotatedTranslation.z;
             }
 
-            public void LerpTowards(CameraState target, float positionLerpPct, float rotationLerpPct)
+            public void LerpTowards(CameraState target, float positionLerpPct, float rotationLerpPct, float fovLerpPct)
             {
                 yaw = Mathf.Lerp(yaw, target.yaw, rotationLerpPct);
                 pitch = Mathf.Lerp(pitch, target.pitch, rotationLerpPct);
                 roll = Mathf.Lerp(roll, target.roll, rotationLerpPct);
+                //fov = Mathf.Lerp(fov, target.fov, fovLerpPct);
+                fov = target.fov;
 
                 x = Mathf.Lerp(x, target.x, positionLerpPct);
                 y = Mathf.Lerp(y, target.y, positionLerpPct);
@@ -53,6 +62,7 @@ namespace BlueOrb.Controller.Camera
             {
                 t.eulerAngles = new Vector3(pitch, yaw, roll);
                 t.position = new Vector3(x, y, z);
+                _virtualCam.m_Lens.FieldOfView = fov;
             }
         }
 
@@ -73,6 +83,9 @@ namespace BlueOrb.Controller.Camera
         [Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
         public float rotationLerpTime = 0.01f;
 
+        [Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
+        public float fovLerpTime = 0.01f;
+
         [Tooltip("Whether or not to invert our Y axis for mouse input to rotation.")]
         public bool invertY = false;
 
@@ -81,6 +94,15 @@ namespace BlueOrb.Controller.Camera
 
         [SerializeField]
         private string _horizontalAxisName;
+
+        [SerializeField]
+        private string _zoomButton;
+
+        [SerializeField]
+        private string _zoomInButton;
+
+        [SerializeField]
+        private string _zoomOutButton;
 
         [SerializeField]
         public float _pitchMin = -45f;
@@ -93,12 +115,20 @@ namespace BlueOrb.Controller.Camera
         [SerializeField]
         public float _yawRange = 180f;
 
+        [SerializeField]
+        private float _fovZoomOut = 60f;
+
+        [SerializeField]
+        private float _fovZoomIn = 20f;
+
         private Rewired.Player _player;
 
         private UnityEngine.Camera _camera;
 
         private float _yawMin;
         private float _yawMax;
+
+        private CinemachineVirtualCamera _virtualCam;
 
         //private CinemachineVirtualCamera cam
 
@@ -110,7 +140,10 @@ namespace BlueOrb.Controller.Camera
                 //_camera = GetComponent<UnityEngine.Camera>();
                 _camera = UnityEngine.Camera.main;
             }
-                
+            //if (_virtualCam == null)
+            //{
+                _virtualCam = GetComponent<CinemachineVirtualCamera>();
+            //}                
         }
 
         private void Start()
@@ -121,6 +154,7 @@ namespace BlueOrb.Controller.Camera
                 return;
             }
             _player = ReInput.players.Players[0];
+            m_InterpolatingCameraState.SetVirtualCamera(_virtualCam);
         }
 
         public override void OnEnable()
@@ -128,6 +162,8 @@ namespace BlueOrb.Controller.Camera
             base.OnEnable();
             transform.position = _camera.transform.position;
             transform.rotation = _camera.transform.rotation;
+            m_TargetCameraState.fov = _camera.fieldOfView;
+            m_InterpolatingCameraState.fov = _camera.fieldOfView;
             m_TargetCameraState.SetFromTransform(transform);
             m_InterpolatingCameraState.SetFromTransform(transform);
             if (!_360Yaw)
@@ -135,6 +171,13 @@ namespace BlueOrb.Controller.Camera
                 _yawMin = transform.rotation.eulerAngles.y - (_yawRange / 2.0f);
                 _yawMax = transform.rotation.eulerAngles.y + (_yawRange / 2.0f);
             }
+        }
+
+        public override void OnDisable()
+        {
+            base.OnDisable();
+            m_TargetCameraState.fov = _fovZoomOut;
+            _virtualCam.m_Lens.FieldOfView = _fovZoomOut;
         }
 
         Vector3 GetInputTranslationDirection()
@@ -233,6 +276,27 @@ namespace BlueOrb.Controller.Camera
             {
                 m_TargetCameraState.yaw = Mathf.Clamp(m_TargetCameraState.yaw, _yawMin, _yawMax);
             }
+
+            if (_player.GetButtonDown(_zoomButton))
+            {
+                if (m_TargetCameraState.fov == _fovZoomOut)
+                {
+                    m_TargetCameraState.fov = _fovZoomIn;
+                }
+                else
+                {
+                    m_TargetCameraState.fov = _fovZoomOut;
+                }
+            }
+
+            if (_player.GetButtonDown(_zoomInButton))
+            {
+                m_TargetCameraState.fov = _fovZoomIn;
+            }
+            if (_player.GetButtonDown(_zoomOutButton))
+            {
+                m_TargetCameraState.fov = _fovZoomOut;
+            }
 #endif
 
             //m_TargetCameraState.Translate(translation);
@@ -241,7 +305,8 @@ namespace BlueOrb.Controller.Camera
             // Calculate the lerp amount, such that we get 99% of the way to our target in the specified time
             //var positionLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / positionLerpTime) * Time.deltaTime);
             var rotationLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / rotationLerpTime) * Time.deltaTime);
-            m_InterpolatingCameraState.LerpTowards(m_TargetCameraState, 0f, rotationLerpPct);
+            var fovLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / fovLerpTime) * Time.deltaTime);
+            m_InterpolatingCameraState.LerpTowards(m_TargetCameraState, 0f, rotationLerpPct, fovLerpPct);
 
             m_InterpolatingCameraState.UpdateTransform(transform);
         }
