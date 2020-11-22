@@ -10,6 +10,8 @@ namespace BlueOrb.Controller.Camera
     public class CharacterMovementNoCamera : MonoBehaviour
     {
         public Transform InvisibleCameraOrigin;
+        [SerializeField]
+        private Transform _objectToRotate;
 
         //public float StrafeSpeed = 0.1f;
         //public float TurnSpeed = 3;
@@ -45,6 +47,7 @@ namespace BlueOrb.Controller.Camera
         public float _pitchMin = -45f;
         [SerializeField]
         public float _pitchMax = 45f;
+
         //public KeyCode sprintJoystick = KeyCode.JoystickButton2;
         //public KeyCode sprintKeyboard = KeyCode.Space;
 
@@ -53,8 +56,14 @@ namespace BlueOrb.Controller.Camera
         //private float currentStrafeSpeed;
         private Vector2 currentVelocity;
         private Rewired.Player _player;
+        [SerializeField]
         private float _yawMin;
+        [SerializeField]
         private float _yawMax;
+
+        public float yaw;
+        public float pitch;
+        public float roll;
 
         void Start()
         {
@@ -68,10 +77,13 @@ namespace BlueOrb.Controller.Camera
                 anim = GetComponent<Animator>();
             }
             currentVelocity = Vector2.zero;
+            pitch = InvisibleCameraOrigin.localRotation.eulerAngles.x;
+            yaw = _objectToRotate.eulerAngles.y;
+            roll = _objectToRotate.eulerAngles.z;
             if (!_360Yaw)
             {
-                _yawMin = transform.rotation.eulerAngles.y - (_yawRange / 2.0f);
-                _yawMax = transform.rotation.eulerAngles.y + (_yawRange / 2.0f);
+                _yawMin = _objectToRotate.eulerAngles.y - (_yawRange / 2.0f);
+                _yawMax = _objectToRotate.eulerAngles.y + (_yawRange / 2.0f);
             }
             //currentStrafeSpeed = 0;
             //isSprinting = false;
@@ -82,7 +94,7 @@ namespace BlueOrb.Controller.Camera
             var input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             var speed = input.y;
             speed = Mathf.Clamp(speed, -1f, 1f);
-            speed = Mathf.SmoothDamp(anim.GetFloat("Speed"), speed, ref currentVelocity.y, Damping);
+            //speed = Mathf.SmoothDamp(anim.GetFloat("Speed"), speed, ref currentVelocity.y, Damping);
             //anim.SetFloat("Speed", speed);
             //anim.SetFloat("Direction", speed);
 
@@ -100,18 +112,30 @@ namespace BlueOrb.Controller.Camera
 
             var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
 
-            var rot = transform.eulerAngles;
-            rot.y += mouseMovement.x * mouseSensitivityFactor;
-            transform.rotation = Quaternion.Euler(rot);
+            //var rot = _objectToRotate.eulerAngles;
+            //rot.y += mouseMovement.x * mouseSensitivityFactor;
+            yaw += mouseMovement.x * mouseSensitivityFactor;
+            if (!_360Yaw)
+            {
+                yaw = Mathf.Clamp(yaw, _yawMin, _yawMax);
+                //rot.y = Mathf.Clamp(rot.y, _yawMin, _yawMax);
+            }
+            _objectToRotate.rotation = Quaternion.Euler(0f, yaw, 0f);
 
             if (InvisibleCameraOrigin != null)
             {
-                rot = InvisibleCameraOrigin.localRotation.eulerAngles;
-                rot.x -= mouseMovement.y * mouseSensitivityFactor;
-                if (rot.x > 180)
-                    rot.x -= 360;
-                rot.x = Mathf.Clamp(rot.x, _yawMin, _yawMax);
-                InvisibleCameraOrigin.localRotation = Quaternion.Euler(rot);
+                //rot = InvisibleCameraOrigin.localRotation.eulerAngles;
+                //rot.x -= mouseMovement.y * mouseSensitivityFactor;
+                ////if (rot.x > 180)
+                ////    rot.x -= 360;
+                //rot.x = Mathf.Clamp(rot.x, _pitchMin, _pitchMax);
+                //rot = InvisibleCameraOrigin.localRotation.eulerAngles;
+                pitch -= mouseMovement.y * mouseSensitivityFactor;
+                //if (rot.x > 180)
+                //    rot.x -= 360;
+                pitch = Mathf.Clamp(pitch, _pitchMin, _pitchMax);
+
+                InvisibleCameraOrigin.localRotation = Quaternion.Euler(pitch, 0f, 0f);
             }
         }
 
