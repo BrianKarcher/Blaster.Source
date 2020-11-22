@@ -78,12 +78,12 @@ namespace BlueOrb.Controller.Camera
             }
             currentVelocity = Vector2.zero;
             pitch = InvisibleCameraOrigin.localRotation.eulerAngles.x;
-            yaw = _objectToRotate.eulerAngles.y;
-            roll = _objectToRotate.eulerAngles.z;
+            yaw = _objectToRotate.localEulerAngles.y;
+            roll = _objectToRotate.localEulerAngles.z;
             if (!_360Yaw)
             {
-                _yawMin = _objectToRotate.eulerAngles.y - (_yawRange / 2.0f);
-                _yawMax = _objectToRotate.eulerAngles.y + (_yawRange / 2.0f);
+                _yawMin = _objectToRotate.localEulerAngles.y - (_yawRange / 2.0f);
+                _yawMax = _objectToRotate.localEulerAngles.y + (_yawRange / 2.0f);
             }
             //currentStrafeSpeed = 0;
             //isSprinting = false;
@@ -120,7 +120,7 @@ namespace BlueOrb.Controller.Camera
                 yaw = Mathf.Clamp(yaw, _yawMin, _yawMax);
                 //rot.y = Mathf.Clamp(rot.y, _yawMin, _yawMax);
             }
-            _objectToRotate.rotation = Quaternion.Euler(0f, yaw, 0f);
+            _objectToRotate.localRotation = Quaternion.Euler(0f, yaw, 0f);
 
             if (InvisibleCameraOrigin != null)
             {
