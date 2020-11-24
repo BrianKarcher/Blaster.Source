@@ -425,6 +425,11 @@ namespace BlueOrb.Controller.Damage
             return _entityStats.CurrentStamina;
         }
 
+        public bool IsDead()
+        {
+            return _entityStats.CurrentHP <= 0;
+        }
+
         /// <summary>
         /// Make sure the current stamina is greater than the supplied amount
         /// </summary>
