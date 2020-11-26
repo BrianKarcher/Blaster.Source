@@ -134,8 +134,14 @@ namespace BlueOrb.Controller.Camera
                 //if (rot.x > 180)
                 //    rot.x -= 360;
                 pitch = Mathf.Clamp(pitch, _pitchMin, _pitchMax);
-
-                InvisibleCameraOrigin.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+                if (InvisibleCameraOrigin == _objectToRotate)
+                {
+                    InvisibleCameraOrigin.localRotation = Quaternion.Euler(pitch, yaw, 0f);
+                }
+                else
+                {
+                    InvisibleCameraOrigin.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+                }
             }
         }
 
@@ -144,11 +150,11 @@ namespace BlueOrb.Controller.Camera
             // read inputs
             if (_player == null)
             {
-                return new Vector2(Input.GetAxis(_horizontalAxisName), Input.GetAxis(_verticalAxisName) * (invertY ? 1 : -1));
+                return new Vector2(Input.GetAxis(_horizontalAxisName), Input.GetAxis(_verticalAxisName) * (invertY ? -1 : 1));
             }
             else
             {
-                return new Vector2(_player.GetAxis(_horizontalAxisName), _player.GetAxis(_verticalAxisName) * (invertY ? 1 : -1));
+                return new Vector2(_player.GetAxis(_horizontalAxisName), _player.GetAxis(_verticalAxisName) * (invertY ? -1 : 1));
             }
         }
     }
