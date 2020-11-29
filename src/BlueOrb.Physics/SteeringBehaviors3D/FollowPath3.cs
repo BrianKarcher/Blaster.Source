@@ -100,6 +100,12 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             Path.Set(new_path);
         }
 
+        public void SetPath(List<Vector3> new_path, int waypoint)
+        {
+            Path.Set(new_path);
+            Path.SetCurrentWaypoint(waypoint);
+        }
+
         public bool ComparePath(List<Vector3> path)
         {
             //bool isEqual = true;
