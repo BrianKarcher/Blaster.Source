@@ -1,4 +1,5 @@
-﻿using Cinemachine;
+﻿using BlueOrb.Common.Components;
+using Cinemachine;
 using Rewired;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace BlueOrb.Controller.Camera
 {
     [AddComponentMenu("BlueOrb/Components/Character Movement No Camera")]
-    public class CharacterMovementNoCamera : MonoBehaviour
+    public class CharacterMovementNoCamera : ComponentBase<CharacterMovementNoCamera>
     {
         public Transform InvisibleCameraOrigin;
         [SerializeField]
@@ -76,8 +77,11 @@ namespace BlueOrb.Controller.Camera
         public float pitch;
         public float roll;
 
-        void Awake()
+        private bool _hasBeenEnabled = false;
+
+        protected override void Awake()
         {
+            base.Awake();
             _isZoomedIn = false;
         }
 
@@ -86,8 +90,9 @@ namespace BlueOrb.Controller.Camera
             _player = ReInput.players.Players[0];
         }
 
-        void OnEnable()
+        public override void OnEnable()
         {
+            base.OnEnable();
             if (anim == null)
             {
                 anim = GetComponent<Animator>();
@@ -96,6 +101,15 @@ namespace BlueOrb.Controller.Camera
             pitch = InvisibleCameraOrigin.localRotation.eulerAngles.x;
             yaw = _objectToRotate.localEulerAngles.y;
             roll = _objectToRotate.localEulerAngles.z;
+            //if (_hasBeenEnabled)
+            //{
+            //    pitch = UnityEngine.Camera.main.transform.rotation.eulerAngles.x;
+            //    yaw = UnityEngine.Camera.main.transform.rotation.eulerAngles.y;
+            //    roll = UnityEngine.Camera.main.transform.rotation.eulerAngles.z;
+            //    _componentRepository.transform.position = UnityEngine.Camera.main.transform.position - transform.localPosition;
+            //    //transform.position = UnityEngine.Camera.main.transform.position;
+            //}
+            
             if (!_360Yaw)
             {
                 _yawMin = _objectToRotate.localEulerAngles.y - (_yawRange / 2.0f);
@@ -103,10 +117,12 @@ namespace BlueOrb.Controller.Camera
             }
             //currentStrafeSpeed = 0;
             //isSprinting = false;
+            _hasBeenEnabled = true;
         }
 
-        void OnDisable()
+        public override void OnDisable()
         {
+            base.OnDisable();
             _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomOut;
         }
 
