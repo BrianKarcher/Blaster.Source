@@ -1,4 +1,5 @@
-﻿using Rewired;
+﻿using Cinemachine;
+using Rewired;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,6 +49,12 @@ namespace BlueOrb.Controller.Camera
         [SerializeField]
         public float _pitchMax = 45f;
 
+        [SerializeField]
+        private float _fovZoomOut = 60f;
+
+        [SerializeField]
+        private float _fovZoomIn = 20f;
+
         //public KeyCode sprintJoystick = KeyCode.JoystickButton2;
         //public KeyCode sprintKeyboard = KeyCode.Space;
 
@@ -61,9 +68,18 @@ namespace BlueOrb.Controller.Camera
         [SerializeField]
         private float _yawMax;
 
+        [SerializeField]
+        private CinemachineVirtualCamera _cinemachineVirtualCamera;
+        private bool _isZoomedIn;
+
         public float yaw;
         public float pitch;
         public float roll;
+
+        void Awake()
+        {
+            _isZoomedIn = false;
+        }
 
         void Start()
         {
@@ -89,6 +105,11 @@ namespace BlueOrb.Controller.Camera
             //isSprinting = false;
         }
 
+        void OnDisable()
+        {
+            _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomOut;
+        }
+
         void Update()
         {
             var input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -110,7 +131,12 @@ namespace BlueOrb.Controller.Camera
             //var rotInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
             var mouseMovement = GetAxisInput();
 
+            ProcessZoomInput();
+
             var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
+
+            if (_isZoomedIn)
+                mouseSensitivityFactor /= 8;
 
             //var rot = _objectToRotate.eulerAngles;
             //rot.y += mouseMovement.x * mouseSensitivityFactor;
@@ -142,6 +168,34 @@ namespace BlueOrb.Controller.Camera
                 {
                     InvisibleCameraOrigin.localRotation = Quaternion.Euler(pitch, 0f, 0f);
                 }
+            }
+        }
+
+        private void ProcessZoomInput()
+        {
+            if (_player.GetButtonDown(_zoomButton))
+            {
+                if (!_isZoomedIn)
+                {
+                    _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomIn;
+                    _isZoomedIn = true;
+                }
+                else
+                {
+                    _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomOut;
+                    _isZoomedIn = false;
+                }
+            }
+
+            if (_player.GetButtonDown(_zoomInButton))
+            {
+                _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomIn;
+                _isZoomedIn = true;
+            }
+            if (_player.GetButtonDown(_zoomOutButton))
+            {
+                _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomOut;
+                _isZoomedIn = false;
             }
         }
 
