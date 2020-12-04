@@ -2,6 +2,7 @@
 using Cinemachine;
 using Rewired;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -98,7 +99,7 @@ namespace BlueOrb.Controller.Camera
                 anim = GetComponent<Animator>();
             }
             currentVelocity = Vector2.zero;
-            pitch = InvisibleCameraOrigin.localRotation.eulerAngles.x;
+            pitch = InvisibleCameraOrigin.localEulerAngles.x;
             yaw = _objectToRotate.localEulerAngles.y;
             roll = _objectToRotate.localEulerAngles.z;
             //if (_hasBeenEnabled)
@@ -124,6 +125,7 @@ namespace BlueOrb.Controller.Camera
         {
             base.OnDisable();
             _cinemachineVirtualCamera.m_Lens.FieldOfView = _fovZoomOut;
+            _isZoomedIn = false;
         }
 
         void Update()
@@ -185,6 +187,43 @@ namespace BlueOrb.Controller.Camera
                     InvisibleCameraOrigin.localRotation = Quaternion.Euler(pitch, 0f, 0f);
                 }
             }
+        }
+
+        public void CenterHead(float seconds)
+        {
+            StartCoroutine(CenterHeadProcess(seconds));
+        }
+
+        private IEnumerator CenterHeadProcess(float seconds)
+        {
+            Debug.Log("CenterHeadProcess started");
+            float time = 0f;
+            var initialInvisibleCameraRotation = InvisibleCameraOrigin.localRotation;
+            var initialObjectToRotateRotation = _objectToRotate.localRotation;
+            var destRotation = Quaternion.Euler(0f, 0f, 0f);
+
+            while (time < seconds)
+            {
+                // If both are the same, just do the slerp once.
+                if (InvisibleCameraOrigin == _objectToRotate)
+                {
+                    //Quaternion.
+                    //InvisibleCameraOrigin.localRotation.
+                    InvisibleCameraOrigin.localRotation = Quaternion.Slerp(InvisibleCameraOrigin.localRotation, destRotation, Time.deltaTime / seconds);
+                    //InvisibleCameraOrigin.localRotation = Quaternion.Slerp(InvisibleCameraOrigin.localRotation, destRotation, seconds / Time.deltaTime);
+                    //_objectToRotate.localRotation = Quaternion.Slerp(_objectToRotate.localRotation, destRotation, seconds / Time.deltaTime);
+                }
+                else
+                {
+                    InvisibleCameraOrigin.localRotation = Quaternion.Slerp(InvisibleCameraOrigin.localRotation, destRotation, Time.deltaTime / seconds);
+                    _objectToRotate.localRotation = Quaternion.Slerp(_objectToRotate.localRotation, destRotation, Time.deltaTime / seconds);
+                    //InvisibleCameraOrigin.localRotation = Quaternion.Slerp(InvisibleCameraOrigin.localRotation, destRotation, seconds / Time.deltaTime);
+                    //_objectToRotate.localRotation = Quaternion.Slerp(_objectToRotate.localRotation, destRotation, seconds / Time.deltaTime);
+                }
+                time += Time.deltaTime;
+                yield return null;
+            }
+            Debug.Log("CenterHeadProcess finished");
         }
 
         private void ProcessZoomInput()
