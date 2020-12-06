@@ -1,5 +1,4 @@
-﻿using BlueOrb.Base.Skill;
-using BlueOrb.Base.VariableClasses;
+﻿using BlueOrb.Base.VariableClasses;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller;
@@ -22,8 +21,7 @@ namespace BlueOrb.Base.Manager
         //public SceneConfig NextSceneConfig { get; set; }
         public string SpawnpointUniqueId { get; set; }
         public SceneConfig CurrentSceneConfig { get; set; }
-        public MoldConfig CurrentMold { get; set; }
-        public ShardConfig CurrentShard { get; set; }
+
         [SerializeField]
         private Variables _globalVariables;
         public Variables GlobalVariables => _globalVariables;

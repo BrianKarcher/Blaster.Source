@@ -1,6 +1,5 @@
 ﻿using BlueOrb.Base.Item;
 using BlueOrb.Base.Manager;
-using BlueOrb.Base.Skill;
 using BlueOrb.Base.SpawnPoint;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Scene;
@@ -97,44 +96,19 @@ namespace BlueOrb.Controller.Manager
                     //}
                 }
 
-                var molds = SceneConfig.StartingItems.Where(i => i.ItemConfig.ItemType == ItemTypeEnum.Mold).ToList();
-                var shards = SceneConfig.StartingItems.Where(i => i.ItemConfig.ItemType == ItemTypeEnum.Shard).ToList();
+                //var molds = SceneConfig.StartingItems.Where(i => i.ItemConfig.ItemType == ItemTypeEnum.Mold).ToList();
+                //var shards = SceneConfig.StartingItems.Where(i => i.ItemConfig.ItemType == ItemTypeEnum.Shard).ToList();
 
-                if (shards.Count != 0)
-                    GameStateController.Instance.CurrentShard = (ShardConfig)shards[0].ItemConfig;
+                //if (shards.Count != 0)
+                //    GameStateController.Instance.CurrentShard = (ShardConfig)shards[0].ItemConfig;
 
-                // TODO - This is broken as it assumes the shards apply to this Mold. FIX!
-                //var moldData = new MoldData()
+                //MessageDispatcher.Instance.DispatchMsg("SetMoldData", 0f, string.Empty, "Hud Controller", molds);
+                //MessageDispatcher.Instance.DispatchMsg("SetShardData", 0f, string.Empty, "Hud Controller", shards);
+
+                //if (molds.Count > 0)
                 //{
-                //    MoldConfig = mold?.ItemConfig as MoldConfig,
-                //    shardConfigs = shards?.ToList()
-                //};
-
-                MessageDispatcher.Instance.DispatchMsg("SetMoldData", 0f, string.Empty, "Hud Controller", molds);
-                MessageDispatcher.Instance.DispatchMsg("SetShardData", 0f, string.Empty, "Hud Controller", shards);
-
-                if (molds.Count > 0)
-                {
-                    Debug.Log("Setting Mold to " + molds[0].ItemConfig.name);
-                    GameStateController.Instance.CurrentMold = molds[0].ItemConfig as MoldConfig;
-                }
-                //MessageDispatcher.Instance.DispatchMsg("SetMoldData", 0f, string.Empty, "Hud Controller", moldData);
-
-                // Extract first starting blueprint and mold and set as active
-                //MessageDispatcher.Instance.DispatchMsg("DisplayActiveMold", 0f, string.Empty, _player.GetId(), null);
-                //for (int i = 0; i < SceneConfig.StartingItems.Length; i++)
-                //{
-                //    var startingItem = SceneConfig.StartingItems[i].ItemConfig;
-                //    if (startingItem == null)
-                //        continue;
-                //    if (startingItem.ItemType == ItemTypeEnum.Mold)
-                //        GameDataController.Instance.CurrentBlueprint = startingItem;
-                //    if (startingItem.ItemClass == ItemClass.Mold)
-                //    {
-                //        Debug.Log("Setting Mold");
-                //        MessageDispatcher2.Instance.DispatchMsg("SetMold", 0f, this.UniqueId, "UI Manager", startingItem);
-                //    }
-                //    //GameDataController.Instance.CurrentMold = startingItem;
+                //    Debug.Log("Setting Mold to " + molds[0].ItemConfig.name);
+                //    GameStateController.Instance.CurrentMold = molds[0].ItemConfig as MoldConfig;
                 //}
             }
         }

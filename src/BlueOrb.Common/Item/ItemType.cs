@@ -6,8 +6,6 @@ namespace BlueOrb.Base.Item
 {
     public enum ItemTypeEnum
     {
-        Health = 0,
-        Shard = 1,
-        Mold = 2
+        Health = 0
     }
 }

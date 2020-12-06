@@ -1,5 +1,4 @@
 ﻿using BlueOrb.Base.Config;
-using BlueOrb.Base.Skill;
 using BlueOrb.Base.SpawnPoint;
 using BlueOrb.Controller.Manager;
 using BlueOrb.Controller.Scene;

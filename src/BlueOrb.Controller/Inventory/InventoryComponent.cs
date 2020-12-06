@@ -1,5 +1,4 @@
 ﻿using BlueOrb.Base.Item;
-using BlueOrb.Base.Skill;
 using BlueOrb.Common.Components;
 using BlueOrb.Messaging;
 using System;
