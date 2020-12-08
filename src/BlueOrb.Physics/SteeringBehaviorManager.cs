@@ -14,6 +14,11 @@ namespace BlueOrb.Physics
         private bool _drawDebug = false;
         public bool DrawDebug => _drawDebug;
 
+        /// <summary>
+        /// This is generally used for enemies that are walking on a terrain. Flying enemies must have this set to false!
+        /// </summary>
+        public bool ProjectOnGround = true;
+
         private Dictionary<behavior_type, ISteeringBehavior> _allSteeringBehaviors;
         private Dictionary<behavior_type, ISteeringBehavior> _steeringBehaviors;
         //public IPhysicsAffector SteeringPhysicsAffector { get; set; }
