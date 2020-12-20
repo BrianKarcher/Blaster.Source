@@ -535,6 +535,7 @@ namespace BlueOrb.Physics
 
         public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
         {
+            Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
             _rigidBody3D.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
         }
 
