@@ -32,13 +32,13 @@ namespace BlueOrb.Controller.Manager
         private void Start()
         {
             _player = EntityContainer.Instance.GetMainCharacter();
-            if (GameStateController.Instance.BeginNewGame)
-            {
-                BeginNewGame();
-                // Set this variable in a FSM state... maybe the beginning of Play mode?
-                GameStateController.Instance.BeginNewGame = false;
-            }
-            PlacePlayerAtSpawnPoint();
+            //if (GameStateController.Instance.BeginNewGame)
+            //{
+            //    BeginNewGame();
+            //    // Set this variable in a FSM state... maybe the beginning of Play mode?
+            //    GameStateController.Instance.BeginNewGame = false;
+            //}
+            //PlacePlayerAtSpawnPoint();
         }
 
         public void InitAllEntities()
@@ -60,135 +60,82 @@ namespace BlueOrb.Controller.Manager
             }
         }
 
-        public void BeginNewGame()
-        {
-            ////GameStateController.Instance.NewGame();
-            ////GameStateController.Instance.StartInit();
-            ////MessageDispatcher2.Instance.DispatchMsg("SetGold", 0f, this.UniqueId, "UI Manager", GameDataController.Instance.Data.Inventory.Gold);
-            ////var sceneConfig = GameDataController.Instance.NextSceneConfig;
-            ////if (sceneConfig == null)
-            ////    sceneConfig = GameDataController.Instance.CurrentSceneConfig;
+        //private void PlacePlayerAtSpawnPoint()
+        //{
+        //    if (!String.IsNullOrEmpty(GameStateController.Instance.SpawnpointUniqueId))
+        //    {
+        //        _spawnPointComponents = GetSpawnPoints();
+        //        //var sceneSetup = GameController.Instance.GetSceneSetup();
 
-            //MessageDispatcher2.Instance.DispatchMsg("SetHUDSkill", 0f, this.UniqueId, "UI Manager", null);
-            // Populate starting items
+        //        //for (int i = 0; i < sceneSetup.SpawnPointComponents.Count; i++)
+        //        //{
 
-            //Debug.Log("Populating " + sceneConfig.StartingItems.Length + " Starting Items");
-            if (SceneConfig.StartingItems != null)
-            {
-                bool isFirst = true;
-                //Debug.Log("Adding Starting Items to inventory.");
-                foreach (var startingItem in SceneConfig.StartingItems)
-                {
-                    if (startingItem.ItemConfig == null)
-                        continue;
-                    //var addItemData = new ItemAndQuantityData()
-                    //{
-                    //    ItemConfig = startingItem.Item as IItemConfig,
-                    //    Quantity = startingItem.Quantity
-                    //};
-                    MessageDispatcher.Instance.DispatchMsg("AddItem", 0f, this.GetInstanceID().ToString(), _player.GetId(),
-                        startingItem);
-                    //if (isFirst)
-                    //{
-                    //    GameDataController.Instance.Data.SelectedSkill = startingItem.Item.UniqueId;
-                    //    MessageDispatcher2.Instance.DispatchMsg("SetHUDSkill", 0f, UniqueId, "UI Manager", startingItem.Item.UniqueId);
-                    //    isFirst = false;
-                    //}
-                }
+        //        //}
+        //        //var spawnPoints = sceneSetup.SpawnPointComponents.Where(i =>
+        //        //i.SpawnPointUniqueId == GameDataController.Instance.Data.SpawnpointUniqueId);
 
-                //var molds = SceneConfig.StartingItems.Where(i => i.ItemConfig.ItemType == ItemTypeEnum.Mold).ToList();
-                //var shards = SceneConfig.StartingItems.Where(i => i.ItemConfig.ItemType == ItemTypeEnum.Shard).ToList();
+        //        PlaceEntityAtSpawnPoint(_spawnPointComponents);
+        //        //PlaceEntityAtSpawnPoint(_spawnPointComponents, Enums.EntityType.Companion);
+        //        GameStateController.Instance.SpawnpointUniqueId = null;
+        //    }
+        //}
 
-                //if (shards.Count != 0)
-                //    GameStateController.Instance.CurrentShard = (ShardConfig)shards[0].ItemConfig;
+        //private void PlaceEntityAtSpawnPoint(SpawnPointComponent[] spawnPoints)
+        //{
+        //    SpawnPointComponent spawnPoint = null;
 
-                //MessageDispatcher.Instance.DispatchMsg("SetMoldData", 0f, string.Empty, "Hud Controller", molds);
-                //MessageDispatcher.Instance.DispatchMsg("SetShardData", 0f, string.Empty, "Hud Controller", shards);
+        //    for (int i = 0; i < spawnPoints.Length; i++)
+        //    {
+        //        if (spawnPoints[i].SpawnPointUniqueId == GameStateController.Instance.SpawnpointUniqueId)
+        //        {
+        //            spawnPoint = spawnPoints[i];
+        //            Debug.Log($"Located spawn point {spawnPoint.SpawnPointUniqueId}");
+        //            break;
+        //        }
+        //    }
 
-                //if (molds.Count > 0)
-                //{
-                //    Debug.Log("Setting Mold to " + molds[0].ItemConfig.name);
-                //    GameStateController.Instance.CurrentMold = molds[0].ItemConfig as MoldConfig;
-                //}
-            }
-        }
+        //    //var spawnPoint = spawnPoints.FirstOrDefault(i => i.EntityType == entityType);
+        //    if (spawnPoint == null)
+        //    {
+        //        Debug.LogError($"(PlaceEntityAtSpawnPoint) Could not locate spawn point {GameStateController.Instance.SpawnpointUniqueId}.");
+        //        return;
+        //    }
 
-        private void PlacePlayerAtSpawnPoint()
-        {
-            if (!String.IsNullOrEmpty(GameStateController.Instance.SpawnpointUniqueId))
-            {
-                _spawnPointComponents = GetSpawnPoints();
-                //var sceneSetup = GameController.Instance.GetSceneSetup();
+        //    var pos = spawnPoint.transform.position;
 
-                //for (int i = 0; i < sceneSetup.SpawnPointComponents.Count; i++)
-                //{
+        //    var player = EntityContainer.Instance.GetMainCharacter();
+        //    if (player == null)
+        //    {
+        //        Debug.LogWarning($"(PlaceEntityAtSpawnPoint) Could not locate player.");
+        //        return;
+        //    }
 
-                //}
-                //var spawnPoints = sceneSetup.SpawnPointComponents.Where(i =>
-                //i.SpawnPointUniqueId == GameDataController.Instance.Data.SpawnpointUniqueId);
+        //    player.transform.position = pos;
 
-                PlaceEntityAtSpawnPoint(_spawnPointComponents);
-                //PlaceEntityAtSpawnPoint(_spawnPointComponents, Enums.EntityType.Companion);
-                GameStateController.Instance.SpawnpointUniqueId = null;
-            }
-        }
+        //    //string uniqueId = player;
 
-        private void PlaceEntityAtSpawnPoint(SpawnPointComponent[] spawnPoints)
-        {
-            SpawnPointComponent spawnPoint = null;
-
-            for (int i = 0; i < spawnPoints.Length; i++)
-            {
-                if (spawnPoints[i].SpawnPointUniqueId == GameStateController.Instance.SpawnpointUniqueId)
-                {
-                    spawnPoint = spawnPoints[i];
-                    Debug.Log($"Located spawn point {spawnPoint.SpawnPointUniqueId}");
-                    break;
-                }
-            }
-
-            //var spawnPoint = spawnPoints.FirstOrDefault(i => i.EntityType == entityType);
-            if (spawnPoint == null)
-            {
-                Debug.LogError($"(PlaceEntityAtSpawnPoint) Could not locate spawn point {GameStateController.Instance.SpawnpointUniqueId}.");
-                return;
-            }
-
-            var pos = spawnPoint.transform.position;
-
-            var player = EntityContainer.Instance.GetMainCharacter();
-            if (player == null)
-            {
-                Debug.LogWarning($"(PlaceEntityAtSpawnPoint) Could not locate player.");
-                return;
-            }
-
-            player.transform.position = pos;
-
-            //string uniqueId = player;
-
-            // Place the main character at the spawn point
-            //var spawnPoint = GameData.Instance.CurrentScene.SpawnPoints[GameData.Instance.SpawnpointUniqueId];
-            //MessageDispatcher.Instance.DispatchMsg(0f, this.UniqueId,
-            //    uniqueId, Enums.Telegrams.SetPos,
-            //    new Vector2D(pos.x, pos.y));
-            //MessageDispatcher.Instance.DispatchMsg(0f, this.UniqueId, uniqueId,
-            //    Enums.Telegrams.SetLevelHeight, spawnPoint.LevelLayer);
+        //    // Place the main character at the spawn point
+        //    //var spawnPoint = GameData.Instance.CurrentScene.SpawnPoints[GameData.Instance.SpawnpointUniqueId];
+        //    //MessageDispatcher.Instance.DispatchMsg(0f, this.UniqueId,
+        //    //    uniqueId, Enums.Telegrams.SetPos,
+        //    //    new Vector2D(pos.x, pos.y));
+        //    //MessageDispatcher.Instance.DispatchMsg(0f, this.UniqueId, uniqueId,
+        //    //    Enums.Telegrams.SetLevelHeight, spawnPoint.LevelLayer);
 
 
-        }
+        //}
 
-        public SpawnPointComponent[] GetSpawnPoints()
-        {
-            if (SpawnPoints == null)
-                return null;
+        //public SpawnPointComponent[] GetSpawnPoints()
+        //{
+        //    if (SpawnPoints == null)
+        //        return null;
 
-            return SpawnPoints.GetComponentsInChildren<SpawnPointComponent>();
+        //    return SpawnPoints.GetComponentsInChildren<SpawnPointComponent>();
 
-            //if (spawnPointComponents != null)
-            //{
-            //    SpawnPointComponents.AddRange(spawnPointComponents);
-            //}
-        }
+        //    //if (spawnPointComponents != null)
+        //    //{
+        //    //    SpawnPointComponents.AddRange(spawnPointComponents);
+        //    //}
+        //}
     }
 }
