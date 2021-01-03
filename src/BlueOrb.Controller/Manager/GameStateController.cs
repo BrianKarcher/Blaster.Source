@@ -7,6 +7,7 @@ using BlueOrb.Controller.Player;
 using BlueOrb.Controller.Scene;
 using BlueOrb.Messaging;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BlueOrb.Base.Manager
 {
@@ -23,18 +24,26 @@ namespace BlueOrb.Base.Manager
         //public string SpawnpointUniqueId { get; set; }
         public SceneConfig CurrentSceneConfig { get; set; }
 
+        public int _currentScore;
+
+        /// <summary>
+        /// The players current high scores in each level
+        /// </summary>
+        private Dictionary<string, int> _levelHighScore;
+
         [SerializeField]
         private Variables _globalVariables;
         public Variables GlobalVariables => _globalVariables;
         // TODO Set this to true when the player starts a new game!
         //public bool BeginNewGame { get; set; }
-        public bool ChangingScene { get; set; }
+        //public bool ChangingScene { get; set; }
         [SerializeField]
         private SceneController _sceneController;
 
         protected override void Awake()
         {
             base.Awake();
+            _levelHighScore = new Dictionary<string, int>();
             //BeginNewGame = true;
         }
 
@@ -70,6 +79,9 @@ namespace BlueOrb.Base.Manager
             }
         }
 
+        /// <summary>
+        /// The game start init method. The first SceneConfig must already be set since we load data from the first scene when debugging so we can start the game in any scene. Call this before the first in-game LoadScene function call.
+        /// </summary>
         public void BeginNewGame()
         {
             ////GameStateController.Instance.NewGame();
@@ -131,9 +143,26 @@ namespace BlueOrb.Base.Manager
         //    //inventoryController.
         //}
 
+        public void PrepareStartStageData()
+        {
+            _currentScore = 0;
+            SendScoreToUI();
+        }
+
+        public void AddPoints(int points)
+        {
+            _currentScore += points;
+            SendScoreToUI();
+        }
+
+        private void SendScoreToUI()
+        {
+            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, GetId(), "UI Controller", _currentScore);
+        }
+
         public void LoadScene(string sceneName)
         {
-            ChangingScene = true;
+            //ChangingScene = true;
             // Log the next Spawnpoint before ClearScene deletes it
             //SpawnpointUniqueId = spawnPointId;
             //if (GameDataController.Instance.Data != null)

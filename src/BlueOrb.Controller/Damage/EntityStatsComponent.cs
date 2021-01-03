@@ -395,7 +395,7 @@ namespace BlueOrb.Controller.Damage
             }
 
             //var healthPct = _entityStats.CurrentHP / _entityStats.MaxHP;
-            MessageDispatcher.Instance.DispatchMsg("UpdateStatsInHud", 0f, this.GetId(), "UI Manager", _entityStats);
+            MessageDispatcher.Instance.DispatchMsg("UpdateStatsInHud", 0f, this.GetId(), "UI Controller", _entityStats);
             MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", _entityStats.CurrentHP / _entityStats.MaxHP);
             MessageDispatcher.Instance.DispatchMsg("SetStamina", 0f, this.GetId(), "Hud Controller", _entityStats.CurrentStamina / _entityStats.MaxStamina);
             //MessageDispatcher.Instance.DispatchMsg(0f, this.UniqueId,
