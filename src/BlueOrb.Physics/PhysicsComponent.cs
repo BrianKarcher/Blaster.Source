@@ -230,7 +230,7 @@ namespace BlueOrb.Physics
         private void ProcessSteeringBehaviorForce2()
         {
             var steeringForce = _steering.Calculate();
-            if (_steering.ProjectOnGround)
+            if (_steering.ProjectOnGround && Controller.GetIsGrounded())
             {
                 steeringForce = Vector3.ProjectOnPlane(steeringForce, _controller.GroundNormal);
             }

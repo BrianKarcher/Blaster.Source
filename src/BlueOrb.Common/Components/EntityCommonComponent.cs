@@ -44,7 +44,8 @@ namespace BlueOrb.Base.Components
         {
             // We can safely say this was no longer just loaded from a Save file
             //JustLoaded = false;
-            Target = EntityContainer.Instance.GetMainCharacter()?.gameObject;
+            if (Target == null)
+                Target = EntityContainer.Instance.GetMainCharacter()?.gameObject;
         }
 
         /// <summary>

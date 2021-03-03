@@ -15,7 +15,18 @@ namespace BlueOrb.Common.Container
 
         [SerializeField]
         private GameObject _target;
-        public GameObject Target { get => _target; set => _target = value; }
+        public GameObject Target { get
+            {
+                if (_target == null && _defaultTargetIsPlayer)
+                {
+                    _target = EntityContainer.Instance.GetMainCharacter().gameObject;
+                }
+                return _target;
+            }
+            set => _target = value; }
+
+        [SerializeField]
+        private bool _defaultTargetIsPlayer = true;
 
         [SerializeField]
         private float _height;

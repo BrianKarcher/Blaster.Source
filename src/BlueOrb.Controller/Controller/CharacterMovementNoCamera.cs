@@ -151,14 +151,15 @@ namespace BlueOrb.Controller.Camera
 
             ProcessZoomInput();
 
-            var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
+            //var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
 
+            var sensitivity = 1.0f;
             if (_isZoomedIn)
-                mouseSensitivityFactor /= 8;
+                sensitivity /= 8;
 
             //var rot = _objectToRotate.eulerAngles;
             //rot.y += mouseMovement.x * mouseSensitivityFactor;
-            yaw += mouseMovement.x * mouseSensitivityFactor;
+            yaw += mouseMovement.x * sensitivity;
             if (!_360Yaw)
             {
                 yaw = Mathf.Clamp(yaw, _yawMin, _yawMax);
@@ -174,7 +175,7 @@ namespace BlueOrb.Controller.Camera
                 ////    rot.x -= 360;
                 //rot.x = Mathf.Clamp(rot.x, _pitchMin, _pitchMax);
                 //rot = InvisibleCameraOrigin.localRotation.eulerAngles;
-                pitch -= mouseMovement.y * mouseSensitivityFactor;
+                pitch -= mouseMovement.y * sensitivity;
                 //if (rot.x > 180)
                 //    rot.x -= 360;
                 pitch = Mathf.Clamp(pitch, _pitchMin, _pitchMax);
