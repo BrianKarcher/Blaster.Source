@@ -14,6 +14,8 @@ namespace BlueOrb.Controller.Triggers
         private string _tag;
         [SerializeField]
         private Transform _cartJoint;
+        [SerializeField]
+        private float _speed = 5;
 
         void Awake()
         {
@@ -30,8 +32,12 @@ namespace BlueOrb.Controller.Triggers
                 return;
             }
             Debug.Log($"Reparenting to {other.name}");
+            //var worldRotation = other.transform.rotation;
             other.transform.parent = _cartJoint;
-            _cartJoint.gameObject.SetActive(true);
+            //_cartJoint.gameObject.SetActive(true);
+            var dollyCart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
+            dollyCart.m_Speed = _speed;
+            //other.transform.rotation = worldRotation;
         }
     }
 }
