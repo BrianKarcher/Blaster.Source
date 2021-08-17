@@ -16,6 +16,7 @@ namespace BlueOrb.Base.Manager
     // between scene loads
     /// <summary>
     /// Controls the state of the game as the player progresses through it.
+    /// Scope: Entire game, from "Begin New Game" to when the player exits to the main screen.
     /// </summary>
     [AddComponentMenu("RQ/Manager/Game State")]
     public class GameStateController : ComponentBase<GameStateController>
@@ -24,7 +25,7 @@ namespace BlueOrb.Base.Manager
         //public string SpawnpointUniqueId { get; set; }
         public SceneConfig CurrentSceneConfig { get; set; }
 
-        public int _currentScore;
+
 
         /// <summary>
         /// The players current high scores in each level
@@ -143,22 +144,7 @@ namespace BlueOrb.Base.Manager
         //    //inventoryController.
         //}
 
-        public void PrepareStartStageData()
-        {
-            _currentScore = 0;
-            SendScoreToUI();
-        }
 
-        public void AddPoints(int points)
-        {
-            _currentScore += points;
-            SendScoreToUI();
-        }
-
-        private void SendScoreToUI()
-        {
-            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, GetId(), "UI Controller", _currentScore);
-        }
 
         public void LoadScene(string sceneName)
         {
