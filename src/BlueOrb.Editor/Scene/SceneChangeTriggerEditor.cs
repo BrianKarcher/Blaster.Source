@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace BlueOrb.Editor.Skill
 {
-    [CustomEditor(typeof(SeneChangeTrigger), true)]
-    public class SeneChangeTriggerEditor : EditorBase<SeneChangeTrigger>
+    [CustomEditor(typeof(SceneChangeTrigger), true)]
+    public class SeneChangeTriggerEditor : EditorBase<SceneChangeTrigger>
     {
         //private SceneSetup _sceneSetup;
         //private bool _showSpawnPoints = false;

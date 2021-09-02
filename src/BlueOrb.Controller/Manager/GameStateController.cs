@@ -18,7 +18,7 @@ namespace BlueOrb.Base.Manager
     /// Controls the state of the game as the player progresses through it.
     /// Scope: Entire game, from "Begin New Game" to when the player exits to the main screen.
     /// </summary>
-    [AddComponentMenu("RQ/Manager/Game State")]
+    [AddComponentMenu("BlueOrb/Manager/Game State")]
     public class GameStateController : ComponentBase<GameStateController>
     {
         //public SceneConfig NextSceneConfig { get; set; }

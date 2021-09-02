@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BlueOrb.Base.Interfaces;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlueOrb.Common.Container
@@ -11,6 +12,10 @@ namespace BlueOrb.Common.Container
         private IEntity MainCharacter { get; set; }
         private IEntity CompanionCharacter { get; set; }
         private Dictionary<string, IEntity> Bosses { get; set; }
+
+        private ILevelStateController _levelStateController;
+
+        public ILevelStateController LevelStateController { get => _levelStateController; set => _levelStateController = value; }
         //const string _idToCheck = "8da840b9-43f6-4bae-9e63-a3ceee1cb493";
 
         //[HideInInspector]

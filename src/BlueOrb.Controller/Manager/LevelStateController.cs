@@ -1,5 +1,8 @@
-﻿using BlueOrb.Base.Item;
+﻿using BlueOrb.Base.Interfaces;
+using BlueOrb.Base.Item;
 using BlueOrb.Common.Components;
+using BlueOrb.Common.Container;
+using BlueOrb.Controller.Component;
 using BlueOrb.Messaging;
 using System;
 using System.Collections.Generic;
@@ -13,14 +16,21 @@ namespace BlueOrb.Controller.Manager
     /// Controls the level state
     /// Scope: Single level, gets instantiated on level entry and destroyed on level exit
     /// </summary>
-    public class LevelStateController : ComponentBase<LevelStateController>
+    [AddComponentMenu("BlueOrb/Manager/Level State")]
+    public class LevelStateController : ComponentBase<LevelStateController>, ILevelStateController
     {
         public int _currentScore;
         public int _highScore;
 
-        private ProjectileConfig _currentProjectile;
+        [SerializeField]
+        private IShooterComponent _shooterComponent;
+        public IShooterComponent ShooterComponent => _shooterComponent;
 
-        private long _setProjectileId;
+        //private long _setProjectileId;
+        protected override void Awake()
+        {
+            EntityContainer.Instance.LevelStateController = this;
+        }
 
         public void PrepareStartStageData()
         {
@@ -43,22 +53,16 @@ namespace BlueOrb.Controller.Manager
         {
             base.StartListening();
 
-            _setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
-            {
-                var projectileConfig = data.ExtraInfo as ProjectileConfig;
-                if (projectileConfig == null)
-                {
-                    throw new Exception("No Projectile Config");
-                }
-
-                if (_currentProjectile == projectileConfig)
-                {
-                    Debug.Log("Player already has this projectile");
-                    return;
-                }
+            //_setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
+            //{
+            //    var projectileConfig = data.ExtraInfo as ProjectileConfig;
 
 
-            });
+            //    _currentProjectile = projectileConfig;
+
+            //    var mainPlayer = EntityContainer.Instance.GetMainCharacter();
+            //    MessageDispatcher.Instance.DispatchMsg("SetProjectile", 0f, "Level State", mainPlayer.GetId(), projectileConfig);
+            //});
         }
     }
 }

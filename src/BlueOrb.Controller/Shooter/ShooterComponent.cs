@@ -1,9 +1,11 @@
-﻿using BlueOrb.Base.Item;
+﻿using BlueOrb.Base.Interfaces;
+using BlueOrb.Base.Item;
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Player;
 using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using System;
 using UnityEngine;
 
@@ -13,19 +15,24 @@ namespace BlueOrb.Controller.Component
     /// This component lives in the Game Controller Game Object, not on the player
     /// This makes persistence easier and less buggy if the game were to destroy the Main Character or his weapon
     /// </summary>
-    [AddComponentMenu("BlueOrb/Components/Shooter")]
-    public class ShooterComponent : ComponentBase<ShooterComponent>
+    [AddComponentMenu("BlueOrb/Manager/Shooter Controller")]
+    public class ShooterComponent : ComponentBase<ShooterComponent>, IShooterComponent
     {
         [SerializeField]
-        private GameObject _projectileSpawnPoint;
-        public GameObject ProjectileSpawnPoint => _projectileSpawnPoint;
-        //        //[SerializeField] private PlayerController _playerController;
-        [SerializeField] private ProjectileConfig _currentProjectileConfig;
-        public ProjectileConfig CurrentProjectileConfig => _currentProjectileConfig;
+        private string MessageId = "Shooter Controller";
+
+        [SerializeField] private ProjectileConfig _currentMainProjectileConfig;
+        public ProjectileConfig CurrentMainProjectileConfig => _currentMainProjectileConfig;
+
+        // Gets set when the player shoots an ammo box
+        [SerializeField] private ProjectileConfig _currentSecondaryProjectileConfig;
+        public ProjectileConfig CurrentSecondaryProjectileConfig => _currentSecondaryProjectileConfig;
 
         [SerializeField] private string _changeProjectileReceiveMessage;
 
         [SerializeField] private string _changeProjectileSendMessage;
+
+        //private ProjectileConfig _currentProjectile;
 
         private long _projectileId;
 
@@ -40,59 +47,37 @@ namespace BlueOrb.Controller.Component
         public override void StartListening()
         {
             base.StartListening();
-            _projectileId = MessageDispatcher.Instance.StartListening(_changeProjectileReceiveMessage, _componentRepository.GetId(), (data) =>
+            _projectileId = MessageDispatcher.Instance.StartListening(_changeProjectileReceiveMessage, MessageId, (data) =>
             {
-                _currentProjectileConfig = data.ExtraInfo as ProjectileConfig;
+                var projectileConfig = data.ExtraInfo as ProjectileConfig;
+                Debug.Log($"(Shooter Controller) Setting Secondary Projectile to {projectileConfig?.Name}");
+
+                if (projectileConfig == null)
+                {
+                    throw new Exception("No Projectile Config");
+                }
+
+                if (_currentSecondaryProjectileConfig == projectileConfig)
+                {
+                    Debug.Log("Player already has this projectile");
+                    return;
+                }
+
+                _currentSecondaryProjectileConfig = projectileConfig;
+
                 var mainPlayer = EntityContainer.Instance.GetMainCharacter();
                 // Inform player object the projectile has changed
-                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, _componentRepository.GetId(), mainPlayer.GetId(), null);
-                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, _componentRepository.GetId(), "Hud Controller", data.ExtraInfo);
+                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, mainPlayer.GetId(), null);
+                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, "Hud Controller", data.ExtraInfo);
             });
         }
 
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening(_changeProjectileReceiveMessage, _componentRepository.GetId(), _projectileId);
+            MessageDispatcher.Instance.StopListening(_changeProjectileReceiveMessage, MessageId, _projectileId);
         }
 
-        //        public void Shoot()
-        //        {
-        //            //transform.TransformPoint(_projectileCreatePoint);
-        //            GameObject newObject = null;
 
-        //            var projectilePrefab = GameStateController.Instance.CurrentShard == null ? 
-        //                GameStateController.Instance.CurrentMold.ReferencePrefab : 
-        //                GameStateController.Instance.CurrentShard.ReferencePrefab;
-        //            if (projectilePrefab == null)
-        //            {
-        //                Debug.LogError($"Associated item {GameStateController.Instance.CurrentShard.name} has no prefab reference.");
-        //                return;
-        //            }
-
-        //            var shooterRotation = transform.rotation;
-
-        //            CreateMuzzleFlash(_projectileCreatePoint.transform.position, shooterRotation);
-
-        //            newObject = GameObject.Instantiate(projectilePrefab, _projectileCreatePoint.transform.position, shooterRotation);
-        //            var rigidBody = newObject.GetComponent<Rigidbody>();
-        //            if (rigidBody == null)
-        //                throw new Exception("Could not locate PhysicsComponent or RigidBody!");
-        //            var direction = transform.forward;
-        //            var velocity = direction.normalized * _speed;
-        //            rigidBody.velocity = velocity;
-        //        }
-
-        //        public void CreateMuzzleFlash(Vector3 pos, Quaternion rotation)
-        //        {
-        //            // Muzzle Flash
-        //            if (GameStateController.Instance.CurrentShard.MuzzleFlash == null)
-        //            {
-        //                Debug.LogError("This shard has no muzzle flash. Please apply one.");
-        //                return;
-        //            }
-
-        //            GameObject.Instantiate(GameStateController.Instance.CurrentShard.MuzzleFlash, pos, rotation);
-        //        }
     }
 }

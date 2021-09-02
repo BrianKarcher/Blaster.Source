@@ -14,8 +14,8 @@ using UnityEngine.UI;
 
 namespace BlueOrb.Controller
 {
-    [AddComponentMenu("RQ/Components/Scene Change Trigger")]
-    public class SeneChangeTrigger : MonoBehaviour
+    [AddComponentMenu("BlueOrb/Components/Scene Change Trigger")]
+    public class SceneChangeTrigger : MonoBehaviour
     {
         /// <summary>
         /// Scene config to change to.
