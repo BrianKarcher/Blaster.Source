@@ -17,7 +17,7 @@ namespace BlueOrb.Controller.Block
 
             MessageDispatcher.Instance.StartListening("SetSecondaryProjectile", _componentRepository.GetId(), (data) =>
             {
-                Debug.Log($"(EntityItem) Setting Secondary Projectile to {_item.Name}");
+                Debug.Log($"(EntityItem) Setting Secondary Projectile to {_item?.Name}");
                 MessageDispatcher.Instance.DispatchMsg("SetSecondaryProjectile", 0f, _componentRepository.GetId(), "Shooter Controller", _item);
             });
             
