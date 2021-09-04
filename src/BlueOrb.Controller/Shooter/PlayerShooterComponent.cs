@@ -52,6 +52,7 @@ namespace BlueOrb.Controller.Component
 
         protected override void Awake()
         {
+            base.Awake();
             if (_camera == null)
             {
                 var cameraGo = UnityEngine.Camera.main;
@@ -144,6 +145,9 @@ namespace BlueOrb.Controller.Component
 
         private void ProcessShoot(ProjectileConfig projectileConfig)
         {
+            if (projectileConfig == null)
+                return;
+
             var velocity = CalculateVelocity(projectileConfig.MaxSpeed);
 
             //var angleToRotate = _animationComponent.GetFacingDirection().GetDirectionAngle();

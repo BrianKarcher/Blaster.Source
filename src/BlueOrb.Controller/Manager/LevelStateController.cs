@@ -23,7 +23,7 @@ namespace BlueOrb.Controller.Manager
         public int _highScore;
 
         [SerializeField]
-        private IShooterComponent _shooterComponent;
+        private ShooterComponent _shooterComponent;
         public IShooterComponent ShooterComponent => _shooterComponent;
 
         //private long _setProjectileId;
