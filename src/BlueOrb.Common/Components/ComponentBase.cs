@@ -36,7 +36,10 @@ namespace BlueOrb.Common.Components
             base.StartListening();
             if (_componentRepository == null)
                 throw new Exception($"No component repository located for {this.name}");
-            MessageDispatcher.Instance.StartListening("Kill", _componentRepository.GetId(), _killDelegate);
+            //MessageDispatcher.Instance.StartListening("ProjectileHit", _componentRepository.GetId(), (data) =>
+            //{
+            //    GameObject.Destroy(gameObject);
+            //});
         }
 
         public override void StopListening()
