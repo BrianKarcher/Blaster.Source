@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace BlueOrb.Controller.Inventory
+namespace BlueOrb.Controller
 {
-    [AddComponentMenu("RQ/Components")]
+    [AddComponentMenu("BlueOrb/Components/Dolly Cart")]
     public class DollyCartComponent : ComponentBase<DollyCartComponent>
     {
         private float _targetTime;
@@ -20,8 +20,11 @@ namespace BlueOrb.Controller.Inventory
         [SerializeField]
         public LerpType _speedChangeType;
 
+        [SerializeField]
         private float _targetSpeed;
+        [SerializeField]
         private float _startSpeed;
+        [SerializeField]
         private float _currentSpeed;
 
         private long _setSpeedMessageId;
@@ -40,6 +43,12 @@ namespace BlueOrb.Controller.Inventory
         {
             public float SmoothTime = 2f;
             public float TargetSpeed;
+        }
+
+        public void SetDollyCart(GameObject dolly)
+        {
+            _componentRepository.transform.parent = dolly.transform;
+            _cinemachineDollyCart = dolly.GetComponent<CinemachineDollyCart>();
         }
 
         //[SerializeField]
