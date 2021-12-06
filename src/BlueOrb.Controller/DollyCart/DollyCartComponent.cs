@@ -96,7 +96,7 @@ namespace BlueOrb.Controller
                         _cinemachineDollyCart.m_Speed = Mathf.Lerp(_startSpeed, _targetSpeed, 0.5f);
                         break;
                     case LerpType.SmoothDamp:
-                        _cinemachineDollyCart.m_Speed = UnityEngine.Mathf.SmoothDamp(_cinemachineDollyCart.m_Speed, _targetSpeed, ref _velocity, 2f);
+                        _cinemachineDollyCart.m_Speed = UnityEngine.Mathf.SmoothDamp(_cinemachineDollyCart.m_Speed, _targetSpeed, ref _velocity, _smoothTime * Time.deltaTime);
                         break;
                 }
                 
