@@ -35,6 +35,7 @@ namespace BlueOrb.Controller.Component
         //private ProjectileConfig _currentProjectile;
 
         private long _projectileId;
+        public int _ammoCount;
 
         //        [SerializeField] private float _speed;
 
@@ -64,6 +65,7 @@ namespace BlueOrb.Controller.Component
                 }
 
                 _currentSecondaryProjectileConfig = projectileConfig;
+                _ammoCount = projectileConfig.Ammo;
 
                 var mainPlayer = EntityContainer.Instance.GetMainCharacter();
                 // Inform player object the projectile has changed
@@ -78,6 +80,9 @@ namespace BlueOrb.Controller.Component
             MessageDispatcher.Instance.StopListening(_changeProjectileReceiveMessage, MessageId, _projectileId);
         }
 
-
+        public void AddAmmo(int ammo)
+        {
+            _ammoCount += ammo;
+        }
     }
 }

@@ -51,6 +51,11 @@ namespace BlueOrb.Controller
             _cinemachineDollyCart = dolly.GetComponent<CinemachineDollyCart>();
         }
 
+        public float GetSpeed()
+        {
+            return _cinemachineDollyCart.m_Speed;
+        }
+
         //[SerializeField]
         //private InventoryData _inventoryData;
 
@@ -93,7 +98,7 @@ namespace BlueOrb.Controller
                 switch (_speedChangeType)
                 {
                     case LerpType.Lerp:
-                        _cinemachineDollyCart.m_Speed = Mathf.Lerp(_startSpeed, _targetSpeed, 0.5f);
+                        _cinemachineDollyCart.m_Speed = Mathf.Lerp(_startSpeed, _targetSpeed, 1f / _smoothTime * Time.deltaTime);
                         break;
                     case LerpType.SmoothDamp:
                         _cinemachineDollyCart.m_Speed = UnityEngine.Mathf.SmoothDamp(_cinemachineDollyCart.m_Speed, _targetSpeed, ref _velocity, _smoothTime * Time.deltaTime);
