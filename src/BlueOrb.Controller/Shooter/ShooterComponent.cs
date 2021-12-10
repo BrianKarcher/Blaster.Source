@@ -31,11 +31,13 @@ namespace BlueOrb.Controller.Component
         [SerializeField] private string _changeProjectileReceiveMessage;
 
         [SerializeField] private string _changeProjectileSendMessage;
+        [SerializeField] private string _hudControllerName;
 
         //private ProjectileConfig _currentProjectile;
 
         private long _projectileId;
         public int _ammoCount;
+        [SerializeField] private string _setAmmoMessage;
 
         //        [SerializeField] private float _speed;
 
@@ -70,7 +72,7 @@ namespace BlueOrb.Controller.Component
                 var mainPlayer = EntityContainer.Instance.GetMainCharacter();
                 // Inform player object the projectile has changed
                 MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, mainPlayer.GetId(), null);
-                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, "Hud Controller", data.ExtraInfo);
+                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, _hudControllerName, data.ExtraInfo);
             });
         }
 
@@ -83,6 +85,15 @@ namespace BlueOrb.Controller.Component
         public void AddAmmo(int ammo)
         {
             _ammoCount += ammo;
+            if (_ammoCount <= 0)
+            {
+                _currentSecondaryProjectileConfig = null;
+                MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, _hudControllerName, null);
+            }
+            else
+            {
+                MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, _ammoCount);
+            }            
         }
     }
 }

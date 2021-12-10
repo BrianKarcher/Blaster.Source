@@ -141,6 +141,12 @@ namespace BlueOrb.Controller.Component
             Debug.Log("Shooting Secondary Projectile");
             var projectileConfig = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectileConfig;
             ProcessShoot(projectileConfig);
+            DecreaseAmmo();
+        }
+
+        private void DecreaseAmmo()
+        {
+            EntityContainer.Instance.LevelStateController.ShooterComponent.AddAmmo(-1);
         }
 
         private void ProcessShoot(ProjectileConfig projectileConfig)
