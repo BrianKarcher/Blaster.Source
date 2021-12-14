@@ -90,14 +90,16 @@ namespace BlueOrb.Controller.Player
             MessageDispatcher.Instance.StopListening("EnableInput", _componentRepository.GetId(), _enableInputId);
         }
 
-        //private void Update()
-        //{
-        //    if (!_enablePlayerInput)
-        //        return;
+        private void Update()
+        {
+            if (!_enablePlayerInput)
+                return;
 
-        //    var movementInputData = GetInputData();
-        //    _playerController.PerformThirdPersonUpdate(movementInputData);
-        //}
+            var movementInputData = GetInputData();
+            //_playerController.PerformThirdPersonUpdate(movementInputData);
+            MessageDispatcher.Instance.DispatchMsg("Input", 0f, _componentRepository.GetId(), _componentRepository.GetId(),
+                movementInputData);
+        }
 
         public MovementInputData GetInputData()
         {
