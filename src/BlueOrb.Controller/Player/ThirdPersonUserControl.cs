@@ -23,6 +23,8 @@ namespace BlueOrb.Controller.Player
         [SerializeField] private string _blockAction;
         [SerializeField] private string _crouchAction;
         [SerializeField] private string _sprintAction;
+        [SerializeField] private string _horizontalAxis;
+        [SerializeField] private string _verticalAxis;
 
         //private ThirdPersonCharacter m_Character; // A reference to the ThirdPersonCharacter on the object
         private Transform m_Cam; // A reference to the main camera in the scenes transform
@@ -181,11 +183,11 @@ namespace BlueOrb.Controller.Player
             // read inputs
             if (_player == null)
             {
-                return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                return new Vector2(Input.GetAxis(_horizontalAxis), Input.GetAxis(_verticalAxis));
             }
             else
             {
-                return new Vector2(_player.GetAxis("Horizontal"), _player.GetAxis("Vertical"));
+                return new Vector2(_player.GetAxis(_horizontalAxis), _player.GetAxis(_verticalAxis));
             }
         }
 
