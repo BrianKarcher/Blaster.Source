@@ -13,8 +13,9 @@ namespace BlueOrb.Controller.Camera
     public class CharacterMovementNoCamera : ComponentBase<CharacterMovementNoCamera>
     {
         public Transform InvisibleCameraOrigin;
-        [SerializeField]
-        private Transform _objectToRotate;
+        [SerializeField] private Transform _objectToRotate;
+        [SerializeField] private Transform _objectToRotatePitch;
+        [SerializeField] private Transform _objectToRotateYaw;
 
         //public float StrafeSpeed = 0.1f;
         //public float TurnSpeed = 3;
@@ -100,8 +101,17 @@ namespace BlueOrb.Controller.Camera
             }
             currentVelocity = Vector2.zero;
             pitch = InvisibleCameraOrigin.localEulerAngles.x;
-            yaw = _objectToRotate.localEulerAngles.y;
-            roll = _objectToRotate.localEulerAngles.z;
+            if (_objectToRotate != null)
+            {
+                yaw = _objectToRotate.localEulerAngles.y;
+                roll = _objectToRotate.localEulerAngles.z;
+            }
+            if (_objectToRotateYaw != null)
+            {
+                yaw = _objectToRotateYaw.localEulerAngles.y;
+                // Why are we recording roll here?
+                roll = _objectToRotatePitch.localEulerAngles.z;
+            }
             //if (_hasBeenEnabled)
             //{
             //    pitch = UnityEngine.Camera.main.transform.rotation.eulerAngles.x;
@@ -113,8 +123,16 @@ namespace BlueOrb.Controller.Camera
             
             if (!_360Yaw)
             {
-                _yawMin = _objectToRotate.localEulerAngles.y - (_yawRange / 2.0f);
-                _yawMax = _objectToRotate.localEulerAngles.y + (_yawRange / 2.0f);
+                if (_objectToRotate != null)
+                {
+                    _yawMin = _objectToRotate.localEulerAngles.y - (_yawRange / 2.0f);
+                    _yawMax = _objectToRotate.localEulerAngles.y + (_yawRange / 2.0f);
+                }
+                if (_objectToRotateYaw != null)
+                {
+                    _yawMin = _objectToRotateYaw.localEulerAngles.y - (_yawRange / 2.0f);
+                    _yawMax = _objectToRotateYaw.localEulerAngles.y + (_yawRange / 2.0f);
+                }
             }
             //currentStrafeSpeed = 0;
             //isSprinting = false;
@@ -165,7 +183,15 @@ namespace BlueOrb.Controller.Camera
                 yaw = Mathf.Clamp(yaw, _yawMin, _yawMax);
                 //rot.y = Mathf.Clamp(rot.y, _yawMin, _yawMax);
             }
-            _objectToRotate.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            if (_objectToRotate != null)
+            {
+                _objectToRotate.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            }
+            if (_objectToRotateYaw != null)
+            {
+                _objectToRotateYaw.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            }
+
 
             if (InvisibleCameraOrigin != null)
             {

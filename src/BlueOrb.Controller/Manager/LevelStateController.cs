@@ -26,6 +26,8 @@ namespace BlueOrb.Controller.Manager
         private ShooterComponent _shooterComponent;
         public IShooterComponent ShooterComponent => _shooterComponent;
 
+        private long _addPointsIndex;
+
         //private long _setProjectileId;
         protected override void Awake()
         {
@@ -53,6 +55,13 @@ namespace BlueOrb.Controller.Manager
         {
             base.StartListening();
 
+            _addPointsIndex = MessageDispatcher.Instance.StartListening("AddPoints", "Level Controller", (data) =>
+            {
+                var points = (PointsData)data.ExtraInfo;
+                _currentScore += points.Points;
+                MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
+                MessageDispatcher.Instance.DispatchMsg("CreatePointsLabel", 0f, _componentRepository.GetId(), "UI Controller", points);
+            });
             //_setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
             //{
             //    var projectileConfig = data.ExtraInfo as ProjectileConfig;
@@ -64,5 +73,13 @@ namespace BlueOrb.Controller.Manager
             //    MessageDispatcher.Instance.DispatchMsg("SetProjectile", 0f, "Level State", mainPlayer.GetId(), projectileConfig);
             //});
         }
+    }
+
+    public class PointsData
+    {
+        public int Score { get; set; }
+        public int Points { get; set; }
+        public Color Color { get; set; } = Color.white;
+        public Vector3 Position { get; set; }
     }
 }

@@ -41,6 +41,8 @@ namespace BlueOrb.Physics
         {
             base.Awake();
             _rigidBody3D = GetComponent<Rigidbody>();
+            if (_rigidBody3D == null)
+                _rigidBody3D = _componentRepository.GetComponent<Rigidbody>();
             _controller?.SetMovementController(this);
             _isEnabled = true;
             _controller.Awake();
