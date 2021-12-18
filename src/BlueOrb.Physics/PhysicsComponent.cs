@@ -411,7 +411,10 @@ namespace BlueOrb.Physics
         public void SetVelocity3(Vector3 velocity)
         {
             if (_rigidBody3D != null)
+            {
                 _rigidBody3D.velocity = velocity;
+                //Debug.Log($"RigidBody: Setting velocity to {velocity}");
+            }
         }
 
         public void SetVelocity2(Vector2 velocity)

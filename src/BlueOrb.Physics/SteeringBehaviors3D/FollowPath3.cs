@@ -73,7 +73,7 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             var distanceSq = (currentWaypointPos - feetPos).sqrMagnitude;
             if (distanceSq < WaypointSeekDistSq)
             {
-                Debug.Log("Setting next waypoint");
+                //Debug.Log("Setting next waypoint");
                 Path.SetNextWaypoint();
                 return true;
             }
