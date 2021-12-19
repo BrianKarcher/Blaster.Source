@@ -23,15 +23,26 @@ namespace BlueOrb.Controller.Manager
         private SpawnPointComponent[] _spawnPointComponents;
 
         private IEntity _player;
+        //private LevelStateController _levelStateController;
 
-        private void Awake()
-        {
-            InitAllEntities();
-        }
+        //private void Start()
+        //{
+        //    //_levelStateController = GameObject.Find<LevelStateController>();
+        //    //InitAllEntities();
+            
+        //}
 
         private void Start()
         {
             _player = EntityContainer.Instance.GetMainCharacter();
+            Debug.Log("Scene Setup Starting");
+            if (SceneConfig != null)
+            {
+                //EntityContainer.Instance.LevelStateController.SetMaxHp(SceneConfig.MaxHp);
+                MessageDispatcher.Instance.DispatchMsg("SetMaxHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
+                MessageDispatcher.Instance.DispatchMsg("SetCurrentHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
+            }
+            
             //if (GameStateController.Instance.BeginNewGame)
             //{
             //    BeginNewGame();
@@ -45,19 +56,19 @@ namespace BlueOrb.Controller.Manager
         {
             //Debug.Log(this.name + " - InitAllEntities called");
             //var actorsRoot = GameController.Instance.GetSceneSetup().GetActorsRoot();
-            var entities = _actorsRoot.GetComponentsInChildren<ComponentRepository>(true);
-            foreach (var entity in entities)
-            {
-                try
-                {
-                    //if (!entity.isActiveAndEnabled)
-                    entity.Init();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(ex);
-                }
-            }
+            //var entities = _actorsRoot.GetComponentsInChildren<ComponentRepository>(true);
+            //foreach (var entity in entities)
+            //{
+            //    try
+            //    {
+            //        //if (!entity.isActiveAndEnabled)
+            //        entity.Init();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debug.LogError(ex);
+            //    }
+            //}
         }
 
         //private void PlacePlayerAtSpawnPoint()

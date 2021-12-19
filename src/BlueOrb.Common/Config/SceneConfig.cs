@@ -7,6 +7,7 @@ namespace BlueOrb.Controller.Scene
 {
     public class SceneConfig : BaseConfig
     {
+        public float MaxHp = 1;
         /// <summary>
         /// Pointer to the Scene file (.unity)
         /// </summary>

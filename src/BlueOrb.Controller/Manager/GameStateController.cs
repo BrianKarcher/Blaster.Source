@@ -8,6 +8,7 @@ using BlueOrb.Controller.Scene;
 using BlueOrb.Messaging;
 using UnityEngine;
 using System.Collections.Generic;
+using BlueOrb.Controller.Damage;
 
 namespace BlueOrb.Base.Manager
 {
@@ -25,7 +26,11 @@ namespace BlueOrb.Base.Manager
         //public string SpawnpointUniqueId { get; set; }
         public SceneConfig CurrentSceneConfig { get; set; }
 
-
+        // Player stats are a Game Instance-level object, things like MaxHp can be upgraded potentially
+        // and be retained forever in the save file
+        [SerializeField]
+        private EntityStatsData _entityStats = new EntityStatsData();
+        public EntityStatsData EntityStats => _entityStats;
 
         /// <summary>
         /// The players current high scores in each level

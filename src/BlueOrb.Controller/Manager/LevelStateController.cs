@@ -1,5 +1,6 @@
 ﻿using BlueOrb.Base.Interfaces;
 using BlueOrb.Base.Item;
+using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Component;
@@ -21,6 +22,8 @@ namespace BlueOrb.Controller.Manager
     {
         public int _currentScore;
         public int _highScore;
+        //public float _currentHp;
+        //public float _maxHp;
 
         [SerializeField]
         private ShooterComponent _shooterComponent;
@@ -28,27 +31,71 @@ namespace BlueOrb.Controller.Manager
 
         private long _addPointsIndex;
 
+        //private static LevelStateController _instance;
+        //[HideInInspector]
+        //public static LevelStateController Instance
+        //{
+        //    get
+        //    {
+        //        if (_instance == null)
+        //        {
+        //            _instance = GameObject.FindObjectOfType<LevelStateController>();
+        //            _instance.Init();
+        //        }
+        //        return _instance;
+        //    }
+        //}
+
         //private long _setProjectileId;
         protected override void Awake()
         {
             EntityContainer.Instance.LevelStateController = this;
+            //StartLevel();
         }
+
+        public void StartLevel()
+        {
+            //var stats = GameStateController.Instance.EntityStats;
+            //_currentHp = _maxHp;
+            //SetMaxHp(_maxHp);
+
+            UpdateUI();
+        }
+
+        //public void SetCurrentHp(float hp)
+        //{
+        //    _currentHp = hp;
+        //    UpdateUI();
+        //}
+
+        //public void AddHp(float hp)
+        //{
+        //    _currentHp += hp;
+        //    UpdateUI();
+        //}
+
+        //public void SetMaxHp(float maxHp)
+        //{
+        //    _maxHp = maxHp;
+        //    UpdateUI();
+        //}
 
         public void PrepareStartStageData()
         {
             _currentScore = 0;
-            SendScoreToUI();
+            UpdateUI();
         }
 
         public void AddPoints(int points)
         {
             _currentScore += points;
-            SendScoreToUI();
+            UpdateUI();
         }
 
-        private void SendScoreToUI()
+        private void UpdateUI()
         {
             MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, string.Empty, "UI Controller", _currentScore);
+            //MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (_currentHp, _maxHp));
         }
 
         public override void StartListening()

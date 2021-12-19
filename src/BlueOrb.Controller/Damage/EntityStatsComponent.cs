@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Messaging;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace BlueOrb.Controller.Damage
         //private long _setEntityStatsId, _setupPlayerStatsId, _fullHealId, _healHPId, _skillUsedId, _updateHUDId, _setCurrentHPId, _addXPId, _entityDiedId,
         //    _updateHUDId2;
 
-        private long _setHpPercentId, _deflectedOtherIndex;
+        private long _setHpPercentId, _deflectedOtherIndex, _setMaxHpId, _setCurrentHpId;
         private Action<Telegram> _deflectOtherDel;
         private float _staminaRefreshWaitUntil;
         private Dictionary<string, float> _actionStaminas;
@@ -102,6 +103,8 @@ namespace BlueOrb.Controller.Damage
         protected override void Awake()
         {
             base.Awake();
+            if (this.tag == "Player")
+                _entityStats = GameStateController.Instance.EntityStats;
             _actionStaminas = new Dictionary<string, float>();
             if (_entityStats.ActionStaminas != null)
             {
@@ -181,14 +184,28 @@ namespace BlueOrb.Controller.Damage
         public override void StartListening()
         {
             base.StartListening();
-            _setHpPercentId = MessageDispatcher.Instance.StartListening("SetHpPercent", _componentRepository.GetId(), (data) =>
-            {
-                float hp = (float)data.ExtraInfo;
-                _entityStats.CurrentHP = Mathf.CeilToInt(_entityStats.MaxHP * hp);
-                UpdateHud();
-            });
+            //_setHpPercentId = MessageDispatcher.Instance.StartListening("SetHpPercent", _componentRepository.GetId(), (data) =>
+            //{
+            //    float hp = (float)data.ExtraInfo;
+            //    _entityStats.CurrentHP = Mathf.CeilToInt(_entityStats.MaxHP * hp);
+            //    UpdateHud();
+            //});
 
             _deflectedOtherIndex = MessageDispatcher.Instance.StartListening("DeflectedOther", _componentRepository.GetId(), _deflectOtherDel);
+            _setMaxHpId = MessageDispatcher.Instance.StartListening("SetMaxHp", _componentRepository.GetId(), (data) =>
+            {
+                float maxHp = (float)data.ExtraInfo;
+                _entityStats.MaxHP = maxHp;
+                Debug.Log($"Setting max hp to {maxHp}");
+                UpdateHud();
+            });
+            _setCurrentHpId = MessageDispatcher.Instance.StartListening("SetCurrentHp", _componentRepository.GetId(), (data) =>
+            {
+                float hp = (float)data.ExtraInfo;
+                _entityStats.CurrentHP = hp;
+                Debug.Log($"Setting current hp to {hp}");
+                UpdateHud();
+            });
 
             //    var unqiueid = _componentRepository.UniqueId;
             //    var rqname = _componentRepository.name;
@@ -241,6 +258,8 @@ namespace BlueOrb.Controller.Damage
         {
             base.StopListening();
             MessageDispatcher.Instance.StopListening("DeflectedOther", _componentRepository.GetId(), _deflectedOtherIndex);
+            MessageDispatcher.Instance.StopListening("SetMaxHp", _componentRepository.GetId(), _setMaxHpId);
+            MessageDispatcher.Instance.StopListening("SetCurrentHp", _componentRepository.GetId(), _setCurrentHpId);
             //    MessageDispatcher2.Instance.StopListening("SetEntityStats", _componentRepository.UniqueId, _setEntityStatsId);
             //    //_componentRepository.StopListening("SetEntityStats", this.UniqueId);
             //    MessageDispatcher2.Instance.StopListening("SetupPlayerStats", _componentRepository.UniqueId, _setupPlayerStatsId);
@@ -396,7 +415,7 @@ namespace BlueOrb.Controller.Damage
 
             //var healthPct = _entityStats.CurrentHP / _entityStats.MaxHP;
             MessageDispatcher.Instance.DispatchMsg("UpdateStatsInHud", 0f, this.GetId(), "UI Controller", _entityStats);
-            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", _entityStats.CurrentHP / _entityStats.MaxHP);
+            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (_entityStats.CurrentHP, _entityStats.MaxHP));
             MessageDispatcher.Instance.DispatchMsg("SetStamina", 0f, this.GetId(), "Hud Controller", _entityStats.CurrentStamina / _entityStats.MaxStamina);
             //MessageDispatcher.Instance.DispatchMsg(0f, this.UniqueId,
             //    _playerComponent.UniqueId, Enums.Telegrams.SetCurrentHealth,
