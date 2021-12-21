@@ -27,7 +27,7 @@ namespace BlueOrb.Controller
         [SerializeField]
         private float _currentSpeed;
 
-        private long _setSpeedMessageId;
+        private long _setSpeedTargetId, _setSpeedId;
         private bool _updatingSpeed;
         private float _velocity;
         private float _smoothTime = 2f;
@@ -36,7 +36,8 @@ namespace BlueOrb.Controller
         {
             Lerp = 0,
             Slerp = 1,
-            SmoothDamp = 2
+            SmoothDamp = 2,
+            InverseLerp = 3
         }
 
         public class SetSpeedData
@@ -70,12 +71,18 @@ namespace BlueOrb.Controller
         public override void StartListening()
         {
             base.StartListening();
-            _setSpeedMessageId = MessageDispatcher.Instance.StartListening("SetSpeedTarget", _componentRepository.GetId(), (data) =>
+            _setSpeedTargetId = MessageDispatcher.Instance.StartListening("SetSpeedTarget", _componentRepository.GetId(), (data) =>
             {
                 _updatingSpeed = true;
                 var speedData = data.ExtraInfo as SetSpeedData;
                 _smoothTime = speedData.SmoothTime;
                 _targetSpeed = speedData.TargetSpeed;
+            });
+
+            _setSpeedId = MessageDispatcher.Instance.StartListening("SetSpeed", _componentRepository.GetId(), (data) =>
+            {
+                var speed = (float)data.ExtraInfo;
+                _cinemachineDollyCart.m_Speed = speed;
             });
             //_addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
             //{
@@ -88,7 +95,8 @@ namespace BlueOrb.Controller
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening("SetSpeedTarget", _componentRepository.GetId(), _setSpeedMessageId);
+            MessageDispatcher.Instance.StopListening("SetSpeedTarget", _componentRepository.GetId(), _setSpeedTargetId);
+            MessageDispatcher.Instance.StopListening("SetSpeed", _componentRepository.GetId(), _setSpeedId);
         }
 
         protected void FixedUpdate()
@@ -98,7 +106,8 @@ namespace BlueOrb.Controller
                 switch (_speedChangeType)
                 {
                     case LerpType.Lerp:
-                        _cinemachineDollyCart.m_Speed = Mathf.Lerp(_startSpeed, _targetSpeed, 1f / _smoothTime * Time.deltaTime);
+                        _cinemachineDollyCart.m_Speed = Mathf.Lerp(_cinemachineDollyCart.m_Speed, _targetSpeed, 1f / _smoothTime * Time.deltaTime);
+                        //_cinemachineDollyCart.m_Speed = Mathf.Lerp(_startSpeed, _targetSpeed, 1f / _smoothTime * Time.deltaTime);
                         break;
                     case LerpType.SmoothDamp:
                         _cinemachineDollyCart.m_Speed = UnityEngine.Mathf.SmoothDamp(_cinemachineDollyCart.m_Speed, _targetSpeed, ref _velocity, _smoothTime * Time.deltaTime);
@@ -107,30 +116,5 @@ namespace BlueOrb.Controller
                 
             }
         }
-
-        //public void AddItem(ItemDesc item)
-        //{
-        //    var itemConfigAndCount = _inventoryData.Items.FirstOrDefault(i => i.ItemConfig == item.ItemConfig);
-        //    // Prevent duplication of Items, just adjust the Qty if the item is already in the inventory
-        //    //ItemDesc itemToUpdate = null;
-        //    if (itemConfigAndCount == null)
-        //    {
-        //        itemConfigAndCount = item.Clone();
-        //        _inventoryData.Add(itemConfigAndCount);
-        //        //Items.Add(itemConfigAndCount);
-        //    }
-        //    else
-        //    {
-        //        //itemConfigAndCount = itemConfigAndCount;
-        //        itemConfigAndCount.Qty += item.Qty;
-        //    }
-            
-        //    MessageDispatcher.Instance.DispatchMsg("ItemAdded", 0, null, _componentRepository.GetId(), itemConfigAndCount);
-        //}
-
-        //public void ToggleMold(bool isAsc)
-        //{
-
-        //}
     }
 }

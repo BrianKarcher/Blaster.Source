@@ -60,6 +60,9 @@ namespace BlueOrb.Controller.Component
                     throw new Exception("No Projectile Config");
                 }
 
+                _ammoCount = projectileConfig.Ammo;
+                MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, _ammoCount);
+
                 if (_currentSecondaryProjectileConfig == projectileConfig)
                 {
                     Debug.Log("Player already has this projectile");
@@ -67,7 +70,6 @@ namespace BlueOrb.Controller.Component
                 }
 
                 _currentSecondaryProjectileConfig = projectileConfig;
-                _ammoCount = projectileConfig.Ammo;
 
                 var mainPlayer = EntityContainer.Instance.GetMainCharacter();
                 // Inform player object the projectile has changed
