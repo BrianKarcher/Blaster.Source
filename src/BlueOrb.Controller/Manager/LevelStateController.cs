@@ -22,6 +22,18 @@ namespace BlueOrb.Controller.Manager
     {
         public int _currentScore;
         public int _highScore;
+        private const string Id = "Level Controller";
+        //private bool _isLevelBegun = false;
+
+        public override string GetId()
+        {
+            return Id;
+        }
+
+        //public void SetLevelBegan(bool hasBegun)
+        //{
+        //    _isLevelBegun = hasBegun;
+        //}
         //public float _currentHp;
         //public float _maxHp;
 
@@ -94,7 +106,7 @@ namespace BlueOrb.Controller.Manager
 
         private void UpdateUI()
         {
-            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, string.Empty, "UI Controller", _currentScore);
+            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
             //MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (_currentHp, _maxHp));
         }
 
@@ -102,13 +114,17 @@ namespace BlueOrb.Controller.Manager
         {
             base.StartListening();
 
-            _addPointsIndex = MessageDispatcher.Instance.StartListening("AddPoints", "Level Controller", (data) =>
+            _addPointsIndex = MessageDispatcher.Instance.StartListening("AddPoints", Id, (data) =>
             {
                 var points = (PointsData)data.ExtraInfo;
                 _currentScore += points.Points;
                 MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
                 MessageDispatcher.Instance.DispatchMsg("CreatePointsLabel", 0f, _componentRepository.GetId(), "UI Controller", points);
             });
+            //_levelScoreIndex = MessageDispatcher.Instance.StartListening("LevelStart", _componentRepository.GetId(), (data) =>
+            //{
+            //    _isLevelBegun = true;
+            //});
             //_setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
             //{
             //    var projectileConfig = data.ExtraInfo as ProjectileConfig;
@@ -119,6 +135,13 @@ namespace BlueOrb.Controller.Manager
             //    var mainPlayer = EntityContainer.Instance.GetMainCharacter();
             //    MessageDispatcher.Instance.DispatchMsg("SetProjectile", 0f, "Level State", mainPlayer.GetId(), projectileConfig);
             //});
+        }
+
+        public override void StopListening()
+        {
+            base.StopListening();
+            MessageDispatcher.Instance.StopListening("AddPoints", _componentRepository.GetId(), _addPointsIndex);
+            //MessageDispatcher.Instance.StopListening("LevelStart", _componentRepository.GetId(), _levelScoreIndex);
         }
     }
 

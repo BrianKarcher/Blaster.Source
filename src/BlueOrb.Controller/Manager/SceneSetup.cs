@@ -20,6 +20,13 @@ namespace BlueOrb.Controller.Manager
         [SerializeField]
         private GameObject _actorsRoot;
 
+        [SerializeField]
+        private bool _startCountdownImmediately = false;
+
+        public bool StartCoundownImmediately => _startCountdownImmediately;
+
+        //private Cinemachine.
+
         private SpawnPointComponent[] _spawnPointComponents;
 
         private IEntity _player;
@@ -39,6 +46,7 @@ namespace BlueOrb.Controller.Manager
             if (SceneConfig != null)
             {
                 //EntityContainer.Instance.LevelStateController.SetMaxHp(SceneConfig.MaxHp);
+
                 MessageDispatcher.Instance.DispatchMsg("SetMaxHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
                 MessageDispatcher.Instance.DispatchMsg("SetCurrentHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
             }
@@ -50,7 +58,16 @@ namespace BlueOrb.Controller.Manager
             //    GameStateController.Instance.BeginNewGame = false;
             //}
             //PlacePlayerAtSpawnPoint();
+            //if (_startCountdownImmediately)
+            //{
+            //    StartCountdown();
+            //}
         }
+
+        //private void StartCountdown()
+        //{
+        //    MessageDispatcher.Instance.DispatchMsg("StartCountdown", 0f, string.Empty, "Level Controller", null);
+        //}
 
         public void InitAllEntities()
         {
