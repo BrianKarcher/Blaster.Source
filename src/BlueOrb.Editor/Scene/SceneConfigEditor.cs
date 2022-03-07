@@ -1,9 +1,7 @@
 ﻿using BlueOrb.Base.Config;
-using BlueOrb.Base.SpawnPoint;
 using BlueOrb.Controller.Manager;
 using BlueOrb.Controller.Scene;
 using BlueOrb.Editor.GUIStyles;
-using BlueOrb.Editor.UnityExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,58 +13,22 @@ namespace BlueOrb.Editor.Skill
     [CustomEditor(typeof(SceneConfig), true)]
     public class SceneConfigEditor : ConfigEditorBase<SceneConfig>
     {
-        private SceneSetup _sceneSetup;
         private bool _showSpawnPoints = false;
 
-        [MenuItem("Assets/Create/RQ/Scene Config")]
+        [MenuItem("Assets/Create/Blue Orb/Scene Config")]
         public static void CreateNewAsset()
         {
             var newAsset = CreateAsset("NewScene.asset");
-            //var gameConfig = Utils.FindAssetsByType<GameConfig>()[0];
-            //if (!gameConfig.SceneConfigs.Contains(baseAgent as SceneConfig))
-            //{
-            //    gameConfig.SceneConfigs.Add(baseAgent as SceneConfig);
-            //    EditorUtility.SetDirty(gameConfig);
-            //}
-            //gameConfig.Assets.Add(newAsset);
-            //EditorUtility.SetDirty(gameConfig);
-
-            //SceneConfig sceneData = ScriptableObject.CreateInstance<SceneConfig>();
-            //AssetDatabase.CreateAsset(sceneData, "Assets/Areas/NewScene.asset");
-            //EditorUtility.FocusProjectWindow();
-            //Selection.activeObject = sceneData;
         }
-
-        //public void OnSceneGUI()
-        //{
-        //    var ev = Event.current;
-        //}
 
         public override void OnInspectorGUI()
         {
             GUI.changed = false;
-            //var areaConfigGUIDs = AssetDatabase.FindAssets("t:AreaConfig");
-            //bool isFoundInArea = false;
-            //foreach (var guid in areaConfigGUIDs)
-            //{
-            //    var path = AssetDatabase.GUIDToAssetPath(guid);
-            //    var areaConfig = AssetDatabase.LoadAssetAtPath<AreaConfig>(path);
-            //    if (areaConfig.Scenes.Contains(agent))
-            //    {
-            //        isFoundInArea = true;
-            //        break;
-            //    }
-            //}
-
-            //if (!isFoundInArea)
-            //    EditorGUILayout.HelpBox("Not in an Area Config. Must be added to an Area Config.", MessageType.Error);
 
             EditorGUI.BeginChangeCheck();
             base.OnInspectorGUI();
             var oldScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(agent.SceneName);
             var newScene = EditorGUILayout.ObjectField("Scene", oldScene, typeof(SceneAsset), false) as SceneAsset;
-
-            //agent.SceneName = newScene.
 
             if (GUILayout.Button("Add/Enable in Build Settings"))
             {
@@ -83,16 +45,6 @@ namespace BlueOrb.Editor.Skill
                     editorBuildScene.enabled = true;
                 }
                 EditorBuildSettings.scenes = editorBuildSettingsScenes.ToArray();
-                //foreach (var sceneAsset in editorBuildSettingsScenes)
-                //{
-                //    string scenePath = AssetDatabase.GetAssetPath(sceneAsset);
-                //    if (!string.IsNullOrEmpty(scenePath))
-
-                //}
-
-                // Set the Build Settings window Scene list
-
-                //SceneManager.
             }
 
             if (GUILayout.Button("Disable in Build Settings"))
@@ -109,8 +61,6 @@ namespace BlueOrb.Editor.Skill
 
             agent.SceneName = EditorGUILayout.TextField("Scene Name", agent.SceneName ?? string.Empty);
 
-            //_variablesEditor.OnInspectorGUI(agent.Variables);
-
             _showSpawnPoints = GUILayout.Toggle(_showSpawnPoints, "Spawn Points", "Button");
 
             var spawnPoints = agent.SpawnPoints;
@@ -119,11 +69,8 @@ namespace BlueOrb.Editor.Skill
             {
                 if (GUILayout.Button("Add Spawn Point", GUILayout.Width(130)))
                 {
-                    //spriteAnimations.Add(new Animation.Common.SpriteAnimation());
-                    var newSpawnPoint = new SpawnPointConfig(); //KeyValuePair<string, List<SpriteAnimation>>(string.Empty, new List<SpriteAnimation>());
+                    var newSpawnPoint = new SpawnPointConfig();
                     newSpawnPoint.UniqueId = Guid.NewGuid().ToString();
-                    //newType.SpriteAnimations = new List<SpriteAnimation>();
-                    //spriteAnimationTypes.Add(newType);
                     spawnPoints.Add(newSpawnPoint);
                 }
 
@@ -145,7 +92,6 @@ namespace BlueOrb.Editor.Skill
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.LabelField("Unique Id", spawnPoint.UniqueId);
-                    //spawnPoint.SceneCameFrom = EditorGUILayout.ObjectField("Scene came from", spawnPoint.SceneCameFrom, typeof(SceneConfig)) as SceneConfig;
                     spawnPoint.IsInitialSpawnPoint = EditorGUILayout.Toggle("Initial Spawn Point", spawnPoint.IsInitialSpawnPoint);
                     spawnPoint.ExtraInfo = EditorGUILayout.TextField("Extra Info", spawnPoint.ExtraInfo);
 
@@ -159,8 +105,6 @@ namespace BlueOrb.Editor.Skill
             if (EditorGUI.EndChangeCheck())
             {
                 var newPath = AssetDatabase.GetAssetPath(newScene);
-                //var scenePathProperty = serializedObject.FindProperty("scenePath");
-                //scenePathProperty.stringValue = newPath;
                 agent.SceneName = newPath;
             }
 

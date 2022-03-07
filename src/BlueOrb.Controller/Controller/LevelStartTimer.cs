@@ -1,4 +1,6 @@
-﻿using BlueOrb.Common.Components;
+﻿using BlueOrb.Base.Config;
+using BlueOrb.Base.Manager;
+using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
 using System.Collections.Generic;
@@ -10,8 +12,6 @@ namespace BlueOrb.Controller.Controller
     public class LevelStartTimer : ComponentBase<LevelStartTimer>
     {
         [SerializeField]
-        private int _seconds;
-        [SerializeField]
         private bool _immediate = false;
         [SerializeField]
         private List<GameObject> gameObjectsToEnable;
@@ -21,17 +21,18 @@ namespace BlueOrb.Controller.Controller
         private int _currentTime;
         private float _startTime;
         private int _displayedTime;
+        private GameSettingsConfig gameSettingsConfig = GameStateController.Instance.GameSettingsConfig;
 
         protected override void Awake()
         {
             base.Awake();
-            _currentTime = _seconds;
-            _displayedTime = _seconds;
-            _startTime = Time.time;
         }
 
         private void Start()
         {
+            _currentTime = gameSettingsConfig.LevelStartSeconds;
+            _displayedTime = gameSettingsConfig.LevelStartSeconds;
+            _startTime = Time.time;
             if (_immediate)
             {
                 LevelStart();
@@ -43,8 +44,8 @@ namespace BlueOrb.Controller.Controller
 
         private void Update()
         {
-            int timeElapsed = (int)(Time.time - _startTime);
-            _currentTime = _seconds - timeElapsed;
+            int timeElapsed = (int)((Time.time - _startTime) * gameSettingsConfig.LevelStartCountdownSpeed);
+            _currentTime = gameSettingsConfig.LevelStartSeconds - timeElapsed;
             if (_currentTime <= 0)
             {
                 LevelStart();

@@ -9,6 +9,7 @@ using BlueOrb.Messaging;
 using UnityEngine;
 using System.Collections.Generic;
 using BlueOrb.Controller.Damage;
+using BlueOrb.Base.Config;
 
 namespace BlueOrb.Base.Manager
 {
@@ -22,6 +23,10 @@ namespace BlueOrb.Base.Manager
     [AddComponentMenu("BlueOrb/Manager/Game State")]
     public class GameStateController : ComponentBase<GameStateController>
     {
+        [SerializeField]
+        private GameSettingsConfig gameSettingsConfig;
+        public GameSettingsConfig GameSettingsConfig => gameSettingsConfig;
+
         //public SceneConfig NextSceneConfig { get; set; }
         //public string SpawnpointUniqueId { get; set; }
         public SceneConfig CurrentSceneConfig { get; set; }

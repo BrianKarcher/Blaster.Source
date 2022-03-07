@@ -1,0 +1,15 @@
+﻿using UnityEngine;
+
+namespace BlueOrb.Base.Config
+{
+    public class GameSettingsConfig : BaseConfig
+    {
+        [SerializeField]
+        private int levelStartSeconds = 3;
+        public int LevelStartSeconds => levelStartSeconds;
+
+        [SerializeField]
+        private float levelStartCountdownSpeed = 1.0f;
+        public float LevelStartCountdownSpeed => levelStartCountdownSpeed;
+    }
+}
