@@ -42,6 +42,7 @@ namespace BlueOrb.Controller.Triggers
             //var worldRotation = other.transform.rotation;
             //other.transform.parent = _cartJoint;
             var otherEntity = other.GetComponent<IEntity>();
+            otherEntity = otherEntity ?? other.attachedRigidbody.GetComponent<IEntity>();
             MessageDispatcher.Instance.DispatchMsg("SetTrack", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
             //var cart = otherEntity.Components.GetComponent<DollyCartComponent>();
             //cart.

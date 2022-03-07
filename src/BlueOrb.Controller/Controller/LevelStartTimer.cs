@@ -1,9 +1,7 @@
 ﻿using BlueOrb.Common.Components;
-using BlueOrb.Controller.Manager;
+using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Controller
@@ -12,22 +10,24 @@ namespace BlueOrb.Controller.Controller
     public class LevelStartTimer : ComponentBase<LevelStartTimer>
     {
         [SerializeField]
-        private float _seconds;
+        private int _seconds;
         [SerializeField]
         private bool _immediate = false;
         [SerializeField]
         private List<GameObject> gameObjectsToEnable;
-        //[SerializeField]
-        //private SceneSetup sceneSetup;
+        [SerializeField]
+        private GameObject _levelState;
 
-        private float _current;
-        private int _displayTime;
+        private int _currentTime;
+        private float _startTime;
+        private int _displayedTime;
 
         protected override void Awake()
         {
             base.Awake();
-            _current = 0;
-            _displayTime = 0;
+            _currentTime = _seconds;
+            _displayedTime = _seconds;
+            _startTime = Time.time;
         }
 
         private void Start()
@@ -35,29 +35,38 @@ namespace BlueOrb.Controller.Controller
             if (_immediate)
             {
                 LevelStart();
+                return;
             }
+            MessageDispatcher.Instance.DispatchMsg("ShowTimer", 0f, _componentRepository.GetId(), "Hud Controller", true);
+            SetDisplay();
         }
 
         private void Update()
         {
-            _current += Time.deltaTime;
-            if (_current > _seconds)
+            int timeElapsed = (int)(Time.time - _startTime);
+            _currentTime = _seconds - timeElapsed;
+            if (_currentTime <= 0)
             {
                 LevelStart();
             }
-            else if ((int) _current > _displayTime)
+            else if (_currentTime < _displayedTime)
             {
-                _displayTime = (int)_current;
-                MessageDispatcher.Instance.DispatchMsg("SetTimer", 0f, _componentRepository.GetId(), "Hud Controller", _displayTime);
+                _displayedTime = _currentTime;
+                SetDisplay();
             }
+        }
+
+        private void SetDisplay()
+        {
+            MessageDispatcher.Instance.DispatchMsg("SetTimer", 0f, _componentRepository.GetId(), "Hud Controller", _displayedTime);
         }
 
         private void LevelStart()
         {
-            //MessageDispatcher.Instance.DispatchMsg("LevelStart", 0f, _componentRepository.GetId(), "Hud Controller", _displayTime);
-
             // Broadcast a level start to everybody listening
-            MessageDispatcher.Instance.DispatchMsg("LevelStart", 0f, _componentRepository.GetId(), _componentRepository.GetId(), null);
+            MessageDispatcher.Instance.DispatchMsg("ShowTimer", 0f, _componentRepository.GetId(), "Hud Controller", false);
+            IEntity levelStateId = _levelState.GetComponent<IEntity>();
+            MessageDispatcher.Instance.DispatchMsg("LevelStart", 0f, _componentRepository.GetId(), levelStateId.GetId(), null);
             foreach (var go in gameObjectsToEnable)
             {
                 go.SetActive(true);
