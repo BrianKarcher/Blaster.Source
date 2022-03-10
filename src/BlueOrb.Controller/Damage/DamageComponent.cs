@@ -30,6 +30,7 @@ namespace BlueOrb.Controller.Damage
         protected override void Awake()
         {
             base.Awake();
+            Debug.LogError("Damage Component being used by " + this.name);
 
             if (_externalDamageDelegate == null)
             {

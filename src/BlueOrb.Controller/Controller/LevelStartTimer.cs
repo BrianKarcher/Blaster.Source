@@ -12,16 +12,16 @@ namespace BlueOrb.Controller.Controller
     public class LevelStartTimer : ComponentBase<LevelStartTimer>
     {
         [SerializeField]
-        private bool _immediate = false;
-        [SerializeField]
         private List<GameObject> gameObjectsToEnable;
         [SerializeField]
         private GameObject _levelState;
+        [SerializeField]
+        private string StartText = "START";
 
         private int _currentTime;
         private float _startTime;
         private int _displayedTime;
-        private GameSettingsConfig gameSettingsConfig = GameStateController.Instance.GameSettingsConfig;
+        private GameSettingsConfig gameSettingsConfig;
 
         protected override void Awake()
         {
@@ -30,10 +30,11 @@ namespace BlueOrb.Controller.Controller
 
         private void Start()
         {
+            gameSettingsConfig = GameStateController.Instance.GameSettingsConfig;
             _currentTime = gameSettingsConfig.LevelStartSeconds;
             _displayedTime = gameSettingsConfig.LevelStartSeconds;
             _startTime = Time.time;
-            if (_immediate)
+            if (gameSettingsConfig.ImmediateStartGame)
             {
                 LevelStart();
                 return;
@@ -46,7 +47,12 @@ namespace BlueOrb.Controller.Controller
         {
             int timeElapsed = (int)((Time.time - _startTime) * gameSettingsConfig.LevelStartCountdownSpeed);
             _currentTime = gameSettingsConfig.LevelStartSeconds - timeElapsed;
-            if (_currentTime <= 0)
+            //if (_currentTime < _displayedTime && _currentTime == 0)
+            //{
+            //    _displayedTime = _currentTime;
+            //    SetDisplayToStart();
+            //}
+            if (_currentTime < 0)
             {
                 LevelStart();
             }
@@ -61,6 +67,11 @@ namespace BlueOrb.Controller.Controller
         {
             MessageDispatcher.Instance.DispatchMsg("SetTimer", 0f, _componentRepository.GetId(), "Hud Controller", _displayedTime);
         }
+
+        //private void SetDisplayToStart()
+        //{
+        //    MessageDispatcher.Instance.DispatchMsg("SetTimer", 0f, _componentRepository.GetId(), "Hud Controller", StartText.ToString());
+        //}
 
         private void LevelStart()
         {

@@ -10,6 +10,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using BlueOrb.Controller.Damage;
 using BlueOrb.Base.Config;
+using BlueOrb.Controller.Manager;
 
 namespace BlueOrb.Base.Manager
 {
@@ -29,27 +30,35 @@ namespace BlueOrb.Base.Manager
 
         //public SceneConfig NextSceneConfig { get; set; }
         //public string SpawnpointUniqueId { get; set; }
-        public SceneConfig CurrentSceneConfig { get; set; }
-
-        // Player stats are a Game Instance-level object, things like MaxHp can be upgraded potentially
-        // and be retained forever in the save file
-        [SerializeField]
-        private EntityStatsData _entityStats = new EntityStatsData();
-        public EntityStatsData EntityStats => _entityStats;
+        //public SceneConfig CurrentSceneConfig { get; set; }
 
         /// <summary>
         /// The players current high scores in each level
         /// </summary>
         private Dictionary<string, int> _levelHighScore;
 
-        [SerializeField]
-        private Variables _globalVariables;
-        public Variables GlobalVariables => _globalVariables;
+        //[SerializeField]
+        //private Variables _globalVariables;
+        //public Variables GlobalVariables => _globalVariables;
         // TODO Set this to true when the player starts a new game!
         //public bool BeginNewGame { get; set; }
         //public bool ChangingScene { get; set; }
         [SerializeField]
         private SceneController _sceneController;
+
+        private LevelStateController levelStateController;
+        public LevelStateController LevelStateController 
+        { 
+            get
+            {
+                if (levelStateController == null)
+                {
+                    levelStateController = GameObject.FindObjectOfType<LevelStateController>();
+                }
+                return levelStateController;
+            }
+            set => levelStateController = value; 
+        }
 
         protected override void Awake()
         {
@@ -69,7 +78,7 @@ namespace BlueOrb.Base.Manager
                 return;
             base.Init();
 
-            GlobalVariables.Init();
+            //GlobalVariables.Init();
         }
 
         /// <summary>

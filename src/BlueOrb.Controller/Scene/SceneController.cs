@@ -32,6 +32,7 @@ namespace BlueOrb.Controller
 
         private bool isFading;
         private Coroutine _currentSceneSwitch = null;
+
         //private IEnumerator Start()
         //{
         //    if (SceneManager.sceneCount == 1)

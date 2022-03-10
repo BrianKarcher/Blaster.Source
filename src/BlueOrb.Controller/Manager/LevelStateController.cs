@@ -30,6 +30,11 @@ namespace BlueOrb.Controller.Manager
             return Id;
         }
 
+        private void Start()
+        {
+            GameStateController.Instance.LevelStateController = this;
+        }
+
         //public void SetLevelBegan(bool hasBegun)
         //{
         //    _isLevelBegun = hasBegun;
@@ -39,6 +44,7 @@ namespace BlueOrb.Controller.Manager
 
         [SerializeField]
         private ShooterComponent _shooterComponent;
+        [SerializeField] private string levelStartMessage;
         public IShooterComponent ShooterComponent => _shooterComponent;
 
         private long _addPointsIndex;
@@ -70,7 +76,7 @@ namespace BlueOrb.Controller.Manager
             //var stats = GameStateController.Instance.EntityStats;
             //_currentHp = _maxHp;
             //SetMaxHp(_maxHp);
-
+            MessageDispatcher.Instance.DispatchMsg(levelStartMessage, 0f, _componentRepository.GetId(), null, null);
             UpdateUI();
         }
 

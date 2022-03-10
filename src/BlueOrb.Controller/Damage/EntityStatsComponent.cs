@@ -1,5 +1,4 @@
-﻿using BlueOrb.Base.Manager;
-using BlueOrb.Common.Components;
+﻿using BlueOrb.Common.Components;
 using BlueOrb.Messaging;
 using UnityEngine;
 
@@ -11,13 +10,11 @@ namespace BlueOrb.Controller.Damage
         [SerializeField]
         private EntityStatsData _entityStats = new EntityStatsData();
 
-        private long _deflectedOtherIndex, _setMaxHpId, _setCurrentHpId;
+        private long _setMaxHpId, _setCurrentHpId;
 
         protected override void Awake()
         {
             base.Awake();
-            if (this.tag == "Player")
-                _entityStats = GameStateController.Instance.EntityStats;
         }
 
         public EntityStatsData GetEntityStats()
@@ -47,7 +44,6 @@ namespace BlueOrb.Controller.Damage
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening("DeflectedOther", _componentRepository.GetId(), _deflectedOtherIndex);
             MessageDispatcher.Instance.StopListening("SetMaxHp", _componentRepository.GetId(), _setMaxHpId);
             MessageDispatcher.Instance.StopListening("SetCurrentHp", _componentRepository.GetId(), _setCurrentHpId);
         }

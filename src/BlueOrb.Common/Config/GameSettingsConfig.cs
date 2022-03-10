@@ -11,5 +11,9 @@ namespace BlueOrb.Base.Config
         [SerializeField]
         private float levelStartCountdownSpeed = 1.0f;
         public float LevelStartCountdownSpeed => levelStartCountdownSpeed;
+
+        [SerializeField]
+        private bool immediateStartGame = false;
+        public bool ImmediateStartGame => immediateStartGame;
     }
 }
