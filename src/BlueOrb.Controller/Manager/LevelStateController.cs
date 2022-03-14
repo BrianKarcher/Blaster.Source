@@ -1,13 +1,9 @@
 ﻿using BlueOrb.Base.Interfaces;
-using BlueOrb.Base.Item;
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Component;
 using BlueOrb.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Manager
@@ -23,17 +19,10 @@ namespace BlueOrb.Controller.Manager
         public int _currentScore;
         public int _highScore;
         private const string Id = "Level Controller";
-        //private bool _isLevelBegun = false;
-
-        public override string GetId()
-        {
-            return Id;
-        }
-
-        private void Start()
-        {
-            GameStateController.Instance.LevelStateController = this;
-        }
+        private bool hasLevelBegun = false;
+        public bool HasLevelBegun => hasLevelBegun;
+        //[SerializeField] private string levelStartMessage = "LevelStart";
+        [SerializeField] private string setLevelBeginMessage = "SetLevelBegin";
 
         //public void SetLevelBegan(bool hasBegun)
         //{
@@ -44,10 +33,9 @@ namespace BlueOrb.Controller.Manager
 
         [SerializeField]
         private ShooterComponent _shooterComponent;
-        [SerializeField] private string levelStartMessage;
         public IShooterComponent ShooterComponent => _shooterComponent;
 
-        private long _addPointsIndex;
+        private long _addPointsIndex, setLevelBeginIndex;
 
         //private static LevelStateController _instance;
         //[HideInInspector]
@@ -64,19 +52,28 @@ namespace BlueOrb.Controller.Manager
         //    }
         //}
 
+        public override string GetId()
+        {
+            return Id;
+        }
+
         //private long _setProjectileId;
         protected override void Awake()
         {
+            base.Awake();
             EntityContainer.Instance.LevelStateController = this;
-            //StartLevel();
         }
+
+        //private void Start()
+        //{
+        //    GameStateController.Instance.LevelStateController = this;
+        //}
 
         public void StartLevel()
         {
-            //var stats = GameStateController.Instance.EntityStats;
-            //_currentHp = _maxHp;
-            //SetMaxHp(_maxHp);
-            MessageDispatcher.Instance.DispatchMsg(levelStartMessage, 0f, _componentRepository.GetId(), null, null);
+            Debug.Log("(LevelStateController) Set Level Begun variable");
+            hasLevelBegun = true;
+            //MessageDispatcher.Instance.DispatchMsg("LevelStart", 0f, _componentRepository.GetId(), null, null);
             UpdateUI();
         }
 
@@ -127,10 +124,13 @@ namespace BlueOrb.Controller.Manager
                 MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
                 MessageDispatcher.Instance.DispatchMsg("CreatePointsLabel", 0f, _componentRepository.GetId(), "UI Controller", points);
             });
-            //_levelScoreIndex = MessageDispatcher.Instance.StartListening("LevelStart", _componentRepository.GetId(), (data) =>
-            //{
-            //    _isLevelBegun = true;
-            //});
+            setLevelBeginIndex = MessageDispatcher.Instance.StartListening(setLevelBeginMessage, _componentRepository.GetId(), (data) =>
+            {
+                Debug.Log($"(LevelStateController) Received {setLevelBeginMessage} mesage");
+                if (data.ReceiverId != _componentRepository.GetId())
+                    return;
+                StartLevel();
+            });
             //_setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
             //{
             //    var projectileConfig = data.ExtraInfo as ProjectileConfig;
@@ -147,7 +147,7 @@ namespace BlueOrb.Controller.Manager
         {
             base.StopListening();
             MessageDispatcher.Instance.StopListening("AddPoints", _componentRepository.GetId(), _addPointsIndex);
-            //MessageDispatcher.Instance.StopListening("LevelStart", _componentRepository.GetId(), _levelScoreIndex);
+            MessageDispatcher.Instance.StopListening(setLevelBeginMessage, _componentRepository.GetId(), setLevelBeginIndex);
         }
     }
 

@@ -46,19 +46,19 @@ namespace BlueOrb.Base.Manager
         [SerializeField]
         private SceneController _sceneController;
 
-        private LevelStateController levelStateController;
-        public LevelStateController LevelStateController 
-        { 
-            get
-            {
-                if (levelStateController == null)
-                {
-                    levelStateController = GameObject.FindObjectOfType<LevelStateController>();
-                }
-                return levelStateController;
-            }
-            set => levelStateController = value; 
-        }
+        //private LevelStateController levelStateController;
+        //public LevelStateController LevelStateController 
+        //{ 
+        //    get
+        //    {
+        //        if (levelStateController == null)
+        //        {
+        //            levelStateController = GameObject.FindObjectOfType<LevelStateController>();
+        //        }
+        //        return levelStateController;
+        //    }
+        //    set => levelStateController = value; 
+        //}
 
         protected override void Awake()
         {
