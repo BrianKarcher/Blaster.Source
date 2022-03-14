@@ -46,6 +46,10 @@ namespace BlueOrb.Base.Manager
         [SerializeField]
         private SceneController _sceneController;
 
+        [SerializeField]
+        private AudioSource audioSource;
+        public AudioSource AudioSource => audioSource;
+
         //private LevelStateController levelStateController;
         //public LevelStateController LevelStateController 
         //{ 

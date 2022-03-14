@@ -54,10 +54,18 @@ namespace BlueOrb.Controller.Controller
             //}
             if (_currentTime < 0)
             {
+                if (GameStateController.Instance.GameSettingsConfig.StartSound != null)
+                {
+                    GameStateController.Instance.AudioSource?.PlayOneShot(GameStateController.Instance.GameSettingsConfig.StartSound);
+                }                
                 LevelStart();
             }
             else if (_currentTime < _displayedTime)
             {
+                if (GameStateController.Instance.GameSettingsConfig.CountdownSound != null)
+                {
+                    GameStateController.Instance.AudioSource?.PlayOneShot(GameStateController.Instance.GameSettingsConfig.CountdownSound);
+                }                
                 _displayedTime = _currentTime;
                 SetDisplay();
             }
