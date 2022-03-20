@@ -1,4 +1,5 @@
 ﻿using BlueOrb.Base.Interfaces;
+using BlueOrb.Common.Container;
 using BlueOrb.Controller.Component;
 using BlueOrb.Messaging;
 using System;
@@ -31,10 +32,10 @@ namespace BlueOrb.Controller.Shooter
 
         //public IProjectileItem CurrentSecondaryProjectile => currentSecondaryProjectile;
 
-        public ToggleDirection ToggleDirection = ToggleDirection.Right;
+        private ToggleDirection ToggleDirection = ToggleDirection.Right;
         private List<IProjectileItem> projectileInventory = new List<IProjectileItem>();
         //private Dictionary<string, int> projectilesSet = new Dictionary<string, int>();
-        public int currentIndex;
+        private int currentIndex;
 
         public void Toggle(bool right)
         {
@@ -50,6 +51,9 @@ namespace BlueOrb.Controller.Shooter
             this.currentIndex = index;
             CheckBounds();
             //GetCurrentItem()?.Select();
+            var mainPlayer = EntityContainer.Instance.GetMainCharacter();
+            // Inform player object the projectile has changed
+            MessageDispatcher.Instance.DispatchMsg(this.setProjectileHudMessage, 0f, null, mainPlayer.GetId(), null);
             MessageDispatcher.Instance.DispatchMsg(this.setProjectileHudMessage, 0f, null, "Hud Controller", this.currentIndex);
         }
 
@@ -85,8 +89,13 @@ namespace BlueOrb.Controller.Shooter
         public void Add(IProjectileItem projectileItem)
         {
             this.projectileInventory.Add(projectileItem);
-            //this.projectilesSet.Add(projectileItem.ProjectileConfig.UniqueId, this.projectileInventory.Count - 1);
             MessageDispatcher.Instance.DispatchMsg(this.addProjectileTypeHudMessage, 0f, null, "Hud Controller", projectileItem);
+            if (currentIndex == -1)
+            {
+                SetCurrentItem(0);
+            }
+            //this.projectilesSet.Add(projectileItem.ProjectileConfig.UniqueId, this.projectileInventory.Count - 1);
+            
         }
 
         public void Remove(IProjectileItem projectileItem)

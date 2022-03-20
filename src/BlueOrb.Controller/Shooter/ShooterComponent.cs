@@ -37,31 +37,11 @@ namespace BlueOrb.Controller.Component
 
         [SerializeField] private string _ammoBoxShotMessage = "AmmoBoxShot";
 
-        //[SerializeField] private string _changeProjectileSendMessage;
-        //[SerializeField] private string deleteCurrentAndChangeProjectileHudMessage = "DeleteCurrentAndChangeProjectile";
-
         [SerializeField] private string _hudControllerName;
 
-        //private ProjectileConfig _currentProjectile;
-
-        private long ammoBoxShotIndex;
-        //public int _ammoCount;
         [SerializeField] private string _setAmmoMessage;
 
-        private Dictionary<string, ProjectileItem> projectileInventory;
-
-        protected override void Awake()
-        {
-            projectileInventory = new Dictionary<string, ProjectileItem>();
-        }
-
-        //        [SerializeField] private float _speed;
-
-        //        //protected override void Awake()
-        //        //{
-        //        //    base.Awake();
-        //        //    Debug.Log("Block Component is awake!");
-        //        //}
+        private long ammoBoxShotIndex;
 
         public override void StartListening()
         {
@@ -76,38 +56,20 @@ namespace BlueOrb.Controller.Component
                     throw new Exception("No Projectile Config");
                 }
 
-                if (!this.projectileInventory.ContainsKey(projectileConfig.UniqueId))
+                if (!this.projectileToggle.Contains(projectileConfig.UniqueId))
                 {
-                    this.projectileInventory.Add(projectileConfig.UniqueId, new ProjectileInventory()
+                    ProjectileItem projectileItem = new ProjectileItem()
                     {
-                        CurrentAmmo = 0,
+                        CurrentAmmo = projectileConfig.Ammo,
                         ProjectileConfig = projectileConfig
-                    });
-                }
-
-                ProjectileItem projectileItem = this.projectileInventory[projectileConfig.UniqueId];
-
-                projectileItem.CurrentAmmo += projectileConfig.Ammo;
-                
-
-                //if (_currentSecondaryProjectileConfig == projectileConfig)
-                //{
-                //    Debug.Log("Player already has this projectile");
-                //    return;
-                //}
-
-                var mainPlayer = EntityContainer.Instance.GetMainCharacter();
-                if (currentSecondaryProjectile == null)
-                {
-                    currentSecondaryProjectile = projectileInventory;
-                    // Inform player object the projectile has changed
-                    MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, mainPlayer.GetId(), null);
-                    MessageDispatcher.Instance.DispatchMsg(_changeProjectileSendMessage, 0f, MessageId, _hudControllerName, data.ExtraInfo);
+                    };
+                    this.projectileToggle.Add(projectileItem);
                 }
                 else
                 {
-                    // Otherwise just change the ammo count
-                    MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileInventory);
+                    IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
+                    projectileItem.CurrentAmmo += projectileConfig.Ammo;
+                    MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
                 }
             });
         }
