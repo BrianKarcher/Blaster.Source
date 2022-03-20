@@ -1,4 +1,5 @@
-﻿using BlueOrb.Base.Item;
+﻿using BlueOrb.Base.Interfaces;
+using BlueOrb.Base.Item;
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
@@ -139,8 +140,8 @@ namespace BlueOrb.Controller.Component
         public void ShootSecondaryProjectile()
         {
             Debug.Log("Shooting Secondary Projectile");
-            var projectileConfig = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectileConfig;
-            ProcessShoot(projectileConfig);
+            var projectileInventory = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectile;
+            ProcessShoot(projectileInventory.ProjectileConfig);
             DecreaseAmmo();
         }
 

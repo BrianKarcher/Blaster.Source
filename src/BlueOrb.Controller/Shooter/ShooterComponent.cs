@@ -4,6 +4,7 @@ using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Player;
+using BlueOrb.Controller.Shooter;
 using BlueOrb.Messaging;
 using BlueOrb.Physics;
 using System;
@@ -12,7 +13,7 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Component
 {
-    public class ProjectileInventory : IProjectileInventory
+    public class ProjectileItem : IProjectileItem
     {
         public int CurrentAmmo { get; set; }
         public ProjectileConfig ProjectileConfig { get; set; }
@@ -28,31 +29,30 @@ namespace BlueOrb.Controller.Component
         [SerializeField]
         private string MessageId = "Shooter Controller";
 
+        [SerializeField]
+        private ProjectileToggle projectileToggle;
+
         [SerializeField] private ProjectileConfig _currentMainProjectileConfig;
         public ProjectileConfig CurrentMainProjectileConfig => _currentMainProjectileConfig;
 
-        // Gets set when the player shoots an ammo box
-        [SerializeField] private IProjectileInventory currentSecondaryProjectile;
-        public IProjectileInventory CurrentSecondaryProjectile => currentSecondaryProjectile;
+        [SerializeField] private string _ammoBoxShotMessage = "AmmoBoxShot";
 
-        [SerializeField] private string _changeProjectileReceiveMessage;
+        //[SerializeField] private string _changeProjectileSendMessage;
+        //[SerializeField] private string deleteCurrentAndChangeProjectileHudMessage = "DeleteCurrentAndChangeProjectile";
 
-        [SerializeField] private string _changeProjectileSendMessage;
-        [SerializeField] private string deleteCurrentAndChangeProjectileHudMessage = "DeleteCurrentAndChangeProjectile";
-        [SerializeField] private string setProjectileHudMessage = "SetProjectile";
         [SerializeField] private string _hudControllerName;
 
         //private ProjectileConfig _currentProjectile;
 
-        private long _projectileIndex;
+        private long ammoBoxShotIndex;
         //public int _ammoCount;
         [SerializeField] private string _setAmmoMessage;
 
-        private Dictionary<string, ProjectileInventory> projectileInventory;
+        private Dictionary<string, ProjectileItem> projectileInventory;
 
         protected override void Awake()
         {
-            projectileInventory = new Dictionary<string, ProjectileInventory>();
+            projectileInventory = new Dictionary<string, ProjectileItem>();
         }
 
         //        [SerializeField] private float _speed;
@@ -66,7 +66,7 @@ namespace BlueOrb.Controller.Component
         public override void StartListening()
         {
             base.StartListening();
-            _projectileIndex = MessageDispatcher.Instance.StartListening(_changeProjectileReceiveMessage, MessageId, (data) =>
+            this.ammoBoxShotIndex = MessageDispatcher.Instance.StartListening(_ammoBoxShotMessage, MessageId, (data) =>
             {
                 var projectileConfig = data.ExtraInfo as ProjectileConfig;
                 Debug.Log($"(Shooter Controller) Setting Secondary Projectile to {projectileConfig?.Name}");
@@ -85,9 +85,9 @@ namespace BlueOrb.Controller.Component
                     });
                 }
 
-                ProjectileInventory projectileInventory = this.projectileInventory[projectileConfig.UniqueId];
+                ProjectileItem projectileItem = this.projectileInventory[projectileConfig.UniqueId];
 
-                projectileInventory.CurrentAmmo += projectileConfig.Ammo;
+                projectileItem.CurrentAmmo += projectileConfig.Ammo;
                 
 
                 //if (_currentSecondaryProjectileConfig == projectileConfig)
@@ -115,21 +115,20 @@ namespace BlueOrb.Controller.Component
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening(_changeProjectileReceiveMessage, MessageId, _projectileIndex);
+            MessageDispatcher.Instance.StopListening(_ammoBoxShotMessage, MessageId, this.ammoBoxShotIndex);
         }
 
         public void AddAmmo(int ammo)
         {
-            this.currentSecondaryProjectile.CurrentAmmo += ammo;
-            if (this.currentSecondaryProjectile.CurrentAmmo <= 0)
+            IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
+            projectileItem.CurrentAmmo += ammo;
+            if (projectileItem.CurrentAmmo <= 0)
             {
-                this.projectileInventory.Remove(this.currentSecondaryProjectile.ProjectileConfig.UniqueId);
-                this.currentSecondaryProjectile = null;
-                MessageDispatcher.Instance.DispatchMsg(deleteCurrentAndChangeProjectileHudMessage, 0f, MessageId, _hudControllerName, null);
+                this.projectileToggle.Remove(projectileItem);
             }
             else
             {
-                MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, _ammoCount);
+                MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
             }            
         }
     }
