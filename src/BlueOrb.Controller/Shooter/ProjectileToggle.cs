@@ -22,7 +22,7 @@ namespace BlueOrb.Controller.Shooter
         //private IProjectileItem currentSecondaryProjectile;
 
         [SerializeField] 
-        private string setProjectileHudMessage = "SetProjectile";
+        private string selectProjectileHudMessage = "SelectProjectile";
 
         [SerializeField] 
         private string addProjectileTypeHudMessage = "AddProjectileType";
@@ -53,8 +53,8 @@ namespace BlueOrb.Controller.Shooter
             //GetCurrentItem()?.Select();
             var mainPlayer = EntityContainer.Instance.GetMainCharacter();
             // Inform player object the projectile has changed
-            MessageDispatcher.Instance.DispatchMsg(this.setProjectileHudMessage, 0f, null, mainPlayer.GetId(), null);
-            MessageDispatcher.Instance.DispatchMsg(this.setProjectileHudMessage, 0f, null, "Hud Controller", this.currentIndex);
+            MessageDispatcher.Instance.DispatchMsg(this.selectProjectileHudMessage, 0f, null, mainPlayer.GetId(), this.currentIndex);
+            MessageDispatcher.Instance.DispatchMsg(this.selectProjectileHudMessage, 0f, null, "Hud Controller", this.currentIndex);
         }
 
         private void CheckBounds()

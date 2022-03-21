@@ -39,9 +39,11 @@ namespace BlueOrb.Controller.Component
 
         [SerializeField] private string _hudControllerName;
 
-        [SerializeField] private string _setAmmoMessage;
+        [SerializeField] private string _setAmmoMessage = "SetAmmo";
 
         private long ammoBoxShotIndex;
+
+        public IProjectileItem CurrentSecondaryProjectile => projectileToggle.GetSelectedProjectile();
 
         public override void StartListening()
         {
@@ -49,7 +51,7 @@ namespace BlueOrb.Controller.Component
             this.ammoBoxShotIndex = MessageDispatcher.Instance.StartListening(_ammoBoxShotMessage, MessageId, (data) =>
             {
                 var projectileConfig = data.ExtraInfo as ProjectileConfig;
-                Debug.Log($"(Shooter Controller) Setting Secondary Projectile to {projectileConfig?.Name}");
+                Debug.Log($"(Shooter Controller) Acquired Ammo Box {projectileConfig?.Name}");
 
                 if (projectileConfig == null)
                 {
@@ -91,7 +93,7 @@ namespace BlueOrb.Controller.Component
             else
             {
                 MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
-            }            
+            }
         }
     }
 }
