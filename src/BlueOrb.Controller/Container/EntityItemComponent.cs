@@ -10,6 +10,8 @@ namespace BlueOrb.Controller.Block
     {
         [SerializeField]
         private ItemConfig _item;
+        [SerializeField]
+        private string ammoBoxShotMessage = "AmmoBoxShot";
 
         public override void StartListening()
         {
@@ -18,7 +20,7 @@ namespace BlueOrb.Controller.Block
             MessageDispatcher.Instance.StartListening("SetSecondaryProjectile", _componentRepository.GetId(), (data) =>
             {
                 Debug.Log($"(EntityItem) Setting Secondary Projectile to {_item?.Name}");
-                MessageDispatcher.Instance.DispatchMsg("SetSecondaryProjectile", 0f, _componentRepository.GetId(), "Shooter Controller", _item);
+                MessageDispatcher.Instance.DispatchMsg(this.ammoBoxShotMessage, 0f, _componentRepository.GetId(), "Shooter Controller", _item);
             });
             
         }

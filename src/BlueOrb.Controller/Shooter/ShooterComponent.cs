@@ -37,11 +37,13 @@ namespace BlueOrb.Controller.Component
 
         [SerializeField] private string _ammoBoxShotMessage = "AmmoBoxShot";
 
+        [SerializeField] private string toggleProjectileMessage = "ToggleProjectile";
+
         [SerializeField] private string _hudControllerName;
 
         [SerializeField] private string _setAmmoMessage = "SetAmmo";
 
-        private long ammoBoxShotIndex;
+        private long ammoBoxShotIndex, toggleProjectileIndex;
 
         public IProjectileItem CurrentSecondaryProjectile => projectileToggle.GetSelectedProjectile();
 
@@ -74,12 +76,20 @@ namespace BlueOrb.Controller.Component
                     MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
                 }
             });
+
+            this.toggleProjectileIndex = MessageDispatcher.Instance.StartListening(this.toggleProjectileMessage, MessageId, (data) =>
+            {
+                float direction = (float)data.ExtraInfo;
+                Debug.Log($"(Shooter Controller) Toggle Projectile to {direction}");
+                projectileToggle.Toggle(direction > 0);
+            });
         }
 
         public override void StopListening()
         {
             base.StopListening();
             MessageDispatcher.Instance.StopListening(_ammoBoxShotMessage, MessageId, this.ammoBoxShotIndex);
+            MessageDispatcher.Instance.StopListening(this.toggleProjectileMessage, MessageId, this.toggleProjectileIndex);
         }
 
         public void AddAmmo(int ammo)

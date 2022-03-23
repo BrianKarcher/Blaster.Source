@@ -41,6 +41,7 @@ namespace BlueOrb.Controller.Controller
             }
             MessageDispatcher.Instance.DispatchMsg("ShowTimer", 0f, _componentRepository.GetId(), "Hud Controller", true);
             SetDisplay();
+            PlayCountdownSound();
         }
 
         private void Update()
@@ -53,22 +54,30 @@ namespace BlueOrb.Controller.Controller
             //    SetDisplayToStart();
             //}
             if (_currentTime < 0)
-            {
-                if (GameStateController.Instance.GameSettingsConfig.StartSound != null)
-                {
-                    GameStateController.Instance.AudioSource?.PlayOneShot(GameStateController.Instance.GameSettingsConfig.StartSound);
-                }                
+            {            
                 LevelStart();
             }
             else if (_currentTime < _displayedTime)
             {
                 if (GameStateController.Instance.GameSettingsConfig.CountdownSound != null)
                 {
-                    GameStateController.Instance.AudioSource?.PlayOneShot(GameStateController.Instance.GameSettingsConfig.CountdownSound);
+                    if (_currentTime == 0)
+                    {
+                        GameStateController.Instance.AudioSource?.PlayOneShot(GameStateController.Instance.GameSettingsConfig.StartSound);
+                    }
+                    else
+                    {
+                        PlayCountdownSound();
+                    }
                 }                
                 _displayedTime = _currentTime;
                 SetDisplay();
             }
+        }
+
+        private void PlayCountdownSound()
+        {
+            GameStateController.Instance.AudioSource?.PlayOneShot(GameStateController.Instance.GameSettingsConfig.CountdownSound);
         }
 
         private void SetDisplay()

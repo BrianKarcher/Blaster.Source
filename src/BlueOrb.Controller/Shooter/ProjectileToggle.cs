@@ -9,12 +9,13 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Shooter
 {
-    public enum ToggleDirection
-    {
-        Right = 0,
-        Left = 1
-    }
+    //public enum ToggleDirection
+    //{
+    //    Right = 0,
+    //    Left = 1
+    //}
 
+    [Serializable]
     public class ProjectileToggle
     {
         // Gets set when the player shoots an ammo box
@@ -32,16 +33,14 @@ namespace BlueOrb.Controller.Shooter
 
         //public IProjectileItem CurrentSecondaryProjectile => currentSecondaryProjectile;
 
-        private ToggleDirection ToggleDirection = ToggleDirection.Right;
+        //private ToggleDirection ToggleDirection = ToggleDirection.Right;
         private List<IProjectileItem> projectileInventory = new List<IProjectileItem>();
         //private Dictionary<string, int> projectilesSet = new Dictionary<string, int>();
         private int currentIndex;
 
-        public void Toggle(bool right)
+        public void Toggle(bool isRight)
         {
-            if (ToggleDirection != ToggleDirection.Right)
-                right = !right;
-            var newItem = right ? currentIndex - 1 : currentIndex + 1;
+            var newItem = isRight ? currentIndex + 1 : currentIndex - 1;
             SetCurrentItem(newItem);
         }
 

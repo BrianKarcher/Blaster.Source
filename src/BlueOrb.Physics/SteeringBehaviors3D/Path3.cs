@@ -119,7 +119,7 @@ namespace BlueOrb.AI
                 {
                     if (_pathType == PathType.Looped)
                     {
-                        Debug.Log("Setting waypoint back to 0 because hit end of loop");
+                        //Debug.Log("Setting waypoint back to 0 because hit end of loop");
                         _curWaypoint = 0;
                         return;
                     }
@@ -141,7 +141,7 @@ namespace BlueOrb.AI
                 {
                     if (_pathType == PathType.Looped)
                     {
-                        Debug.Log("Setting waypoint back to " + lastWaypoint + " because hit end of loop");
+                        //Debug.Log("Setting waypoint back to " + lastWaypoint + " because hit end of loop");
                         _curWaypoint = lastWaypoint;
                         return;
                     }
@@ -168,7 +168,7 @@ namespace BlueOrb.AI
             //}
 
             _curWaypoint = _pathWalkingDirection == PathWalkingDirection.Forwards ? _curWaypoint + 1 : _curWaypoint - 1;
-            Debug.Log("Setting waypoint to " + _curWaypoint);
+            //Debug.Log("Setting waypoint to " + _curWaypoint);
         }
 
         //creates a random path which is bound by rectangle described by
