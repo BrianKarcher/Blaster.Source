@@ -62,6 +62,7 @@ namespace BlueOrb.Editor
             if (GUILayout.Button("Generate UniqueId"))
             {
                 agent.UniqueId = Guid.NewGuid().ToString();
+                Dirty();
             }
         }
     }

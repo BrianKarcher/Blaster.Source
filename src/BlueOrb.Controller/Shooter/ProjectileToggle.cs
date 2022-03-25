@@ -40,28 +40,43 @@ namespace BlueOrb.Controller.Shooter
 
         public void Toggle(bool isRight)
         {
+            if (projectileInventory.Count == 0)
+            {
+                currentIndex = 0;
+                return;
+            }
             var newItem = isRight ? currentIndex + 1 : currentIndex - 1;
             SetCurrentItem(newItem);
         }
 
         public void SetCurrentItem(int index)
         {
+            Debug.Log($"(ProjectileToggle) Setting index to {index}");
             //GetCurrentItem()?.UnSelect();
             this.currentIndex = index;
-            CheckBounds();
+            this.currentIndex = CheckBounds(this.currentIndex);
             //GetCurrentItem()?.Select();
             var mainPlayer = EntityContainer.Instance.GetMainCharacter();
             // Inform player object the projectile has changed
             MessageDispatcher.Instance.DispatchMsg(this.selectProjectileHudMessage, 0f, null, mainPlayer.GetId(), this.currentIndex);
-            MessageDispatcher.Instance.DispatchMsg(this.selectProjectileHudMessage, 0f, null, "Hud Controller", this.currentIndex);
+            SelectItemInHud();
         }
 
-        private void CheckBounds()
+        private int CheckBounds(int index)
         {
-            if (currentIndex < 0)
-                currentIndex = projectileInventory.Count - 1;
-            if (currentIndex > projectileInventory.Count - 1)
-                currentIndex = 0;
+            if (projectileInventory.Count == 0)
+            {
+                return -1;
+            }
+            if (index < 0)
+            {
+                return projectileInventory.Count - 1;
+            }                
+            if (index > projectileInventory.Count - 1)
+            {
+                return 0;
+            }
+            return index;
         }
 
         public bool Contains(string uniqueId)
@@ -109,13 +124,20 @@ namespace BlueOrb.Controller.Shooter
                 }
             }
             this.projectileInventory.RemoveAt(index);
+            this.currentIndex = CheckBounds(this.currentIndex);
             MessageDispatcher.Instance.DispatchMsg(this.removeProjectileTypeHudMessage, 0f, null, "Hud Controller", index);
+            SelectItemInHud();
             //this.projectileInventory.RemoveAt(this.projectilesSet[projectileItem.ProjectileConfig.UniqueId]);
             //this.projectilesSet.Remove(projectileItem.ProjectileConfig.UniqueId);
             //for (int i = 0; i < this.projectileInventory.Count; i++)
             //{
 
             //}
+        }
+
+        private void SelectItemInHud()
+        {
+            MessageDispatcher.Instance.DispatchMsg(this.selectProjectileHudMessage, 0f, null, "Hud Controller", this.currentIndex);
         }
     }
 }

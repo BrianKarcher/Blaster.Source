@@ -132,14 +132,14 @@ namespace BlueOrb.Controller.Component
 
         public void ShootMainProjectile()
         {
-            Debug.Log("Shooting Main Projectile");
+            //Debug.Log("Shooting Main Projectile");
             var projectileConfig = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentMainProjectileConfig;
             ProcessShoot(projectileConfig);
         }
 
         public void ShootSecondaryProjectile()
         {
-            Debug.Log("Shooting Secondary Projectile");
+            //Debug.Log("Shooting Secondary Projectile");
             var projectileInventory = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectile;
             ProcessShoot(projectileInventory.ProjectileConfig);
             DecreaseAmmo();
@@ -255,7 +255,7 @@ namespace BlueOrb.Controller.Component
             //if (!_camera.Raycast(1000f, _layerMask, out var hitInfo))
             if (!rtn)
             {
-                Debug.Log("Shooter Raycast No Hit");
+                //Debug.Log("Shooter Raycast No Hit");
                 // If raycast no-hit, just point down the camera forward direction very far
                 return _camera.transform.TransformPoint(new Vector3(0f, 0f, 1000f)) - _spawnPointPosition.transform.position;
             }

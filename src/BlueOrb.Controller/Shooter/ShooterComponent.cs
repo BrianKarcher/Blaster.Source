@@ -53,7 +53,7 @@ namespace BlueOrb.Controller.Component
             this.ammoBoxShotIndex = MessageDispatcher.Instance.StartListening(_ammoBoxShotMessage, MessageId, (data) =>
             {
                 var projectileConfig = data.ExtraInfo as ProjectileConfig;
-                Debug.Log($"(Shooter Controller) Acquired Ammo Box {projectileConfig?.Name}");
+                Debug.Log($"(Shooter Controller) Acquired Ammo Box {projectileConfig?.Name}, unique id {projectileConfig.UniqueId}");
 
                 if (projectileConfig == null)
                 {
@@ -62,6 +62,7 @@ namespace BlueOrb.Controller.Component
 
                 if (!this.projectileToggle.Contains(projectileConfig.UniqueId))
                 {
+                    Debug.Log($"(ShooterComponent) Projectile Toggle does NOT contain {projectileConfig.Name}, adding to toggle list");
                     ProjectileItem projectileItem = new ProjectileItem()
                     {
                         CurrentAmmo = projectileConfig.Ammo,
@@ -71,7 +72,9 @@ namespace BlueOrb.Controller.Component
                 }
                 else
                 {
+                    Debug.Log($"(ShooterComponent) Projectile Toggle DOES contain {projectileConfig.Name}, adding to ammo");
                     IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
+                    Debug.Log($"(ShooterComponent) Adding {projectileConfig.Ammo} ammo to {projectileItem.CurrentAmmo} for {projectileItem.ProjectileConfig.name}");
                     projectileItem.CurrentAmmo += projectileConfig.Ammo;
                     MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
                 }
