@@ -147,7 +147,7 @@ namespace BlueOrb.Controller.Component
 
         private void DecreaseAmmo()
         {
-            EntityContainer.Instance.LevelStateController.ShooterComponent.AddAmmo(-1);
+            EntityContainer.Instance.LevelStateController.ShooterComponent.AddAmmoToSelected(-1);
         }
 
         private void ProcessShoot(ProjectileConfig projectileConfig)

@@ -6,6 +6,6 @@ namespace BlueOrb.Base.Interfaces
     {
         ProjectileConfig CurrentMainProjectileConfig { get; }
         IProjectileItem CurrentSecondaryProjectile { get; }
-        void AddAmmo(int ammo);
+        void AddAmmoToSelected(int ammo);
     }
 }

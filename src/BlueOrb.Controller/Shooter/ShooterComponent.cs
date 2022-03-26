@@ -76,7 +76,7 @@ namespace BlueOrb.Controller.Component
                     IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
                     Debug.Log($"(ShooterComponent) Adding {projectileConfig.Ammo} ammo to {projectileItem.CurrentAmmo} for {projectileItem.ProjectileConfig.name}");
                     projectileItem.CurrentAmmo += projectileConfig.Ammo;
-                    MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
+                    MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, (projectileItem.ProjectileConfig.UniqueId, projectileItem.CurrentAmmo));
                 }
             });
 
@@ -95,7 +95,7 @@ namespace BlueOrb.Controller.Component
             MessageDispatcher.Instance.StopListening(this.toggleProjectileMessage, MessageId, this.toggleProjectileIndex);
         }
 
-        public void AddAmmo(int ammo)
+        public void AddAmmoToSelected(int ammo)
         {
             IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
             projectileItem.CurrentAmmo += ammo;
@@ -105,7 +105,7 @@ namespace BlueOrb.Controller.Component
             }
             else
             {
-                MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, projectileItem.CurrentAmmo);
+                MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, (projectileItem.ProjectileConfig.UniqueId, projectileItem.CurrentAmmo));
             }
         }
     }
