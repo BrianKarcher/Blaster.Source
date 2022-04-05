@@ -38,7 +38,8 @@ namespace BlueOrb.Physics
         hide3d = 31,
         //flock3d = 32,
         offset_pursuit3d = 33,
-        radius_clamp3d = 34
+        radius_clamp3d = 34,
+        lateral_wave = 35
     }
 
     public class behavior_typeComparer : IEqualityComparer<behavior_type>

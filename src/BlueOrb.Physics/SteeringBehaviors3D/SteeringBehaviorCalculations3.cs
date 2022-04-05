@@ -24,6 +24,12 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             return (DesiredVelocity - entity.GetVelocity3());
         }
 
+        public static Vector3 LateralWave(IPhysicsComponent entity)
+            => entity.transform.right * Mathf.Sin(Time.time);
+
+        public static Vector3 VerticalWave(IPhysicsComponent entity)
+            => entity.transform.up * Mathf.Sin(Time.time);
+
         //----------------------------- Flee -------------------------------------
         //
         //  Does the opposite of Seek

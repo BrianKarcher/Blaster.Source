@@ -19,7 +19,7 @@ namespace BlueOrb.Physics
         /// </summary>
         public bool ProjectOnGround = true;
 
-        private Dictionary<behavior_type, ISteeringBehavior> _allSteeringBehaviors;
+        private Dictionary<behavior_type, ISteeringBehavior> _cacheSteeringBehaviors;
         private Dictionary<behavior_type, ISteeringBehavior> _steeringBehaviors;
         //public IPhysicsAffector SteeringPhysicsAffector { get; set; }
 
@@ -94,7 +94,7 @@ namespace BlueOrb.Physics
             _summingMethod = summing_method.weighted_average;
 
             _steeringBehaviors = new Dictionary<behavior_type, ISteeringBehavior>();
-            _allSteeringBehaviors = new Dictionary<behavior_type, ISteeringBehavior>();
+            _cacheSteeringBehaviors = new Dictionary<behavior_type, ISteeringBehavior>();
         }
 
         public ISteeringBehavior CreateBehavior(behavior_type behaviorType)
@@ -153,6 +153,8 @@ namespace BlueOrb.Physics
                     return new Wander2(this, _transform);
                 case behavior_type.wander3d:
                     return new Wander3(this, _transform);
+                case behavior_type.lateral_wave:
+                    return new LateralWave2(this);
             }
 
             //_allSteeringBehaviors = new Dictionary<behavior_type, ISteeringBehavior>(new behavior_typeComparer());
@@ -224,10 +226,10 @@ namespace BlueOrb.Physics
         public void TurnOn(behavior_type behaviortype)
         {
             // _allSteeringBehaviors caches the steering behaviors
-            if (!_allSteeringBehaviors.TryGetValue(behaviortype, out var steeringBehavior))
+            if (!_cacheSteeringBehaviors.TryGetValue(behaviortype, out var steeringBehavior))
             {
                 steeringBehavior = CreateBehavior(behaviortype);
-                _allSteeringBehaviors[behaviortype] = steeringBehavior;
+                _cacheSteeringBehaviors[behaviortype] = steeringBehavior;
             }
             _steeringBehaviors[behaviortype] = steeringBehavior;
             CalculateSteeringModes();
