@@ -37,6 +37,8 @@ namespace BlueOrb.Physics
         //a pointer to the owner of this instance
         public IPhysicsComponent Entity { get; set; }
 
+        public SteeringData SteeringData => Entity.GetPhysicsData().SteeringData;
+
         //public CollisionComponent CollisionComponent { get; set; }
 
         //the steering force created by the combined effect of all

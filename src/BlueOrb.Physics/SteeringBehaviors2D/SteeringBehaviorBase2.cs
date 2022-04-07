@@ -93,6 +93,11 @@ namespace BlueOrb.Physics.SteeringBehaviors2D
             return _constantWeight; //_steeringBehaviorManager.SteeringPhysicsAffector.Mass; //_weight;
         }
 
+        protected void SetWeight(float weight)
+        {
+            _constantWeight = weight;
+        }
+
         protected abstract Vector2 CalculateForce();
 
         public float GetConstantWeight()

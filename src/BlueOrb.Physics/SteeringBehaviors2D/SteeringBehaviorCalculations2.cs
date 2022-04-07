@@ -29,7 +29,7 @@ namespace BlueOrb.Physics.SteeringBehaviors2D
         }
 
         public static Vector2 LateralWave(IPhysicsComponent entity)
-            => entity.transform.right.xz() * Mathf.Sin(Time.time);
+            => entity.transform.right.xz() * Mathf.Sin(Time.time * 3f);
 
         //public static Vector2 Seek(Vector2 TargetPos, IPhysicsComponent entity)
         //{

@@ -75,6 +75,10 @@ namespace BlueOrb.Physics
         public float RadiusClampWeight => _radiusClampWeight;
 
         [SerializeField]
+        private float _lateralWaveWeight = 1.0f;
+        public float LateralWaveWeight => _lateralWaveWeight;
+
+        [SerializeField]
         private float _feelerOffset;
 
         public float FeelerOffset => _feelerOffset;

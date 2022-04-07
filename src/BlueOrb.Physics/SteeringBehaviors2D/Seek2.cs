@@ -8,7 +8,7 @@ namespace BlueOrb.Physics.SteeringBehaviors2D
         public Seek2(SteeringBehaviorManager manager)
             : base(manager)
         {
-            _constantWeight = Constants2.SeekWeight;
+            base.SetWeight(manager.SteeringData.SeekWeight);
         }
         //this behavior moves the agent towards a target position
         protected override Vector2 CalculateForce()
