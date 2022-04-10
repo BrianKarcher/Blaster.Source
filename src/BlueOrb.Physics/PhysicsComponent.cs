@@ -18,7 +18,7 @@ namespace BlueOrb.Physics
         public PhysicsLogic Controller => _controller;
 
         private Rigidbody _rigidBody3D;
-        //the steering behavior class
+
         [SerializeField]
         private SteeringBehaviorManager _steering;
 
@@ -340,20 +340,6 @@ namespace BlueOrb.Physics
                 _animationComponent.SetForwardSpeed(speed);
         }
 
-        //private void AddForceLocal(Vector3 force)
-        //{
-        //    if (_animator != null)
-        //    {
-        //        _animator.SetFloat(_animForwardSpeedVar, force.magnitude);
-        //        if (_animator.applyRootMotion)
-        //        {
-        //            return;
-        //        }
-        //    }
-
-        //    _rigidBody3D.AddRelativeForce(force);
-        //}
-
         public override void StartListening()
         {
             base.StartListening();
@@ -377,16 +363,13 @@ namespace BlueOrb.Physics
 
         public void SetWorldPos2(Vector2 newPos)
         {
-            // Depth needs to stay the same
+            // Height needs to stay the same
             this.transform.position = new Vector3(newPos.x, this.transform.position.y, newPos.y);
-            //m_vPosition = new_pos;
         }
 
         public void SetWorldPos3(Vector3 new_pos)
         {
-            // Depth needs to stay the same
             this.transform.position = new_pos;
-            //m_vPosition = new_pos;
         }
 
         public PhysicsData GetPhysicsData()
@@ -413,7 +396,6 @@ namespace BlueOrb.Physics
             if (_rigidBody3D != null)
             {
                 _rigidBody3D.velocity = velocity;
-                //Debug.Log($"RigidBody: Setting velocity to {velocity}");
             }
         }
 
@@ -422,12 +404,6 @@ namespace BlueOrb.Physics
             if (_rigidBody3D != null)
                 _rigidBody3D.velocity = new Vector3(velocity.x, _rigidBody3D.velocity.y, velocity.y);
         }
-
-        //public virtual void AddVelocity3(Vector3 velocity)
-        //{ 
-        //    if (_rigidBody3D != null)
-        //        _rigidBody3D.velocity += velocity;
-        //}
 
         public void AccelerateTo(Vector3 targetVelocity, float maxAccel)
         {
@@ -442,40 +418,15 @@ namespace BlueOrb.Physics
             _rigidBody3D.AddForce(accel);
         }
 
-        //public void AddVelocity2(Vector2 velocity)
-        //{
-        //    if (_rigidBody3D != null)
-        //        _rigidBody3D.velocity = velocity;
-        //}
+        public void AddForce(Vector3 force) => _rigidBody3D?.AddForce(force);
 
-        public void AddForce(Vector3 force)
-        {
-            if (_rigidBody3D != null)
-                _rigidBody3D.AddForce(force);
-        }
+        public void AddForce2(Vector2 force) => _rigidBody3D?.AddForce(force.xz());
 
-        public void AddForce2(Vector2 force)
-        {
-            if (_rigidBody3D != null)
-                _rigidBody3D.AddForce(force.xz());
-        }
+        public void AddForce(Vector3 force, ForceMode forceMode)=> _rigidBody3D?.AddForce(force, forceMode);
 
-        public void AddForce(Vector3 force, ForceMode forceMode)
-        {
-            if (_rigidBody3D != null)
-                _rigidBody3D.AddForce(force, forceMode);
-        }
+        public void AddForce2(Vector2 force, ForceMode forceMode) => _rigidBody3D?.AddForce(force.xz(), forceMode);
 
-        public void AddForce2(Vector2 force, ForceMode forceMode)
-        {
-            if (_rigidBody3D != null)
-                _rigidBody3D.AddForce(force.xz(), forceMode);
-        }
-
-        public void Jump()
-        {
-            AddForce(GetPhysicsData().JumpVelocity, ForceMode.VelocityChange);
-        }
+        public void Jump() => AddForce(GetPhysicsData().JumpVelocity, ForceMode.VelocityChange);
 
         public virtual Vector2 GetFeetWorldPosition2()
         {
@@ -509,18 +460,6 @@ namespace BlueOrb.Physics
         {
             SetVelocity3(Vector3.zero);
             //_rigidBody3D?.Sleep();
-
-            //_physicsData.InputVelocity = Vector2.zero;
-            //_physicsData.Velocity.SetToZero();
-            //if (_physicsAffectors == null)
-            //    return;
-            //foreach (var affector in _physicsAffectors.Values)
-            //for (int i = 0; i < _physicsAffectorsList.Count; i++)
-            //{
-            //    var affector = _physicsAffectorsList[i];
-            //    affector.Stop();
-            //    affector.Force = Vector2.zero;
-            //}
         }
 
         public ISteeringBehaviorManager GetSteering()
@@ -542,41 +481,6 @@ namespace BlueOrb.Physics
         {
             Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
             _rigidBody3D.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
-        }
-
-        public void EnableCollider(bool enabled)
-        {
-            var colliders = GetComponents<Collider>();
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (!colliders[i].isTrigger)
-                    colliders[i].enabled = enabled;
-            }
-        }
-
-        public void JumpViaDistance(float distance)
-        {
-            //var maxSpeed = _physicsComponent.GetPhysicsData().MaxSpeed;
-            var maxSpeed = _controller.OriginalPhysicsData.MaxSpeed;
-            // You jump farther the faster the character is running (there is no force involved, they run at the speed of axisInput * maxSpeed)
-            //var jumpDistance = _jumpDistance * _axisInput.magnitude;
-            // Get the time it takes to make the leap, based on Max Speed
-            var time = distance / maxSpeed;
-            // Use a modified version of the displacement foruma to calculate the initial velocity, using time,
-            // gravity and displacement
-            // Displacement formula can be found on Khan Academy under "Deriving displacement as a function of time, acceleration
-            // and initial velicty.
-            //var numerator = ((0.5f * _physicsComponent.GetPhysicsData().Gravity * time * time) - _jumpDistance);
-            //var initialVelocity = numerator / -time;
-
-            // Derived from Final Velocity = Initial Velocity + a * t, assuming final velocity = -Initial Velocity.
-            var initialVelocity = GetPhysicsData().Gravity * time / -2;
-
-            AddForce(new Vector3(0f, initialVelocity, 0f), ForceMode.VelocityChange);
-            ////var velocity = _physicsComponent.GetVelocity3();
-            //var jumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(_physicsComponent.GetPhysicsData().Gravity) * _jumpHeight);
-            ////_physicsComponent.SetVelocity3(velocity);
-            //_physicsComponent.AddForce(new Vector3(0f, jumpVelocity, 0f), ForceMode.VelocityChange);
         }
 
         public void OnDrawGizmos()

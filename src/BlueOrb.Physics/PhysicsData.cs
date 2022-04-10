@@ -39,10 +39,6 @@ namespace BlueOrb.Physics
         public bool ShowDebug => _showDebug;
 
         [SerializeField]
-        private float _gravity = -9.8f;
-        public float Gravity { get => _gravity; set => _gravity = value; }
-
-        [SerializeField]
         private Vector3 _gravityVector = new Vector3(0f, -9.8f, 0f);
         public Vector3 GravityVector { get => _gravityVector; set => _gravityVector = value; }
 
@@ -247,7 +243,6 @@ namespace BlueOrb.Physics
             this._groundCheckDistance = from._groundCheckDistance;
             this._groundLayer = from._groundLayer;
             this._jumpVelocity = from._jumpVelocity;
-            this._gravity = from._gravity;
             this._directionRotate = from._directionRotate;
             this._movingTurnSpeed = from._movingTurnSpeed;
             this._stationaryTurnSpeed = from._stationaryTurnSpeed;
@@ -256,7 +251,6 @@ namespace BlueOrb.Physics
             this._fieldOfView = from._fieldOfView;
             //this._footOffset = from._footOffset;
             this._friction = from._friction;
-            //this._headingDirection = from._headingDirection;
             //this._inputForce = from._inputForce;
             //this._inputVelocity = from._inputVelocity;
             this._lineOfSight = from._lineOfSight;
