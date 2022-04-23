@@ -28,14 +28,21 @@ namespace BlueOrb.Controller.Manager
         //{
         //    _isLevelBegun = hasBegun;
         //}
-        //public float _currentHp;
-        //public float _maxHp;
+        private float currentHp;
+        private float maxHp;
 
         [SerializeField]
         private ShooterComponent _shooterComponent;
         public IShooterComponent ShooterComponent => _shooterComponent;
 
         private long _addPointsIndex, setLevelBeginIndex;
+
+        public float GetCurrentHp() => currentHp;
+
+        public void SetCurrentHp(float hp) => currentHp = hp;
+
+        public float GetMaxHp() => maxHp;
+
 
         //private static LevelStateController _instance;
         //[HideInInspector]

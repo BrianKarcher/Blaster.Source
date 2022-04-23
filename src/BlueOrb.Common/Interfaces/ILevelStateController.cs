@@ -6,6 +6,10 @@
 
         void AddPoints(int points);
         void PrepareStartStageData();
+        float GetCurrentHp();
+        void SetCurrentHp(float hp);
+        float GetMaxHp();
+
         bool HasLevelBegun { get; }
         //void SetMaxHp(float maxHp);
         //void AddHp(float hp);

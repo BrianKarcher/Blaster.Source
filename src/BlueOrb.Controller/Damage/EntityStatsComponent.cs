@@ -4,18 +4,13 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Damage
 {
-    [AddComponentMenu("RQ/Components/Entity Stats Component")]
+    [AddComponentMenu("BlueOrb/Components/Entity Stats Component")]
     public class EntityStatsComponent : ComponentBase<EntityStatsComponent>
     {
         [SerializeField]
-        private EntityStatsData _entityStats = new EntityStatsData();
+        protected EntityStatsData _entityStats = new EntityStatsData();
 
         private long _setMaxHpId, _setCurrentHpId;
-
-        protected override void Awake()
-        {
-            base.Awake();
-        }
 
         public EntityStatsData GetEntityStats()
         {
@@ -30,15 +25,20 @@ namespace BlueOrb.Controller.Damage
                 float maxHp = (float)data.ExtraInfo;
                 _entityStats.MaxHP = maxHp;
                 Debug.Log($"Setting max hp to {maxHp}");
-                UpdateHud();
+                HpChanged();
             });
             _setCurrentHpId = MessageDispatcher.Instance.StartListening("SetCurrentHp", _componentRepository.GetId(), (data) =>
             {
                 float hp = (float)data.ExtraInfo;
                 _entityStats.CurrentHP = hp;
                 Debug.Log($"Setting current hp to {hp}");
-                UpdateHud();
+                HpChanged();
             });
+        }
+
+        protected virtual void HpChanged()
+        {
+
         }
 
         public override void StopListening()
@@ -48,24 +48,13 @@ namespace BlueOrb.Controller.Damage
             MessageDispatcher.Instance.StopListening("SetCurrentHp", _componentRepository.GetId(), _setCurrentHpId);
         }
 
-        private void RaiseCurrentHP(float amount)
-        {
-            _entityStats.CurrentHP += amount;
-            if (_entityStats.CurrentHP > _entityStats.MaxHP)
-                _entityStats.CurrentHP = _entityStats.MaxHP;
-        }
-
         public void AddHp(float hp)
         {
             Debug.Log($"Adding {hp} HP to {_componentRepository.name}");
+            SetCurrentHp(GetCurrentHp() + hp);
             _entityStats.CurrentHP += hp;
             Debug.Log($"{_componentRepository.name} HP remaining: {_entityStats.CurrentHP}");
-
-            if (this.tag == "Player")
-            {
-                UpdateHud();
-            }
-
+            HpChanged();
             if (_entityStats.CurrentHP <= 0)
             {
                 MessageDispatcher.Instance.DispatchMsg("EntityDied", 0f, this.GetId(), _componentRepository.GetId(), null);
@@ -80,14 +69,19 @@ namespace BlueOrb.Controller.Damage
 
         }
 
-        private void UpdateHud()
+        protected virtual float GetCurrentHp()
         {
-            if (this.tag != "Player")
-            {
-                return;
-            }
-            MessageDispatcher.Instance.DispatchMsg("UpdateStatsInHud", 0f, this.GetId(), "UI Controller", _entityStats);
-            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (_entityStats.CurrentHP, _entityStats.MaxHP));
+            return _entityStats.CurrentHP;
+        }
+
+        protected virtual void SetCurrentHp(float hp)
+        {
+            _entityStats.CurrentHP = hp;
+        }
+
+        protected virtual float GetMaxHp()
+        {
+            return _entityStats.MaxHP;
         }
 
         public bool IsDead()

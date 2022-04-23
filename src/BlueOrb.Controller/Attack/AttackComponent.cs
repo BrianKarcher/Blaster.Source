@@ -23,8 +23,8 @@ namespace BlueOrb.Controller.Attack
         [SerializeField]
         private GameObject _hitVFX;
 
-        [SerializeField]
-        private AttackParryComponent _parry;
+        //[SerializeField]
+        //private AttackParryComponent _parry;
 
         [SerializeField] private bool _debug;
         [SerializeField] private int _attackAnim = -1;
@@ -32,24 +32,24 @@ namespace BlueOrb.Controller.Attack
         private PhysicsComponent _physicsComponent;
         private DamageComponent _damageComponent;
         //private AnimationComponent _animationComponent;
-        private DateTime? _lastAttackTime;
-        public event Action Attacked;
+        //private DateTime? _lastAttackTime;
+        //public event Action Attacked;
 
         private bool _hitDetect;
-        private float _attackTime;
-        private bool _attackTimerActive;
-        private bool _attackComplete;
-        public bool AttackComplete => _attackComplete;
+        //private float _attackTime;
+        //private bool _attackTimerActive;
+        //private bool _attackComplete;
+        //public bool AttackComplete => _attackComplete;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            // Parry must be in the same GameObject.
-            if (_parry == null)
-                _parry = GetComponent<AttackParryComponent>();
-            _attackTimerActive = false;
-            _attackComplete = false;
-        }
+        //protected override void Awake()
+        //{
+        //    base.Awake();
+        //    // Parry must be in the same GameObject.
+        //    if (_parry == null)
+        //        _parry = GetComponent<AttackParryComponent>();
+        //    _attackTimerActive = false;
+        //    _attackComplete = false;
+        //}
 
         private void Start()
         {
@@ -61,51 +61,57 @@ namespace BlueOrb.Controller.Attack
             //    _animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
         }
 
-        private void Update()
-        {
-            if (_attackTimerActive && Time.time > _attackTime)
-            {
-                ProcessAttackNow();
-                _attackTimerActive = false;
-            }
-        }
+        //private void Update()
+        //{
+        //    if (_attackTimerActive && Time.time > _attackTime)
+        //    {
+        //        ProcessAttackNow();
+        //        _attackTimerActive = false;
+        //    }
+        //}
 
-        public void InitiateAttack()
-        {
-            _attackComplete = false;
-            _attackTimerActive = true;
-            _attackTime = Time.time + _attackData.StrikeDelay;
-            _parry?.StartTimer();
-        }
+        //public void InitiateAttack()
+        //{
+        //    _attackComplete = false;
+        //    _attackTimerActive = true;
+        //    _attackTime = Time.time + _attackData.StrikeDelay;
+        //    _parry?.StartTimer();
+        //}
 
-        public void Stop()
-        {
-            _attackTimerActive = false;
-            _parry?.Stop();
-        }
+        //public void Stop()
+        //{
+        //    _attackTimerActive = false;
+        //    _parry?.Stop();
+        //}
 
         private readonly HashSet<string> _entitiesHit = new HashSet<string>();
-        private RaycastHit[] _itemHits = new RaycastHit[10];
-        private Collider[] _itemHitsCol = new Collider[10];
-        public virtual void ProcessAttackNow()
+        
+        //private Collider[] _itemHitsCol = new Collider[10];
+        public virtual void ProcessAttack(Collider[] colliders, int count)
         {
-            _attackComplete = true;
-            Attacked?.Invoke();
+            //_attackComplete = true;
+            //Attacked?.Invoke();
 
             if (_damageComponent == null)
                 throw new Exception("Damage component is required for the Attack component in entity " + GetComponentRepository().name);
-            //base.ProcessAttack();
-            if (_attackData.StopMovingDuringAttack)
+
+            // Get rid of the junk from previous collisions in case the caller used a NonAlloc call.
+            for (int i = count; i < colliders.Length; i++)
             {
-                //var theSprite = _entity as ISprite;
-                if (_physicsComponent != null)
-                {
-                    _physicsComponent.Stop();
-                    //MessageDispatcher.Instance.DispatchMsg(0f, entity.UniqueId, _physicsComponent.UniqueId,
-                    //    Enums.Telegrams.StopMovement, null);
-                }
-                //_physicsComponent.Stop();
+                colliders[i] = null;
             }
+            //base.ProcessAttack();
+            //if (_attackData.StopMovingDuringAttack)
+            //{
+            //    //var theSprite = _entity as ISprite;
+            //    if (_physicsComponent != null)
+            //    {
+            //        _physicsComponent.Stop();
+            //        //MessageDispatcher.Instance.DispatchMsg(0f, entity.UniqueId, _physicsComponent.UniqueId,
+            //        //    Enums.Telegrams.StopMovement, null);
+            //    }
+            //    //_physicsComponent.Stop();
+            //}
 
             MessageDispatcher.Instance.DispatchMsg("AttackPerformed", 0f, GetComponentRepository().GetId(), _damageComponent.GetId(), null);
             //var facingDirectionVector = _animationComponent.GetFacingDirectionVector();
@@ -134,7 +140,7 @@ namespace BlueOrb.Controller.Attack
             //GameDataController.Instance.GetLayerMask(LevelLayer.LevelOne);
             //var itemsHit = Physics2D.BoxCastAll(pos + _offset, _size, _angle, facingDirection, _distance, layerMask/*, GetEntityUI().GetTransform().gameObject.layer*/);
             //IEnumerable<RaycastHit2D> itemsHit = Physics2D.BoxCastAll((Vector2)pos + AttackData.Offset, AttackData.Size, AttackData.Angle, facingDirection, AttackData.Distance);
-            var attackSize = (Vector3)_attackData.Size;
+            //var attackSize = (Vector3)_attackData.Size;
             //var facingDirection = _animationComponent.GetFacingDirection();
             //if (facingDirection == Direction.Left || facingDirection == Direction.Right)
             //    attackSize.x = 0.1f;
@@ -142,8 +148,8 @@ namespace BlueOrb.Controller.Attack
             //    attackSize.y = 0.1f;
             //attackSize.z = 0.3f;
 
-            var attackPos = transform.TransformPoint(_attackData.Offset);
-            var halfExtent = attackSize / 2f;
+            //var attackPos = transform.TransformPoint(_attackData.Offset);
+            //var halfExtent = attackSize / 2f;
 
             //var worldOffset = transform.TransformPoint(_attackData.Offset);
 
@@ -154,70 +160,19 @@ namespace BlueOrb.Controller.Attack
             //_testDirection = facingDirectionVector;
             //_testPosition = attackPos;
             //_size = attackSize / 2;
-            _lastAttackTime = DateTime.Now;
+            //_lastAttackTime = DateTime.Now;
 
-            //_hitTarget = false;
 
-            //var left = attackPos.x - halfExtent.x;
-            //var right = attackPos.x + halfExtent.x;
-            //var up = attackPos.y + halfExtent.y;
-            //var down = attackPos.y - halfExtent.y;
-            //var forward = attackPos.z + halfExtent.z;
-            //var back = attackPos.z - halfExtent.z;
-
-            //var left = attackPos - transform.right * halfExtent.x;
-            //var right = attackPos + transform.right * halfExtent.x;
-            //var up = attackPos + transform.up * halfExtent.y;
-            //var down = attackPos - transform.up * halfExtent.y;
-            //var forward = attackPos + transform.forward * halfExtent.z;
-            //var back = attackPos - transform.forward * halfExtent.z;
-
-            //if (_debug)
-            //{
-            //    var leftUpBack = transform.TransformPoint(_attackData.Offset + new Vector3(-halfExtent.x, halfExtent.y, -halfExtent.z));
-            //    var rightUpBack = transform.TransformPoint(_attackData.Offset + new Vector3(halfExtent.x, halfExtent.y, -halfExtent.z));
-            //    var rightDownBack = transform.TransformPoint(_attackData.Offset + new Vector3(halfExtent.x, -halfExtent.y, -halfExtent.z));
-            //    var leftDownBack = transform.TransformPoint(_attackData.Offset + new Vector3(-halfExtent.x, -halfExtent.y, -halfExtent.z));
-
-            //    var leftUpForward = transform.TransformPoint(_attackData.Offset + new Vector3(-halfExtent.x, halfExtent.y, halfExtent.z));
-            //    var rightUpForward = transform.TransformPoint(_attackData.Offset + new Vector3(halfExtent.x, halfExtent.y, halfExtent.z));
-            //    var rightDownForward = transform.TransformPoint(_attackData.Offset + new Vector3(halfExtent.x, -halfExtent.y, halfExtent.z));
-            //    var leftDownForward = transform.TransformPoint(_attackData.Offset + new Vector3(-halfExtent.x, -halfExtent.y, halfExtent.z));
-
-            //    // Draw box outline of the attack.                
-            //    Debug.DrawLine(leftUpBack, leftUpForward, Color.red, 5f);
-            //    Debug.DrawLine(leftUpForward, rightUpForward, Color.red, 5f);
-            //    Debug.DrawLine(rightUpForward, rightUpBack, Color.red, 5f);
-            //    Debug.DrawLine(rightUpBack, leftUpBack, Color.red, 5f);
-
-            //    Debug.DrawLine(leftUpBack, rightUpBack, Color.red, 5f);
-            //    Debug.DrawLine(rightUpBack, rightDownBack, Color.red, 5f);
-            //    Debug.DrawLine(rightDownBack, leftDownBack, Color.red, 5f);
-            //    Debug.DrawLine(leftDownBack, leftUpBack, Color.red, 5f);
-
-            //    //Debug.DrawLine(new Vector3(left, up, back), new Vector3(left, up, forward), Color.red, 5f);
-            //    //Debug.DrawLine(new Vector3(left, up, forward), new Vector3(right, up, forward), Color.red, 5f);
-            //    //Debug.DrawLine(new Vector3(right, up, forward), new Vector3(right, up, back), Color.red, 5f);
-            //    //Debug.DrawLine(new Vector3(right, up, back), new Vector3(left, up, back), Color.red, 5f);
-
-            //    //Debug.DrawLine(new Vector3(left, up, back), new Vector3(right, up, back), Color.red, 5f);
-            //    //Debug.DrawLine(new Vector3(right, up, back), new Vector3(right, down, back), Color.red, 5f);
-            //    //Debug.DrawLine(new Vector3(right, down, back), new Vector3(left, down, back), Color.red, 5f);
-            //    //Debug.DrawLine(new Vector3(left, down, back), new Vector3(left, up, back), Color.red, 5f);
-            //}
 
             _hitDetect = false;
 
             //int hitCount = UnityEngine.Physics.BoxCastNonAlloc(attackPos, halfExtent, transform.forward, _itemHits, transform.rotation, _attackData.Distance);
             //int hitCount = UnityEngine.Physics.OverlapBoxNonAlloc(attackPos, halfExtent, _itemHits, transform.rotation);
             //var hits = UnityEngine.Physics.OverlapBox(attackPos, halfExtent, transform.rotation);
-            DrawBoxCast.DrawBoxCastBox(attackPos, halfExtent, transform.rotation, transform.forward, _attackData.Distance, Color.red, 1f);
-            Debug.Log($"Attack pos: {attackPos}, extents: {halfExtent}, forward: {transform.forward}, distance: {_attackData.Distance}");
             //int hitCount = UnityEngine.Physics.BoxCastNonAlloc(attackPos, halfExtent, transform.forward, _itemHits, transform.rotation, _attackData.Distance);
 
-            _itemHits = UnityEngine.Physics.BoxCastAll(attackPos, halfExtent, transform.forward, transform.rotation, _attackData.Distance);
 
-            Debug.Log($"Hit count: {_itemHits.Length}");
+
             //Debug.Log($"Hit count: {hitCount}");
 
             //for (int i = hitCount; i < _itemHits.Length; i++)
@@ -378,7 +333,14 @@ namespace BlueOrb.Controller.Attack
         {
             if (raycastHit.collider == null)
                 return 0;
-            var closestPoint = raycastHit.collider.ClosestPoint(_componentRepository.GetPosition());
+            return GetDistanceBetweenRaycastHitAndSelf(raycastHit.collider);
+        }
+
+        private float GetDistanceBetweenRaycastHitAndSelf(Collider collider)
+        {
+            if (collider == null)
+                return 0;
+            var closestPoint = collider.ClosestPoint(_componentRepository.GetPosition());
             var fromMeToThem = closestPoint - _componentRepository.GetPosition();
             return fromMeToThem.sqrMagnitude;
         }
