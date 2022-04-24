@@ -82,11 +82,18 @@ namespace BlueOrb.Controller.Damage
                     //    }
                     //}
 
+                    Debug.Log($"Eternal damage message received on {_componentRepository.name}");
                     if (!_damageComponentData.TakesDamage)
+                    {
+                        Debug.Log($"Entity {_componentRepository.name} does not take damage");
                         return;
+                    }
 
                     if (damageInfo.MyCollider == null)
+                    {
+                        Debug.Log($"Entity {_componentRepository.name} has no collider, not taking damage.");
                         return;
+                    }
 
                     //if (damageInfo.MyCollider != null && !damageInfo.CollisionHit.ReceivesDamage())
                     //    return false;
@@ -155,19 +162,21 @@ namespace BlueOrb.Controller.Damage
             //if (_hitEffect != null)
             //    CreateHitEffect(damageInfo.HitPosition);
 
+            // No stats? Dead!
+            if (_entityStatsComponent == null)
+            {
+                EntityIsDead();
+            }
+            else
+            {
+                _entityStatsComponent.AddHp(-damageInfo.DamageAmount);
+            }
+
             // Report the damage
             if (_damageComponentData.ReportDamage)
             {
                 MessageDispatcher.Instance.DispatchMsg(_damageComponentData.ReportDamageMessage, 0f,
                     _componentRepository.GetId(), null, null);
-            }
-
-            // No stats? Dead!
-            if (_entityStatsComponent == null)
-                EntityIsDead();
-            else
-            {
-                _entityStatsComponent.AddHp(-damageInfo.DamageAmount);
             }
             //GameObject.Destroy(_componentRepository.gameObject);
             //_componentRepository.SendMessageToAllButThis(0f, this.UniqueId, Telegrams.Damaged, DamageInfo);
@@ -196,26 +205,6 @@ namespace BlueOrb.Controller.Damage
                 return false;
 
             return true;
-        }
-
-        // Damage an external entity
-        public void DamageExternalEntity(IEntity otherEntity, CollisionData collisionData, float damageAmount)
-        {
-            var damageInfo = new DamageEntityInfo()
-            {
-                DamageAmount = damageAmount,
-                //DamagedBy = _componentRepository.UniqueId,
-                DamagedByEntity = _componentRepository,
-                //damageInfo.DamagedBy = transform.GetComponent<IComponentRepository>().UniqueId;
-                //DamageSourceLocation = this.transform.position,
-                HitPosition = collisionData.HitPosition,
-                Tag = tag,
-                MyCollider = collisionData.OtherCollider, // The external entity's MyCollider is this entity's OtherCollider
-                //CollisionDamageType = this._damageData.CollisionDamageType
-            };
-            //var otherEntity = collisionData.OtherCollider.attachedRigidbody.GetComponent<IEntity>();
-            MessageDispatcher.Instance.DispatchMsg("ExternalDamage", 0f, null, otherEntity.GetId(), damageInfo);
-            MessageDispatcher.Instance.DispatchMsg("DamagedOther", 0f, null, _componentRepository.GetId(), null);
         }
 
         public DamageComponentData GetDamageComponentData()

@@ -28,7 +28,10 @@ namespace BlueOrb.Controller.Manager
         //{
         //    _isLevelBegun = hasBegun;
         //}
+        [SerializeField]
         private float currentHp;
+
+        [SerializeField]
         private float maxHp;
 
         [SerializeField]
