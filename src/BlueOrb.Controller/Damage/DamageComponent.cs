@@ -218,27 +218,6 @@ namespace BlueOrb.Controller.Damage
             MessageDispatcher.Instance.DispatchMsg("DamagedOther", 0f, null, _componentRepository.GetId(), null);
         }
 
-        public void DamageExternalEntity(IEntity otherEntity, Collider otherCollider, float damageAmount, Vector3 hitPosition)
-        {
-            Debug.Log($"{_componentRepository.name} Hit {otherEntity.name}");
-            var damageInfo = new DamageEntityInfo()
-            {
-                DamageAmount = damageAmount,
-                //DamagedBy = _componentRepository.UniqueId,
-                DamagedByEntity = _componentRepository,
-                //damageInfo.DamagedBy = transform.GetComponent<IComponentRepository>().UniqueId;
-                //DamageSourceLocation = this.transform.position,
-                //DamageSourceLocation = _componentRepository.GetPosition(),
-                HitPosition = hitPosition,
-                Tag = tag,
-                MyCollider = otherCollider, // The external entity's MyCollider is this entity's OtherCollider
-                //CollisionDamageType = this._damageData.CollisionDamageType
-            };
-
-            MessageDispatcher.Instance.DispatchMsg("ExternalDamage", 0f, _componentRepository.GetId(), otherEntity.GetId(), damageInfo);
-            MessageDispatcher.Instance.DispatchMsg("DamagedOther", 0f, null, _componentRepository.GetId(), null);
-        }
-
         public DamageComponentData GetDamageComponentData()
         {
             return _damageComponentData;

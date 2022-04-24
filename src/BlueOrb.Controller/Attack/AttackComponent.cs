@@ -26,16 +26,15 @@ namespace BlueOrb.Controller.Attack
         //[SerializeField]
         //private AttackParryComponent _parry;
 
-        [SerializeField] private bool _debug;
         [SerializeField] private int _attackAnim = -1;
 
         private PhysicsComponent _physicsComponent;
-        private DamageComponent _damageComponent;
+        //private DamageComponent _damageComponent;
         //private AnimationComponent _animationComponent;
         //private DateTime? _lastAttackTime;
         //public event Action Attacked;
 
-        private bool _hitDetect;
+        //private bool _hitDetect;
         //private float _attackTime;
         //private bool _attackTimerActive;
         //private bool _attackComplete;
@@ -55,8 +54,8 @@ namespace BlueOrb.Controller.Attack
         {
             if (_physicsComponent == null)
                 _physicsComponent = _componentRepository.Components.GetComponent<PhysicsComponent>();
-            if (_damageComponent == null)
-                _damageComponent = _componentRepository.Components.GetComponent<DamageComponent>();
+            //if (_damageComponent == null)
+            //    _damageComponent = _componentRepository.Components.GetComponent<DamageComponent>();
             //if (_animationComponent == null)
             //    _animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
         }
@@ -87,13 +86,13 @@ namespace BlueOrb.Controller.Attack
         private readonly HashSet<string> _entitiesHit = new HashSet<string>();
         
         //private Collider[] _itemHitsCol = new Collider[10];
-        public virtual void ProcessAttack(Collider[] colliders, int count)
+        public virtual bool ProcessAttack(Collider[] colliders, int count, float damage)
         {
             //_attackComplete = true;
             //Attacked?.Invoke();
 
-            if (_damageComponent == null)
-                throw new Exception("Damage component is required for the Attack component in entity " + GetComponentRepository().name);
+            //if (_damageComponent == null)
+            //    throw new Exception("Damage component is required for the Attack component in entity " + GetComponentRepository().name);
 
             // Get rid of the junk from previous collisions in case the caller used a NonAlloc call.
             for (int i = count; i < colliders.Length; i++)
@@ -113,7 +112,7 @@ namespace BlueOrb.Controller.Attack
             //    //_physicsComponent.Stop();
             //}
 
-            MessageDispatcher.Instance.DispatchMsg("AttackPerformed", 0f, GetComponentRepository().GetId(), _damageComponent.GetId(), null);
+            MessageDispatcher.Instance.DispatchMsg("AttackPerformed", 0f, GetComponentRepository().GetId(), GetComponentRepository().GetId(), null);
             //var facingDirectionVector = _animationComponent.GetFacingDirectionVector();
             var facingDirectionVector = transform.forward;
             var pos = transform.position;
@@ -164,36 +163,38 @@ namespace BlueOrb.Controller.Attack
 
 
 
-            _hitDetect = false;
+            bool hitDetect = false;
 
             //int hitCount = UnityEngine.Physics.BoxCastNonAlloc(attackPos, halfExtent, transform.forward, _itemHits, transform.rotation, _attackData.Distance);
             //int hitCount = UnityEngine.Physics.OverlapBoxNonAlloc(attackPos, halfExtent, _itemHits, transform.rotation);
             //var hits = UnityEngine.Physics.OverlapBox(attackPos, halfExtent, transform.rotation);
             //int hitCount = UnityEngine.Physics.BoxCastNonAlloc(attackPos, halfExtent, transform.forward, _itemHits, transform.rotation, _attackData.Distance);
 
-
-
-            //Debug.Log($"Hit count: {hitCount}");
-
-            //for (int i = hitCount; i < _itemHits.Length; i++)
-            //{
-            //    _itemHits[i] = RaycastHit.;
-            //}
-            //return;
-            //Array.Sort(_itemHits, PhysicsHelper.RaycastDistanceCompareDel);
-
-            // TODO - Remove LINQ expression, it wastes memory
-            _itemHits = _itemHits.OrderBy(i => GetDistanceBetweenRaycastHitAndSelf(i)).ToArray();
+            // In-place sort
+            Array.Sort(colliders, Comparer<Collider>.Create((a, b) =>
+            {
+                float aDist = GetDistanceBetweenRaycastHitAndSelf(a);
+                float bDist = GetDistanceBetweenRaycastHitAndSelf(b);
+                if (aDist < bDist)
+                {
+                    return -1;
+                }
+                else if (aDist == bDist)
+                {
+                    return 0;
+                }
+                return 1;
+            }));
 
             //HashSet<string> entitiesHit = new HashSet<string>();
             //var entitiesHit = ObjectPool.Instance.PullFromPool<HashSet<string>>(ObjectPoolType.HashSetString);
             _entitiesHit.Clear();
             //foreach (var itemHit in _itemHits)
-            for (int i = 0; i < _itemHits.Length; i++)
+            for (int i = 0; i < count; i++)
             {
-                var itemHit = _itemHits[i];
+                var collider = colliders[i];
                 // Only do triggers for now.
-                if (!itemHit.collider.isTrigger)
+                if (collider.isTrigger)
                     continue;
                 //if (itemHit == null)
                 //    continue;
@@ -206,7 +207,7 @@ namespace BlueOrb.Controller.Attack
                 //ComponentRepository otherEntity = null;
 
                 //var otherEntity = itemHit.attachedRigidbody?.GetComponent<ComponentRepository>();
-                var otherEntity = itemHit.collider?.attachedRigidbody?.GetComponent<ComponentRepository>();
+                var otherEntity = collider.attachedRigidbody?.GetComponent<ComponentRepository>();
                 if (otherEntity == null)
                     continue;
 
@@ -224,19 +225,21 @@ namespace BlueOrb.Controller.Attack
                 if (_entitiesHit.Contains(otherEntity.GetId()))
                     continue;
 
-                var itemHitTag = itemHit.collider.tag;
+                var itemHitTag = collider.tag;
                 if (_attackData.DeflectTags.Contains(itemHitTag))
                 {
                     Debug.LogWarning($"{_componentRepository.name} got Deflected!");
-                    MessageDispatcher.Instance.DispatchMsg("Deflected", 0f, _componentRepository.GetId(), _componentRepository.GetId(), itemHit);
+                    MessageDispatcher.Instance.DispatchMsg("Deflected", 0f, _componentRepository.GetId(), _componentRepository.GetId(), collider);
                     MessageDispatcher.Instance.DispatchMsg("DeflectedOther", 0f, _componentRepository.GetId(), otherEntity.GetId(), 5);
                     // Can't damage anything during a deflection
-                    return;
+                    return hitDetect;
                 }
 
                 var tagFound = Array.IndexOf(_attackData.TargetTags, itemHitTag) > -1;
                 if (!tagFound)
+                {
                     continue;
+                }
 
                 //if (AttackData.TargetTags.Contains(itemHit.collider.tag))
 
@@ -248,20 +251,20 @@ namespace BlueOrb.Controller.Attack
                 //var skillUsed = _skill == null ? null : _skill.UniqueId;
 
                 //var hitPosition = itemHit.ClosestPoint(attackPos);
-                var hitPosition = itemHit.point;
-                var collider = itemHit.collider;
-                Debug.Log($"{_componentRepository.name} inflicting {_attackData.Damage} on {otherEntity.name}");
+                //var hitPosition = itemHit.point;
+                var hitPosition = GetClosestColliderPointToSelf(collider);
+                Debug.Log($"{_componentRepository.name} inflicting {damage} on {otherEntity.name}");
 
-                CreateHitVFX(itemHit);
+                CreateHitVFX(collider);
 
-                _damageComponent.DamageExternalEntity(otherEntity, collider, _attackData.Damage, hitPosition);
+                DamageExternalEntity(otherEntity, collider, damage, hitPosition);
                 //_damageComponent.DamageExternalEntity(otherEntity.GetId(), _attackData.Damage,
                 //    GetComponentRepository().GetTag(), itemHit.point,
                 //    otherCollisionComponent as ICollisionComponent, skillUsed);
                 MessageDispatcher.Instance.DispatchMsg(_messageToSend, 0f, _componentRepository.GetId(),
                     otherEntity.GetId(), null);
                 _entitiesHit.Add(otherEntity.GetId());
-                _hitDetect = true;
+                hitDetect = true;
 
             }
 
@@ -327,29 +330,58 @@ namespace BlueOrb.Controller.Attack
             //        }
             //    }
             //}
+            return hitDetect;
+        }
+
+        public void DamageExternalEntity(IEntity otherEntity, Collider otherCollider, float damageAmount, Vector3 hitPosition)
+        {
+            Debug.Log($"{_componentRepository.name} Hit {otherEntity.name}");
+            var damageInfo = new DamageEntityInfo()
+            {
+                DamageAmount = damageAmount,
+                //DamagedBy = _componentRepository.UniqueId,
+                DamagedByEntity = _componentRepository,
+                //damageInfo.DamagedBy = transform.GetComponent<IComponentRepository>().UniqueId;
+                //DamageSourceLocation = this.transform.position,
+                //DamageSourceLocation = _componentRepository.GetPosition(),
+                HitPosition = hitPosition,
+                Tag = tag,
+                MyCollider = otherCollider, // The external entity's MyCollider is this entity's OtherCollider
+                                            //CollisionDamageType = this._damageData.CollisionDamageType
+            };
+
+            MessageDispatcher.Instance.DispatchMsg("ExternalDamage", 0f, _componentRepository.GetId(), otherEntity.GetId(), damageInfo);
+            MessageDispatcher.Instance.DispatchMsg("DamagedOther", 0f, null, _componentRepository.GetId(), null);
         }
 
         private float GetDistanceBetweenRaycastHitAndSelf(RaycastHit raycastHit)
         {
             if (raycastHit.collider == null)
-                return 0;
+                return float.MaxValue;
             return GetDistanceBetweenRaycastHitAndSelf(raycastHit.collider);
         }
 
         private float GetDistanceBetweenRaycastHitAndSelf(Collider collider)
         {
             if (collider == null)
-                return 0;
-            var closestPoint = collider.ClosestPoint(_componentRepository.GetPosition());
+                return float.MaxValue;
+            var closestPoint = GetClosestColliderPointToSelf(collider);
             var fromMeToThem = closestPoint - _componentRepository.GetPosition();
             return fromMeToThem.sqrMagnitude;
         }
 
-        private void CreateHitVFX(RaycastHit raycastHit)
+        private Vector3 GetClosestColliderPointToSelf(Collider collider) =>
+            collider.ClosestPoint(_componentRepository.GetPosition());
+
+        private void CreateHitVFX(Collider collider)
         {
             if (_hitVFX == null)
                 return;
-            var otherEntity = raycastHit.collider?.attachedRigidbody?.GetComponent<EntityCommonComponent>();
+            var otherEntity = collider.attachedRigidbody?.GetComponent<EntityCommonComponent>();
+            if (otherEntity == null)
+            {
+                return;
+            }
             var dirBetweenEntities = otherEntity.GetPosition() - _componentRepository.GetPosition();
             // Create the VFX a little way ahead of the attacker towards the entity attacked
             var _hitPos = _componentRepository.GetPosition() + (dirBetweenEntities.normalized); // + new Vector3(0f, 1f, 0f);
@@ -365,40 +397,5 @@ namespace BlueOrb.Controller.Attack
             return _attackData;
         }
 
-        //Draw the BoxCast as a gizmo to show where it currently is testing. Click the Gizmos button to see this
-        void OnDrawGizmos()
-        {
-            if (!_debug)
-                return;
-
-            //Check if there has been a hit yet
-            if (_hitDetect)
-            {
-                Gizmos.color = Color.red;
-                //Gizmos.matrix = transform.localToWorldMatrix;
-                var attackPos = transform.TransformPoint(_attackData.Offset);
-                //Draw a Ray forward from GameObject toward the maximum distance
-                Gizmos.DrawRay(attackPos, transform.forward * _attackData.Distance);
-                //Draw a cube at the maximum distance
-                Gizmos.DrawWireCube(attackPos + transform.forward * _attackData.Distance, _attackData.Size);
-
-                ////Draw a Ray forward from GameObject toward the hit
-                //Gizmos.DrawRay(transform.position, transform.forward * m_Hit.distance);
-                ////Draw a cube that extends to where the hit exists
-                //Gizmos.DrawWireCube(transform.position + transform.forward * m_Hit.distance, transform.localScale);
-            }
-            //If there hasn't been a hit yet, draw the ray at the maximum distance
-            else
-            {
-                Gizmos.color = Color.white;
-                //Gizmos.matrix = transform.localToWorldMatrix;
-                var attackPos = transform.TransformPoint(_attackData.Offset);
-                //Draw a Ray forward from GameObject toward the maximum distance
-                //Gizmos.DrawRay(attackPos, transform.forward * _attackData.Distance);
-                //Draw a cube at the maximum distance
-                //Gizmos.DrawWireCube(attackPos + transform.forward * _attackData.Distance, _attackData.Size);
-                Gizmos.DrawWireCube(attackPos, _attackData.Size);
-            }
-        }
     }
 }
