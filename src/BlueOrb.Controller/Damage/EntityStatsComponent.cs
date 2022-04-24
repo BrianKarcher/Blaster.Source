@@ -52,7 +52,6 @@ namespace BlueOrb.Controller.Damage
         {
             Debug.Log($"Adding {hp} HP to {_componentRepository.name}");
             SetCurrentHp(GetCurrentHp() + hp);
-            _entityStats.CurrentHP += hp;
             Debug.Log($"{_componentRepository.name} HP remaining: {_entityStats.CurrentHP}");
             HpChanged();
             if (_entityStats.CurrentHP <= 0)
