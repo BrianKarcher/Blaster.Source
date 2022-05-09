@@ -430,6 +430,16 @@ namespace BlueOrb.Messaging
             return DispatchMsgWithEarlyTermination(eventName, delay, senderId, receiverId, ExtraInfo);
         }
 
+        public bool DispatchMsg(string eventName,
+         string senderId,
+         string receiverId,
+         object ExtraInfo,
+         float delay = 0f
+         )
+        {
+            return DispatchMsgWithEarlyTermination(eventName, delay, senderId, receiverId, ExtraInfo);
+        }
+
         public bool DispatchMsgWithEarlyTermination(string eventName, float delay,
                  string senderId,
                  string receiverId,
