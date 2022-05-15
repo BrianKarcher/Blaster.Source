@@ -19,7 +19,7 @@ namespace BlueOrb.Controller.Damage
         private long _externalDamageId; //, _setDamageSourceLocationId;
         private Action<Telegram> _externalDamageDelegate, _setDamageSourceLocationDelegate;
         private DamageEntityInfo DamageInfo { get; set; }
-        private PhysicsComponent _physicsComponent;
+        private IPhysicsComponent _physicsComponent;
         private EntityStatsComponent _entityStatsComponent;
         [SerializeField]
         private GameObject _deflectPrefab;
@@ -125,7 +125,7 @@ namespace BlueOrb.Controller.Damage
             if (_entityStatsComponent == null)
                 _entityStatsComponent = _componentRepository.Components.GetComponent<EntityStatsComponent>();
             if (_physicsComponent == null)
-                _physicsComponent = _componentRepository.Components.GetComponent<PhysicsComponent>();
+                _physicsComponent = _componentRepository.Components.GetComponent<IPhysicsComponent>();
         }
 
         public override void StartListening()

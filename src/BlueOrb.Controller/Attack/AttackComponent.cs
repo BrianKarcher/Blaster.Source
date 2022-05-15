@@ -28,7 +28,7 @@ namespace BlueOrb.Controller.Attack
 
         [SerializeField] private int _attackAnim = -1;
 
-        private PhysicsComponent _physicsComponent;
+        private IPhysicsComponent _physicsComponent;
         //private DamageComponent _damageComponent;
         //private AnimationComponent _animationComponent;
         //private DateTime? _lastAttackTime;
@@ -53,7 +53,7 @@ namespace BlueOrb.Controller.Attack
         private void Start()
         {
             if (_physicsComponent == null)
-                _physicsComponent = _componentRepository.Components.GetComponent<PhysicsComponent>();
+                _physicsComponent = _componentRepository.Components.GetComponent<IPhysicsComponent>();
             //if (_damageComponent == null)
             //    _damageComponent = _componentRepository.Components.GetComponent<DamageComponent>();
             //if (_animationComponent == null)

@@ -148,9 +148,9 @@ namespace BlueOrb.Controller.Camera
 
         void Update()
         {
-            var input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            var speed = input.y;
-            speed = Mathf.Clamp(speed, -1f, 1f);
+            //var input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            //var speed = input.y;
+            //speed = Mathf.Clamp(speed, -1f, 1f);
             //speed = Mathf.SmoothDamp(anim.GetFloat("Speed"), speed, ref currentVelocity.y, Damping);
             //anim.SetFloat("Speed", speed);
             //anim.SetFloat("Direction", speed);

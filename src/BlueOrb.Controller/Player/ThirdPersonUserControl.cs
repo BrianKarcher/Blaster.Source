@@ -35,7 +35,7 @@ namespace BlueOrb.Controller.Player
         //private Vector3 _move; // the world-relative desired move direction, calculated from the camForward and user input.
         //private PlayerController _playerController;
         //private Vector3 m_CamForward; // The current forward direction of the camera
-        private PhysicsComponent _physicsComponent;
+        private IPhysicsComponent _physicsComponent;
 
         private long _enableInputId;
         private bool _isCrouching = false;
@@ -58,7 +58,7 @@ namespace BlueOrb.Controller.Player
                 // we use self-relative controls in this case, which probably isn't what the user wants, but hey, we warned them!
             }
             //_playerController = GetComponent<PlayerController>();
-            _physicsComponent = GetComponent<PhysicsComponent>();
+            _physicsComponent = GetComponent<IPhysicsComponent>();
         }
 
         private void Start()

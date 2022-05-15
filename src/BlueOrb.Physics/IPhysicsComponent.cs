@@ -5,7 +5,13 @@ namespace BlueOrb.Physics
 {
     public interface IPhysicsComponent : IComponentBase
     {
+        PhysicsLogic Controller { get; }
+        void AddForce(Vector3 force);
+        void AddForce2(Vector2 force);
+        void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier);
+        bool GetEnabled();
         PhysicsData GetPhysicsData();
+        PhysicsData GetOriginalPhysicsData();
         Vector2 GetVelocity2();
         Vector3 GetVelocity3();
         //void AddVelocity3(Vector3 velocity);
@@ -15,11 +21,15 @@ namespace BlueOrb.Physics
         Vector3 GetLocalPos3();
         Vector3 GetWorldPos3();
         Vector2 GetWorldPos2();
+        void Jump();
+        void SetEnabled(bool enabled);
         //void SetWorldPos(Vector2 new_pos);
+        void SetVelocity3(Vector3 velocity);
         void SetWorldPos3(Vector3 new_pos);
         void Stop();
         //Transform transform { get; }
         ISteeringBehaviorManager GetSteering();
+        void Move(Vector3 motion);
         //IPhysicsAffector GetPhysicsAffector(string name);
         //void SetPhysicsAffector(string name, IPhysicsAffector physicsAffector);
     }

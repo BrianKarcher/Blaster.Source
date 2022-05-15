@@ -7,8 +7,8 @@ using BlueOrb.Controller;
 
 namespace BlueOrb.Physics
 {
-    [AddComponentMenu("RQ/Components/Physics")]
-    public class PhysicsComponent : ComponentBase<PhysicsComponent>, IPhysicsComponent, IMovementController
+    [AddComponentMenu("BlueOrb/Physics/CharacterControllerPhysics")]
+    public class CharacterControllerPhysicsComponent : ComponentBase<CharacterControllerPhysicsComponent>, IPhysicsComponent, IMovementController
     {
         [SerializeField]
         private PhysicsLogic _controller;
@@ -17,7 +17,7 @@ namespace BlueOrb.Physics
 
         public PhysicsLogic Controller => _controller;
 
-        private Rigidbody _rigidBody3D;
+        private CharacterController characterController;
 
         [SerializeField]
         private SteeringBehaviorManager _steering;
@@ -31,6 +31,8 @@ namespace BlueOrb.Physics
         private Animator _animator;
         private AnimationComponent _animationComponent;
         private Vector3 _steeringForce;
+        private Vector3 velocity;
+        private Vector3 steeringVelocity;
 
         public void Construct(PhysicsLogic logic)
         {
@@ -40,9 +42,11 @@ namespace BlueOrb.Physics
         protected override void Awake()
         {
             base.Awake();
-            _rigidBody3D = GetComponent<Rigidbody>();
-            if (_rigidBody3D == null)
-                _rigidBody3D = _componentRepository.GetComponent<Rigidbody>();
+            characterController = GetComponent<CharacterController>();
+            if (this.characterController == null)
+            {
+                this.characterController = _componentRepository.GetComponent<CharacterController>();
+            }
             _controller?.SetMovementController(this);
             _isEnabled = true;
             _controller.Awake();
@@ -149,6 +153,10 @@ namespace BlueOrb.Physics
 
             //AddForce(force);
 
+            if (_controller.GetIsGrounded() && this.velocity.y < 0)
+            {
+                this.velocity.y = 0;
+            }
             //AddForceLocal(force);
             if (_controller.GetPhysicsData().ApplyGravity)
             {
@@ -159,34 +167,34 @@ namespace BlueOrb.Physics
             }
 
 
-            if (velocity2.sqrMagnitude < float.Epsilon)
-            {
-                velocity2 = Vector2.zero;
-            }
+            //if (velocity2.sqrMagnitude < float.Epsilon)
+            //{
+            //    velocity2 = Vector2.zero;
+            //}
 
-            if (!_applySpeedLimit)
-                return;
+            //if (!_applySpeedLimit)
+            //    return;
 
-            float speed = velocity2.magnitude;  // test current object speed
+            //float speed = velocity2.magnitude;  // test current object speed
             //var maxS
-            if (speed > _controller.GetPhysicsData().MaxSpeed)
-            {
-                float brakeSpeed = speed - maxSpeed; // calculate the speed decrease
-                var velocity3 = velocity2.xz();
-                Vector3 normalisedVelocity = velocity3.normalized;
-                Vector3 brakeVelocity = normalisedVelocity * brakeSpeed * 50f; // make the brake Vector3 value
-                //if (_rigidBody3D != null)
-                //    rigidbody.AddForce(-brakeVelocity);  // apply opposing brake force
-                //AddForceLocal(transform.InverseTransformDirection(-brakeVelocity));
-                AddForce(-brakeVelocity, ForceMode.Force);
-                //if (_rigidBody3D != null)
-                //_rigidBody3D.drag = brakeSpeed * 50f;
-            }
-            else
-            {
-                //if (_rigidBody3D != null)
-                //_rigidBody3D.drag = 0f;
-            }
+            //if (speed > _controller.GetPhysicsData().MaxSpeed)
+            //{
+            //    float brakeSpeed = speed - maxSpeed; // calculate the speed decrease
+            //    var velocity3 = velocity2.xz();
+            //    Vector3 normalisedVelocity = velocity3.normalized;
+            //    Vector3 brakeVelocity = normalisedVelocity * brakeSpeed * 50f; // make the brake Vector3 value
+            //    //if (_rigidBody3D != null)
+            //    //    rigidbody.AddForce(-brakeVelocity);  // apply opposing brake force
+            //    //AddForceLocal(transform.InverseTransformDirection(-brakeVelocity));
+            //    AddForce(-brakeVelocity, ForceMode.Force);
+            //    //if (_rigidBody3D != null)
+            //    //_rigidBody3D.drag = brakeSpeed * 50f;
+            //}
+            //else
+            //{
+            //    //if (_rigidBody3D != null)
+            //    //_rigidBody3D.drag = 0f;
+            //}
 
             //velocity = Vector2.ClampMagnitude(velocity, _physicsData.MaxSpeed * _physicsData.MaxSpeedMultiplier);
             //SetVelocity(velocity);
@@ -198,6 +206,8 @@ namespace BlueOrb.Physics
             //    SetHeading(velocity);
             //}
             //UpdateZ();
+
+            this.characterController.Move(this.velocity * Time.deltaTime);
         }
 
         //private void ProcessSteeringBehaviorForce()
@@ -264,10 +274,16 @@ namespace BlueOrb.Physics
             }
             else
             {
-                AddForce(steeringForce * _controller.GetPhysicsData().ForceMultiplier);
+                this.steeringVelocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
+                //AddForce(steeringForce * _controller.GetPhysicsData().ForceMultiplier);
                 //AddForce(transform.forward * forwardAndTurnAmount.forwardAmount * _controller.GetPhysicsData().ForceMultiplier);
             }
-            //SetAnimForwardSpeed(transform.forward.magnitude);
+            var maxSpeed = _controller.GetPhysicsData().MaxSpeed * _controller.GetPhysicsData().MaxSpeedMultiplier;
+            if (this.steeringVelocity.magnitude > maxSpeed)
+            {
+                this.steeringVelocity = this.steeringVelocity.normalized * maxSpeed;
+            }
+            this.characterController.Move(this.steeringVelocity * Time.deltaTime);
         }
 
         public (float forwardAmount, float sideSpeed, float turnAmount) CalculateForwardMovementAndTurnAmount(Vector3 force)
@@ -316,23 +332,18 @@ namespace BlueOrb.Physics
                 _animationComponent.SetVerticalSpeed(GetVelocity3().y);
         }
 
-        public Rigidbody GetRidigbody()
-        {
-            return _rigidBody3D;
-        }
+        //private void SetForwardSpeed(float speed)
+        //{
+        //    if (_animator != null)
+        //    {
+        //        if (_animator.applyRootMotion)
+        //        {
+        //            return;
+        //        }
+        //    }
 
-        private void SetForwardSpeed(float speed)
-        {
-            if (_animator != null)
-            {
-                if (_animator.applyRootMotion)
-                {
-                    return;
-                }
-            }
-
-            _rigidBody3D.AddRelativeForce(new Vector3(0f, 0f, speed));
-        }
+        //    _rigidBody3D.AddRelativeForce(new Vector3(0f, 0f, speed));
+        //}
 
         private void SetAnimForwardSpeed(float speed)
         {
@@ -367,45 +378,18 @@ namespace BlueOrb.Physics
             this.transform.position = new Vector3(newPos.x, this.transform.position.y, newPos.y);
         }
 
-        public void SetWorldPos3(Vector3 new_pos)
-        {
-            this.transform.position = new_pos;
-        }
+        public void SetWorldPos3(Vector3 new_pos) => this.transform.position = new_pos;
 
-        public PhysicsData GetPhysicsData()
-        {
-            return _controller.GetPhysicsData();
-        }
-
+        public PhysicsData GetPhysicsData() => _controller.GetPhysicsData();
         public PhysicsData GetOriginalPhysicsData() => _controller.GetOriginalPhysicsData();
 
-        public Vector2 GetVelocity2()
-        {
-            if (_rigidBody3D != null)
-                return _rigidBody3D.velocity.xz();
-            return Vector2.zero;
-        }
+        public Vector2 GetVelocity2() => this.velocity.xz();
 
-        public Vector3 GetVelocity3()
-        {
-            if (_rigidBody3D != null)
-                return _rigidBody3D.velocity;
-            return Vector2.zero;
-        }
+        public Vector3 GetVelocity3() => this.velocity;
 
-        public void SetVelocity3(Vector3 velocity)
-        {
-            if (_rigidBody3D != null)
-            {
-                _rigidBody3D.velocity = velocity;
-            }
-        }
+        public void SetVelocity3(Vector3 velocity) => this.velocity = velocity;
 
-        public void SetVelocity2(Vector2 velocity)
-        {
-            if (_rigidBody3D != null)
-                _rigidBody3D.velocity = new Vector3(velocity.x, _rigidBody3D.velocity.y, velocity.y);
-        }
+        public void SetVelocity2(Vector2 velocity) => this.velocity = new Vector3(velocity.x, this.velocity.y, velocity.y);
 
         public void AccelerateTo(Vector3 targetVelocity, float maxAccel)
         {
@@ -414,38 +398,31 @@ namespace BlueOrb.Physics
             //var deltaV = targetVelocity.xz();
             //var accel = deltaV / Time.deltaTime;
             //var accel = deltaV.xz().normalized * _controller.GetPhysicsData().MaxForce;
-            var accel = targetVelocity.normalized * _controller.GetPhysicsData().MaxForce;
+            Vector3 accel = targetVelocity.normalized * _controller.GetPhysicsData().MaxForce;
             //if (accel.sqrMagnitude > maxAccel * maxAccel)
             //    accel = accel.normalized * maxAccel;
-            _rigidBody3D.AddForce(accel);
+            AddForce(accel);
         }
 
         public void Move(Vector3 motion)
         {
-            this._rigidBody3D.MovePosition(this.transform.position + motion);
+            this.characterController.Move(motion * Time.deltaTime);
         }
 
-        public void AddForce(Vector3 force) => _rigidBody3D?.AddForce(force);
+        public void AddForce(Vector3 force) => this.velocity += force * Time.deltaTime;
+        public void AddForceInstant(Vector3 force) => this.velocity += force;
 
-        public void AddForce2(Vector2 force) => _rigidBody3D?.AddForce(force.xz());
+        public void AddForce2(Vector2 force) => this.velocity += force.xz() * Time.deltaTime;
 
-        public void AddForce(Vector3 force, ForceMode forceMode)=> _rigidBody3D?.AddForce(force, forceMode);
+        //public void AddForce(Vector3 force, ForceMode forceMode) => _rigidBody3D?.AddForce(force, forceMode);
 
-        public void AddForce2(Vector2 force, ForceMode forceMode) => _rigidBody3D?.AddForce(force.xz(), forceMode);
+        //public void AddForce2(Vector2 force, ForceMode forceMode) => _rigidBody3D?.AddForce(force.xz(), forceMode);
 
-        public void Jump() => AddForce(GetPhysicsData().JumpVelocity, ForceMode.VelocityChange);
+        public void Jump() => AddForceInstant(GetPhysicsData().JumpVelocity);
 
-        public virtual Vector2 GetFeetWorldPosition2()
-        {
-            //return _controller.GetPhysicsData().Foot.transform.position.xz();
-            return transform.position.xz();
-        }
+        public virtual Vector2 GetFeetWorldPosition2() => transform.position.xz();
 
-        public virtual Vector3 GetFeetWorldPosition3()
-        {
-            //return _controller.GetPhysicsData().Foot.transform.position;
-            return transform.position;
-        }
+        public virtual Vector3 GetFeetWorldPosition3() => transform.position;
 
         public virtual void SetFeetWorldPosition2(Vector2 pos)
         {
@@ -463,31 +440,19 @@ namespace BlueOrb.Physics
             return transform.localPosition;
         }
 
-        public void Stop()
-        {
-            SetVelocity3(Vector3.zero);
-            //_rigidBody3D?.Sleep();
-        }
+        public void Stop() => SetVelocity3(Vector3.zero);
 
-        public ISteeringBehaviorManager GetSteering()
-        {
-            return _steering;
-        }
+        public ISteeringBehaviorManager GetSteering() => _steering;
 
-        public void SetEnabled(bool enabled)
-        {
-            _isEnabled = enabled;
-        }
+        public void SetEnabled(bool enabled) => _isEnabled = enabled;
 
-        public bool GetEnabled()
-        {
-            return _isEnabled;
-        }
+        public bool GetEnabled() => _isEnabled;
 
         public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
         {
             Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
-            _rigidBody3D.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
+            Debug.LogError("TODO: Program Explode in CharacterControllerPhysicsComponent");
+            //_rigidBody3D.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
         }
 
         public void OnDrawGizmos()
