@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BlueOrb.Controller.Damage
 {
     [AddComponentMenu("BlueOrb/Components/Entity Stats Component")]
-    public class EntityStatsComponent : ComponentBase<EntityStatsComponent>
+    public class EntityStatsComponent : ComponentBase<EntityStatsComponent>, IEntityStatsComponent
     {
         [SerializeField]
         protected EntityStatsData _entityStats = new EntityStatsData();
@@ -70,6 +70,7 @@ namespace BlueOrb.Controller.Damage
 
         protected virtual float GetCurrentHp()
         {
+            Debug.Log($"(EntityStatsComponent) GetCurrentHp returning {_entityStats.CurrentHP} for {name}, {_componentRepository.name}");
             return _entityStats.CurrentHP;
         }
 

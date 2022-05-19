@@ -20,7 +20,7 @@ namespace BlueOrb.Controller.Damage
         private Action<Telegram> _externalDamageDelegate, _setDamageSourceLocationDelegate;
         private DamageEntityInfo DamageInfo { get; set; }
         private IPhysicsComponent _physicsComponent;
-        private EntityStatsComponent _entityStatsComponent;
+        private IEntityStatsComponent _entityStatsComponent;
         [SerializeField]
         private GameObject _deflectPrefab;
         [Tag]
@@ -123,7 +123,7 @@ namespace BlueOrb.Controller.Damage
         private void Start()
         {
             if (_entityStatsComponent == null)
-                _entityStatsComponent = _componentRepository.Components.GetComponent<EntityStatsComponent>();
+                _entityStatsComponent = _componentRepository.Components.GetComponent<IEntityStatsComponent>();
             if (_physicsComponent == null)
                 _physicsComponent = _componentRepository.Components.GetComponent<IPhysicsComponent>();
         }
@@ -146,15 +146,12 @@ namespace BlueOrb.Controller.Damage
 
         private void DamageSelf(DamageEntityInfo damageInfo)
         {
-            DamageInfo = new DamageEntityInfo();
-            DamageInfo.CopyFrom(damageInfo);
             //DamageInfo.DamageAmount = damageInfo.DamageAmount;
             //Debug.LogError("Damaged " + damageInfo.DamageAmount);
             //DamageInfo.DamagedByEntity = damageInfo.DamagedByEntity;
             //DamageInfo.DamagedBy = damageInfo.DamagedBy;
             //DamageInfo.DamageSourceLocation = damageInfo.DamageSourceLocation;
             //DamageInfo.Tag = damageInfo.Tag;
-            DamageInfo.IsDamaged = true;
             //DamageInfo.CollisionDamageType = damageInfo.CollisionDamageType;
             //SendDamageNotification();
 
@@ -165,11 +162,14 @@ namespace BlueOrb.Controller.Damage
             // No stats? Dead!
             if (_entityStatsComponent == null)
             {
+                Debug.LogError($"(DamageComponent) Entity killed: {_componentRepository.name}");
                 EntityIsDead();
             }
             else
             {
-                _entityStatsComponent.AddHp(-damageInfo.DamageAmount);
+                float damageAmount = Math.Abs(damageInfo.DamageAmount) * -1f;
+                Debug.LogError($"(DamageComponent) Damaging entity {_componentRepository.name} {damageAmount} hp,  damaged by {damageInfo.DamagedByEntity.name}");
+                _entityStatsComponent.AddHp(damageAmount);
             }
 
             // Report the damage
@@ -183,7 +183,6 @@ namespace BlueOrb.Controller.Damage
 
             // Do not retain the damage information, assume it has already been responded to in the state change triggered above
             // If there was no state change then the entity can't be damaged and we don't want to buffer attacks so set to null anyway.
-            DamageInfo = null;
         }
 
         private void EntityIsDead()

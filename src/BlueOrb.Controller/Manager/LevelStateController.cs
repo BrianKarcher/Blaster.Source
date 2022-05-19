@@ -74,10 +74,17 @@ namespace BlueOrb.Controller.Manager
             EntityContainer.Instance.LevelStateController = this;
         }
 
-        //private void Start()
-        //{
-        //    GameStateController.Instance.LevelStateController = this;
-        //}
+        private void Start()
+        {
+            //GameStateController.Instance.LevelStateController = this;
+            SceneSetup sceneSetup = GameObject.FindObjectOfType<SceneSetup>();
+            if (sceneSetup == null)
+            {
+                Debug.LogError("No scene setup. Must have scene setup!");
+                return;
+            }
+            this.currentHp = this.maxHp = sceneSetup.SceneConfig.MaxHp;
+        }
 
         public void StartLevel()
         {
@@ -120,7 +127,7 @@ namespace BlueOrb.Controller.Manager
         private void UpdateUI()
         {
             MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
-            //MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (_currentHp, _maxHp));
+            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (this.currentHp, this.maxHp));
         }
 
         public override void StartListening()

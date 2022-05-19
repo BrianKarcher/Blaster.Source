@@ -194,8 +194,10 @@ namespace BlueOrb.Controller.Attack
             {
                 var collider = colliders[i];
                 // Only do triggers for now.
-                if (collider.isTrigger)
+                if (collider.isTrigger == false)
+                {
                     continue;
+                }
                 //if (itemHit == null)
                 //    continue;
 
