@@ -76,6 +76,7 @@ namespace BlueOrb.Controller.Damage
 
         protected virtual void SetCurrentHp(float hp)
         {
+            hp = Mathf.Max(0, hp);
             _entityStats.CurrentHP = hp;
         }
 
