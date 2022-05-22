@@ -99,24 +99,30 @@ namespace BlueOrb.Physics
             RaycastHit hitInfo;
             //#if UNITY_EDITOR
             //			// helper to visualise the ground check ray in the scene view
-            Debug.DrawLine(_movementController.transform.position + (Vector3.up * 0.1f), _movementController.transform.position + (Vector3.up * 0.1f) + (Vector3.down * _physicsData.GroundCheckDistance));
+            Debug.DrawLine(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), _movementController.transform.position + new Vector3(0f, 0.2f, 0f) + (Vector3.down * _physicsData.GroundCheckDistance));
             //#endif
             // 0.1f is a small offset to start the ray from inside the character
             // it is also good to note that the transform position in the sample assets is at the base of the character
-            bool groundRaycast = UnityEngine.Physics.Raycast(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), Vector3.down, out hitInfo, _physicsData.GroundCheckDistance, _physicsData.GroundLayer.value);
+            bool groundRaycast = UnityEngine.Physics.Raycast(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), Vector3.down, out hitInfo, _physicsData.GroundCheckDistance, _physicsData.GroundLayer);
+            
+            if (_isGrounded != groundRaycast)
+            {
+                Debug.Log($"{_movementController.GetComponentRepository().name} changed isGrounded to {groundRaycast}");
+            }
+            _isGrounded = groundRaycast;
             // The raycast and the Unity rigidbody sometimes disagree, so if either show ground or not moving vertically, assume entity is on the ground.
-            if (!groundRaycast && Mathf.Abs(_movementController.GetVelocity3().y) > 0.05f)
-            {
-                _isGrounded = false;
-                GroundNormal = Vector3.up;
-                //m_Animator.applyRootMotion = false;
-            }
-            else
-            {
-                GroundNormal = hitInfo.normal;
-                _isGrounded = true;
-                //m_Animator.applyRootMotion = true;
-            }
+            //if (!groundRaycast && Mathf.Abs(_movementController.GetVelocity3().y) > 0.05f)
+            //{
+            //    _isGrounded = false;
+            //    GroundNormal = Vector3.up;
+            //    //m_Animator.applyRootMotion = false;
+            //}
+            //else
+            //{
+            //    GroundNormal = hitInfo.normal;
+            //    _isGrounded = true;
+            //    //m_Animator.applyRootMotion = true;
+            //}
         }
 
         public bool PosInFOV2(Vector2 pos)

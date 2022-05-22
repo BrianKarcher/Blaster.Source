@@ -361,7 +361,7 @@ namespace BlueOrb.Physics
 
         public Vector3 GetVelocity3() => _rigidBody3D.velocity;
 
-        public bool GetIsGrounded => this._controller.GetIsGrounded();
+        public bool GetIsGrounded() => this._controller.GetIsGrounded();
 
 
         public void SetVelocity3(Vector3 velocity) => _rigidBody3D.velocity = velocity;

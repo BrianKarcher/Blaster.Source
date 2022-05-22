@@ -414,7 +414,7 @@ namespace BlueOrb.Physics
 
         public virtual Vector3 GetFeetWorldPosition3() => transform.position;
 
-        public bool GetIsGrounded => this._controller.GetIsGrounded();
+        public bool GetIsGrounded() => this._controller.GetIsGrounded();
 
 
         public virtual void SetFeetWorldPosition2(Vector2 pos)
