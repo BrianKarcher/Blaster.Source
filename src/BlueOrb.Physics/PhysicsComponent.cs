@@ -316,10 +316,7 @@ namespace BlueOrb.Physics
                 _animationComponent.SetVerticalSpeed(GetVelocity3().y);
         }
 
-        public Rigidbody GetRidigbody()
-        {
-            return _rigidBody3D;
-        }
+        public Rigidbody GetRidigbody() => _rigidBody3D;
 
         private void SetForwardSpeed(float speed)
         {
@@ -340,26 +337,13 @@ namespace BlueOrb.Physics
                 _animationComponent.SetForwardSpeed(speed);
         }
 
-        public override void StartListening()
-        {
-            base.StartListening();
-        }
-
-        public override void StopListening()
-        {
-            base.StopListening();
-        }
-
         public Vector3 GetWorldPos3()
         {
             var height = _componentRepository.GetHeight();
             return transform.position + new Vector3(0f, height / 2f, 0f);
         }
 
-        public Vector2 GetWorldPos2()
-        {
-            return transform.position.xz();
-        }
+        public Vector2 GetWorldPos2() => transform.position.xz();
 
         public void SetWorldPos2(Vector2 newPos)
         {
@@ -367,45 +351,22 @@ namespace BlueOrb.Physics
             this.transform.position = new Vector3(newPos.x, this.transform.position.y, newPos.y);
         }
 
-        public void SetWorldPos3(Vector3 new_pos)
-        {
-            this.transform.position = new_pos;
-        }
+        public void SetWorldPos3(Vector3 new_pos) => this.transform.position = new_pos;
 
-        public PhysicsData GetPhysicsData()
-        {
-            return _controller.GetPhysicsData();
-        }
+        public PhysicsData GetPhysicsData() => _controller.GetPhysicsData();
 
         public PhysicsData GetOriginalPhysicsData() => _controller.GetOriginalPhysicsData();
 
-        public Vector2 GetVelocity2()
-        {
-            if (_rigidBody3D != null)
-                return _rigidBody3D.velocity.xz();
-            return Vector2.zero;
-        }
+        public Vector2 GetVelocity2() => _rigidBody3D.velocity.xz();
 
-        public Vector3 GetVelocity3()
-        {
-            if (_rigidBody3D != null)
-                return _rigidBody3D.velocity;
-            return Vector2.zero;
-        }
+        public Vector3 GetVelocity3() => _rigidBody3D.velocity;
 
-        public void SetVelocity3(Vector3 velocity)
-        {
-            if (_rigidBody3D != null)
-            {
-                _rigidBody3D.velocity = velocity;
-            }
-        }
+        public bool GetIsGrounded => this._controller.GetIsGrounded();
 
-        public void SetVelocity2(Vector2 velocity)
-        {
-            if (_rigidBody3D != null)
-                _rigidBody3D.velocity = new Vector3(velocity.x, _rigidBody3D.velocity.y, velocity.y);
-        }
+
+        public void SetVelocity3(Vector3 velocity) => _rigidBody3D.velocity = velocity;
+
+        public void SetVelocity2(Vector2 velocity) => _rigidBody3D.velocity = new Vector3(velocity.x, _rigidBody3D.velocity.y, velocity.y);
 
         public void AccelerateTo(Vector3 targetVelocity, float maxAccel)
         {
@@ -420,10 +381,7 @@ namespace BlueOrb.Physics
             _rigidBody3D.AddForce(accel);
         }
 
-        public void Move(Vector3 motion)
-        {
-            this._rigidBody3D.MovePosition(this.transform.position + motion);
-        }
+        public void Move(Vector3 motion) => this._rigidBody3D.MovePosition(this.transform.position + motion);
 
         public void AddForce(Vector3 force) => _rigidBody3D?.AddForce(force);
 
@@ -435,54 +393,25 @@ namespace BlueOrb.Physics
 
         public void Jump() => AddForce(GetPhysicsData().JumpVelocity, ForceMode.VelocityChange);
 
-        public virtual Vector2 GetFeetWorldPosition2()
-        {
-            //return _controller.GetPhysicsData().Foot.transform.position.xz();
-            return transform.position.xz();
-        }
+        public virtual Vector2 GetFeetWorldPosition2() => transform.position.xz();
 
-        public virtual Vector3 GetFeetWorldPosition3()
-        {
-            //return _controller.GetPhysicsData().Foot.transform.position;
-            return transform.position;
-        }
+        public virtual Vector3 GetFeetWorldPosition3() => transform.position;
 
         public virtual void SetFeetWorldPosition2(Vector2 pos)
-        {
-            //SetWorldPos2(new Vector2(pos.x, pos.y) - (Vector2)_physicsData._footOffset);
-            SetWorldPos2(new Vector2(pos.x, pos.y) - _controller.GetPhysicsData().Foot.transform.localPosition.xz());
-        }
+            => SetWorldPos2(new Vector2(pos.x, pos.y) - _controller.GetPhysicsData().Foot.transform.localPosition.xz());
 
         public virtual void SetFeetWorldPosition3(Vector3 pos)
-        {
-            SetWorldPos3((Vector3)pos - _controller.GetPhysicsData().Foot.transform.localPosition);
-        }
+            => SetWorldPos3((Vector3)pos - _controller.GetPhysicsData().Foot.transform.localPosition);
 
-        public Vector3 GetLocalPos3()
-        {
-            return transform.localPosition;
-        }
+        public Vector3 GetLocalPos3() => transform.localPosition;
 
-        public void Stop()
-        {
-            SetVelocity3(Vector3.zero);
-            //_rigidBody3D?.Sleep();
-        }
+        public void Stop() => SetVelocity3(Vector3.zero);
 
-        public ISteeringBehaviorManager GetSteering()
-        {
-            return _steering;
-        }
+        public ISteeringBehaviorManager GetSteering() => _steering;
 
-        public void SetEnabled(bool enabled)
-        {
-            _isEnabled = enabled;
-        }
+        public void SetEnabled(bool enabled) => _isEnabled = enabled;
 
-        public bool GetEnabled()
-        {
-            return _isEnabled;
-        }
+        public bool GetEnabled() => _isEnabled;
 
         public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
         {

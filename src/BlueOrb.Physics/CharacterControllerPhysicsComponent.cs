@@ -351,16 +351,6 @@ namespace BlueOrb.Physics
                 _animationComponent.SetForwardSpeed(speed);
         }
 
-        public override void StartListening()
-        {
-            base.StartListening();
-        }
-
-        public override void StopListening()
-        {
-            base.StopListening();
-        }
-
         public Vector3 GetWorldPos3()
         {
             var height = _componentRepository.GetHeight();
@@ -423,6 +413,9 @@ namespace BlueOrb.Physics
         public virtual Vector2 GetFeetWorldPosition2() => transform.position.xz();
 
         public virtual Vector3 GetFeetWorldPosition3() => transform.position;
+
+        public bool GetIsGrounded => this._controller.GetIsGrounded();
+
 
         public virtual void SetFeetWorldPosition2(Vector2 pos)
         {

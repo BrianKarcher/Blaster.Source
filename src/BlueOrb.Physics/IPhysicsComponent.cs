@@ -21,6 +21,8 @@ namespace BlueOrb.Physics
         Vector3 GetLocalPos3();
         Vector3 GetWorldPos3();
         Vector2 GetWorldPos2();
+
+        bool GetIsGrounded { get; }
         void Jump();
         void SetEnabled(bool enabled);
         //void SetWorldPos(Vector2 new_pos);
