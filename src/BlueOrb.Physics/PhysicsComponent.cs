@@ -424,7 +424,9 @@ namespace BlueOrb.Physics
             _steering.OnDrawGizmos();
             Gizmos.color = Color.black;
             Gizmos.DrawLine(transform.position, transform.position + _steeringForce);
-            Gizmos.DrawSphere(_steering.Target + new Vector3(0, 0.2f, 0), 0.2f);
+            Gizmos.color = Color.blue;
+            //Gizmos.DrawSphere(_steering.Target + new Vector3(0, 0.2f, 0), 0.2f);
+            Gizmos.DrawSphere(transform.position + new Vector3(0, 0.2f, 0), 0.5f);
         }
     }
 }
