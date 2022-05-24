@@ -23,7 +23,7 @@ namespace BlueOrb.Physics
         private SteeringBehaviorManager _steering;
 
         [SerializeField]
-        private bool _isEnabled;
+        private bool _isEnabled = true;
 
         [SerializeField]
         private string _animForwardSpeedVar;
@@ -32,7 +32,7 @@ namespace BlueOrb.Physics
         private AnimationComponent _animationComponent;
         private Vector3 _steeringForce;
         private Vector3 velocity;
-        private Vector3 steeringVelocity;
+        //private Vector3 steeringVelocity;
 
         public void Construct(PhysicsLogic logic)
         {
@@ -64,7 +64,7 @@ namespace BlueOrb.Physics
 
         protected void FixedUpdate()
         {
-            _controller.CheckGroundStatus();
+            //_controller.CheckGroundStatus();
 
             if (!_isEnabled)
                 return;
@@ -153,7 +153,7 @@ namespace BlueOrb.Physics
 
             //AddForce(force);
 
-            if (_controller.GetIsGrounded() && this.velocity.y < 0)
+            if (GetIsGrounded() && this.velocity.y < 0)
             {
                 this.velocity.y = 0;
             }
@@ -242,7 +242,7 @@ namespace BlueOrb.Physics
         private void ProcessSteeringBehaviorForce2()
         {
             var steeringForce = _steering.Calculate();
-            if (_steering.ProjectOnGround && Controller.GetIsGrounded())
+            if (_steering.ProjectOnGround && GetIsGrounded())
             {
                 steeringForce = Vector3.ProjectOnPlane(steeringForce, _controller.GroundNormal);
             }
@@ -250,10 +250,13 @@ namespace BlueOrb.Physics
             _steeringForce = steeringForce;
 
             // Apply the turn before leaving so we can process TurnToTarget even when idle
-            var forwardAndTurnAmount = CalculateForwardMovementAndTurnAmount(GetVelocity3());
+            //var forwardAndTurnAmount = CalculateForwardMovementAndTurnAmount(this.steeringVelocity);
+            var forwardAndTurnAmount = CalculateForwardMovementAndTurnAmount(this.velocity);
             // Can't rotate while airborn
-            if (Controller.GetPhysicsData().AutoTurn && Controller.GetIsGrounded())
+            if (Controller.GetPhysicsData().AutoTurn/* && GetIsGrounded()*/)
+            {
                 ApplyRotation(forwardAndTurnAmount.forwardAmount, forwardAndTurnAmount.turnAmount);
+            }
             //var forwardAndTurnAmount = CalculateForwardMovementAndTurnAmount(steeringForce);
 
             if (Controller.GetPhysicsData().AutoApplyToAnimator)
@@ -274,16 +277,22 @@ namespace BlueOrb.Physics
             }
             else
             {
-                this.steeringVelocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
+                this.velocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
+                //this.steeringVelocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
                 //AddForce(steeringForce * _controller.GetPhysicsData().ForceMultiplier);
                 //AddForce(transform.forward * forwardAndTurnAmount.forwardAmount * _controller.GetPhysicsData().ForceMultiplier);
             }
             var maxSpeed = _controller.GetPhysicsData().MaxSpeed * _controller.GetPhysicsData().MaxSpeedMultiplier;
-            if (this.steeringVelocity.magnitude > maxSpeed)
+            //if (this.steeringVelocity.magnitude > maxSpeed)
+            //{
+            //    this.steeringVelocity = this.steeringVelocity.normalized * maxSpeed;
+            //}
+            //this.characterController.Move(this.steeringVelocity * Time.deltaTime);
+            if (this.velocity.magnitude > maxSpeed)
             {
-                this.steeringVelocity = this.steeringVelocity.normalized * maxSpeed;
+                this.velocity = this.velocity.normalized * maxSpeed;
             }
-            this.characterController.Move(this.steeringVelocity * Time.deltaTime);
+            //this.characterController.Move(this.velocity * Time.deltaTime);
         }
 
         public (float forwardAmount, float sideSpeed, float turnAmount) CalculateForwardMovementAndTurnAmount(Vector3 force)
@@ -414,8 +423,7 @@ namespace BlueOrb.Physics
 
         public virtual Vector3 GetFeetWorldPosition3() => transform.position;
 
-        public bool GetIsGrounded() => this._controller.GetIsGrounded();
-
+        public bool GetIsGrounded() => this.characterController.isGrounded;
 
         public virtual void SetFeetWorldPosition2(Vector2 pos)
         {
