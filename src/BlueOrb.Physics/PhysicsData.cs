@@ -184,11 +184,11 @@ namespace BlueOrb.Physics
         public GameObject Foot { get => _foot; set => _foot = value; }
 
         [SerializeField]
-        private float _fieldOfView;
+        private float _fieldOfView = 60;
         public float FieldOfView { get { return _fieldOfView; } set { _fieldOfView = value; } }
 
         [SerializeField]
-        private float _lineOfSight;
+        private float _lineOfSight = 20;
         public float LineOfSight { get { return _lineOfSight; } set { _lineOfSight = value; } }
         // Cache distance squared for LOS
         public float LOSSquared;

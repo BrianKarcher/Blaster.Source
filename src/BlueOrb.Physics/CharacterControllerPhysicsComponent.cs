@@ -133,7 +133,7 @@ namespace BlueOrb.Physics
             //}
             //_physicsData.
 
-            var velocity2 = GetVelocity3().xz();
+            
             //_previousVelocity = velocity;
 
             //_physicsData.Velocity = velocity;
@@ -166,6 +166,12 @@ namespace BlueOrb.Physics
                 //AddForce(new Vector3(0, -9.8f, 0));
             }
 
+            var velocity2 = GetVelocity3().xz();
+            // Drag force
+            float multiplier = 1.0f - GetPhysicsData().DragForce * Time.fixedDeltaTime;
+            if (multiplier < 0.0f) multiplier = 0.0f;
+            this.velocity = multiplier * this.velocity;
+            //this.velocity = new Vector3(velocity2.x, this.velocity.y, velocity2.y);
 
             //if (velocity2.sqrMagnitude < float.Epsilon)
             //{
