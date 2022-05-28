@@ -17,12 +17,6 @@ namespace BlueOrb.Controller
         [SerializeField] private string[] _attackAnim;
         [SerializeField]
         private string _sideSpeedAnim;
-        //public string SideSpeedAnim => _sideSpeedAnim;
-        [SerializeField]
-        private string _strafeAnim;
-        public string StrafeAnim => _strafeAnim;
-
-        [SerializeField] private string _crouchAnimTrigger;
 
         private Animator _animator;
 

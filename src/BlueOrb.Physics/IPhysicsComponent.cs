@@ -6,6 +6,8 @@ namespace BlueOrb.Physics
     public interface IPhysicsComponent : IComponentBase
     {
         PhysicsLogic Controller { get; }
+        bool AutoApplyToAnimator { get; set; }
+
         void AddForce(Vector3 force);
         void AddForce2(Vector2 force);
         void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier);
@@ -32,6 +34,7 @@ namespace BlueOrb.Physics
         //Transform transform { get; }
         ISteeringBehaviorManager GetSteering();
         void Move(Vector3 motion);
+        void RevertAutoApplyToAnimator();
         //IPhysicsAffector GetPhysicsAffector(string name);
         //void SetPhysicsAffector(string name, IPhysicsAffector physicsAffector);
     }

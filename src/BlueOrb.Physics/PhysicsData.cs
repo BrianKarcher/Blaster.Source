@@ -27,7 +27,7 @@ namespace BlueOrb.Physics
         public bool AutoTurn { get => _autoTurn; set => _autoTurn = value;}
 
         [SerializeField]
-        private bool _autoApplyToAnimator;
+        private bool _autoApplyToAnimator = true;
         public bool AutoApplyToAnimator { get => _autoApplyToAnimator; set => _autoApplyToAnimator = value; }
 
         [SerializeField]
@@ -65,24 +65,8 @@ namespace BlueOrb.Physics
         private Vector3 _velocity;
 
         [SerializeField]
-        private Vector3 _jumpVelocity;
+        private Vector3 _jumpVelocity = new Vector3(0f, 19.8f, 0f);
         public Vector3 JumpVelocity => _jumpVelocity;
-
-        //[HideInInspector]
-        //a normalized vector pointing in the direction the entity is heading. 
-        //[SerializeField]
-        //private Vector3 _heading;
-        //public Vector3 Heading
-        //{
-        //    get => _heading;
-        //    set => _heading = value;
-        //}
-
-        //[HideInInspector]
-        //a vector perpendicular to the heading vector
-        //[SerializeField]
-        //private Vector3 _side;
-        //public Vector3 Side { get { return _side; } set { _side = value; } }
 
         [SerializeField]
         private Vector3 _offset;

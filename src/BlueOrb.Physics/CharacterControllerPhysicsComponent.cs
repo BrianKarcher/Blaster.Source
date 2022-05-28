@@ -166,7 +166,7 @@ namespace BlueOrb.Physics
                 //AddForce(new Vector3(0, -9.8f, 0));
             }
 
-            var velocity2 = GetVelocity3().xz();
+            //var velocity2 = GetVelocity3().xz();
             // Drag force
             float multiplier = 1.0f - GetPhysicsData().DragForce * Time.fixedDeltaTime;
             if (multiplier < 0.0f) multiplier = 0.0f;
@@ -259,7 +259,7 @@ namespace BlueOrb.Physics
             //var forwardAndTurnAmount = CalculateForwardMovementAndTurnAmount(this.steeringVelocity);
             var forwardAndTurnAmount = CalculateForwardMovementAndTurnAmount(this.velocity);
             // Can't rotate while airborn
-            if (Controller.GetPhysicsData().AutoTurn/* && GetIsGrounded()*/)
+            if (Controller.GetPhysicsData().AutoTurn/* && GetIsGrounded()*/ && steeringForce.sqrMagnitude > 0.01f * 0.01f)
             {
                 ApplyRotation(forwardAndTurnAmount.forwardAmount, forwardAndTurnAmount.turnAmount);
             }
@@ -341,7 +341,7 @@ namespace BlueOrb.Physics
             _animationComponent.SetForwardSpeed(forwardSpeed);
             _animationComponent.SetTurnSpeed(turnSpeed);
             _animationComponent.SetSideSpeed(sideSpeed);
-            if (Controller.GetIsGrounded())
+            if (GetIsGrounded())
                 _animationComponent.SetVerticalSpeed(0f);
             else
                 _animationComponent.SetVerticalSpeed(GetVelocity3().y);
@@ -365,6 +365,14 @@ namespace BlueOrb.Physics
             if (_animationComponent != null)
                 _animationComponent.SetForwardSpeed(speed);
         }
+
+        public bool AutoApplyToAnimator {
+            get => this.Controller.GetPhysicsData().AutoApplyToAnimator;
+            set => this.Controller.GetPhysicsData().AutoApplyToAnimator = value;
+        }
+
+        public void RevertAutoApplyToAnimator()
+            => this.Controller.GetPhysicsData().AutoApplyToAnimator = this.Controller.OriginalPhysicsData.AutoApplyToAnimator;
 
         public Vector3 GetWorldPos3()
         {

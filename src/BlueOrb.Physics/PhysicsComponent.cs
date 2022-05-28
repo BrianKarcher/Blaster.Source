@@ -331,6 +331,15 @@ namespace BlueOrb.Physics
             _rigidBody3D.AddRelativeForce(new Vector3(0f, 0f, speed));
         }
 
+        public bool AutoApplyToAnimator
+        {
+            get => this.Controller.GetPhysicsData().AutoApplyToAnimator;
+            set => this.Controller.GetPhysicsData().AutoApplyToAnimator = value;
+        }
+
+        public void RevertAutoApplyToAnimator()
+            => this.Controller.GetPhysicsData().AutoApplyToAnimator = this.Controller.OriginalPhysicsData.AutoApplyToAnimator;
+
         private void SetAnimForwardSpeed(float speed)
         {
             if (_animationComponent != null)
