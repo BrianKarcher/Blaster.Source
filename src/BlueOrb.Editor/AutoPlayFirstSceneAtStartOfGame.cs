@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using SceneSetup = BlueOrb.Controller.Manager.SceneSetup;
 
 namespace BlueOrb.Editor
 {
@@ -19,7 +20,7 @@ namespace BlueOrb.Editor
             // Ensure at least one build scene exist.
             if (EditorBuildSettings.scenes.Length == 0)
                 return;
-            //var sceneSetup = GameObject.FindObjectOfType<RQ.SceneSetup>();
+            //var sceneSetup = GameObject.FindObjectOfType<SceneSetup>();
             //var activeScene = EditorSceneManager.GetActiveScene();
             //var activeSceneName = activeScene.name;
             //Debug.Log($"Active scene name: {sceneSetup?.SceneConfig?.name}");

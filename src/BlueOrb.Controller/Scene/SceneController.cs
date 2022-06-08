@@ -15,8 +15,15 @@ namespace BlueOrb.Controller
     [AddComponentMenu("RQ/Manager/Scene Controller")]
     public class SceneController : MonoBehaviour
     {
+        /// <summary>
+        /// Pointer to the Scene file (.unity)
+        /// </summary>
+        //[SerializeField]
+        //private UnityEngine.Object firstScene;
+
         [SerializeField]
         private string _firstScene;
+        //private Scene scene;
 
         public event Action BeforeSceneUnload;
         public event Action AfterSceneLoad;
@@ -169,6 +176,12 @@ namespace BlueOrb.Controller
         private IEnumerator LoadSceneAndSetActive(string sceneName)
         {
             Debug.Log($"SceneController LoadSceneAsync called for {sceneName}");
+            var persistScene = SceneManager.GetSceneByName(PersistScene);
+            if (sceneName == persistScene.path)
+            {
+                Debug.Log("Cannot switch to the persistent scene");
+                yield break;
+            }
             //yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
             // Need to wait a frame until we can set the next one as active

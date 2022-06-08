@@ -16,6 +16,10 @@ namespace BlueOrb.Base.Config
         private bool immediateStartGame = false;
         public bool ImmediateStartGame => immediateStartGame;
 
+        [SerializeField]
+        private bool skipCountdown = false;
+        public bool SkipCountdown => skipCountdown;
+
         [SerializeField] 
         private AudioClip countdownSound;
         public AudioClip CountdownSound => countdownSound;

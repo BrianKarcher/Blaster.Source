@@ -17,6 +17,8 @@ namespace BlueOrb.Controller.Controller
         private GameObject _levelState;
         [SerializeField]
         private string StartText = "START";
+        [SerializeField]
+        private string CountdownCompleteMessage = "CountdownComplete";
 
         private int _currentTime;
         private float _startTime;
@@ -34,7 +36,7 @@ namespace BlueOrb.Controller.Controller
             _currentTime = gameSettingsConfig.LevelStartSeconds;
             _displayedTime = gameSettingsConfig.LevelStartSeconds;
             _startTime = Time.time;
-            if (gameSettingsConfig.ImmediateStartGame)
+            if (gameSettingsConfig.SkipCountdown)
             {
                 LevelStart();
                 return;
@@ -95,7 +97,7 @@ namespace BlueOrb.Controller.Controller
             // Broadcast a level start to everybody listening
             MessageDispatcher.Instance.DispatchMsg("ShowTimer", 0f, _componentRepository.GetId(), "Hud Controller", false);
             IEntity levelStateId = _levelState.GetComponent<IEntity>();
-            MessageDispatcher.Instance.DispatchMsg("LevelStart", 0f, _componentRepository.GetId(), levelStateId.GetId(), null);
+            MessageDispatcher.Instance.DispatchMsg(CountdownCompleteMessage, 0f, _componentRepository.GetId(), levelStateId.GetId(), null);
             foreach (var go in gameObjectsToEnable)
             {
                 go.SetActive(true);
