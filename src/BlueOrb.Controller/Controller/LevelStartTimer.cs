@@ -25,13 +25,9 @@ namespace BlueOrb.Controller.Controller
         private int _displayedTime;
         private GameSettingsConfig gameSettingsConfig;
 
-        protected override void Awake()
+        public override void OnEnable()
         {
-            base.Awake();
-        }
-
-        private void Start()
-        {
+            base.OnEnable();
             gameSettingsConfig = GameStateController.Instance.GameSettingsConfig;
             _currentTime = gameSettingsConfig.LevelStartSeconds;
             _displayedTime = gameSettingsConfig.LevelStartSeconds;
@@ -44,6 +40,11 @@ namespace BlueOrb.Controller.Controller
             MessageDispatcher.Instance.DispatchMsg("ShowTimer", 0f, _componentRepository.GetId(), "Hud Controller", true);
             SetDisplay();
             PlayCountdownSound();
+        }
+
+        private void Start()
+        {
+
         }
 
         private void Update()
@@ -102,7 +103,7 @@ namespace BlueOrb.Controller.Controller
             {
                 go.SetActive(true);
             }
-            GameObject.Destroy(gameObject);
+            //GameObject.Destroy(gameObject);
         }
     }
 }

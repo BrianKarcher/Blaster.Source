@@ -15,6 +15,15 @@ namespace BlueOrb.Base.Components
         private EntityCommonComponent _parentRepo;
         private HashSet<EntityCommonComponent> _childSpriteBaseComponents = new HashSet<EntityCommonComponent>();
 
+        [SerializeField]
+        private string customId;
+
+        public override string GetId()
+        {
+            string id = string.IsNullOrEmpty(this.customId) ? base.GetId() : customId;
+            return id;
+        }
+
         //[HideInInspector]
         //public bool JustLoaded { get; set; }
 

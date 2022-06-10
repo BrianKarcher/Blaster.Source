@@ -57,19 +57,19 @@ namespace BlueOrb.Controller
                     //sceneSetup.LevelLoaded();
                 }
             };
-            if (string.IsNullOrEmpty(GlobalStatic.NextScene))
-            {
-                GlobalStatic.NextScene = _firstScene;
-            }
+            //if (string.IsNullOrEmpty(GlobalStatic.NextScene))
+            //{
+            //    GlobalStatic.NextScene = _firstScene;
+            //}
             Debug.Log("(GameController) Next Scene is set to " + GlobalStatic.NextScene);
             // If the only scene open is the Game Controller, then load in the start scene
             // In the Unity Editor, the start scene is the scene loaded when pressing Play,
             // per AutoPlayFirstSceneAtStartOfGame. When playing after build, it loads the title screen.
-            if (SceneManager.sceneCount == 1)
-            {
-                StartCoroutine(LoadSceneAndSetActive(GlobalStatic.NextScene));
-                //SceneManager.LoadScene(GlobalStatic.NextScene, LoadSceneMode.Additive);
-            }
+            //if (SceneManager.sceneCount == 1)
+            //{
+            //    StartCoroutine(LoadSceneAndSetActive(GlobalStatic.NextScene));
+            //    //SceneManager.LoadScene(GlobalStatic.NextScene, LoadSceneMode.Additive);
+            //}
         }
 
         //public void SceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -197,7 +197,10 @@ namespace BlueOrb.Controller
         private IEnumerator Fade(string triggerName, float finalAlpha)
         {
             Debug.LogWarning("Fade called");
-            OverlayAnimator.SetTrigger(triggerName);
+            if (OverlayAnimator != null)
+            {
+                OverlayAnimator.SetTrigger(triggerName);
+            }
             //var overlayWindow = GameController.Instance.GetGraphicsEngine().GetOverlayWindow();
             //overlayWindow.TweenOverlayToColor(
             //    new RQ.Model.TweenToColorInfo(new Color(0, 0, 0, finalAlpha), 0, fadeDuration));

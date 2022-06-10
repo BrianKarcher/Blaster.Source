@@ -23,6 +23,7 @@ namespace BlueOrb.Controller.Manager
         public bool HasLevelBegun => hasLevelBegun;
         //[SerializeField] private string levelStartMessage = "LevelStart";
         [SerializeField] private string setLevelBeginMessage = "SetLevelBegin";
+        [SerializeField] private string setLevelEndMessage = "SetLevelEnd";
 
         //public void SetLevelBegan(bool hasBegun)
         //{
@@ -147,6 +148,13 @@ namespace BlueOrb.Controller.Manager
                 if (data.ReceiverId != _componentRepository.GetId())
                     return;
                 StartLevel();
+            });
+            setLevelBeginIndex = MessageDispatcher.Instance.StartListening(this.setLevelEndMessage, _componentRepository.GetId(), (data) =>
+            {
+                Debug.Log($"(LevelStateController) Received {setLevelBeginMessage} mesage");
+                if (data.ReceiverId != _componentRepository.GetId())
+                    return;
+                this.hasLevelBegun = false;
             });
             //_setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
             //{
