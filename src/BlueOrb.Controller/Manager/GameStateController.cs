@@ -1,16 +1,9 @@
-﻿using BlueOrb.Base.VariableClasses;
-using BlueOrb.Common.Components;
-using BlueOrb.Common.Container;
+﻿using BlueOrb.Common.Components;
 using BlueOrb.Controller;
-using BlueOrb.Controller.Inventory;
-using BlueOrb.Controller.Player;
-using BlueOrb.Controller.Scene;
-using BlueOrb.Messaging;
 using UnityEngine;
 using System.Collections.Generic;
-using BlueOrb.Controller.Damage;
 using BlueOrb.Base.Config;
-using BlueOrb.Controller.Manager;
+using BlueOrb.Controller.Persistence;
 
 namespace BlueOrb.Base.Manager
 {
@@ -28,26 +21,29 @@ namespace BlueOrb.Base.Manager
         private GameSettingsConfig gameSettingsConfig;
         public GameSettingsConfig GameSettingsConfig => gameSettingsConfig;
 
-        //public SceneConfig NextSceneConfig { get; set; }
-        //public string SpawnpointUniqueId { get; set; }
-        //public SceneConfig CurrentSceneConfig { get; set; }
+        [SerializeField]
+        private PersistenceController persistenceController;
+        public PersistenceController PersistenceController => persistenceController;
+
+        private string lootLockerDeviceId;
+        private string lootLockerMemberId;
+        private string userId;
+        private string userName;
 
         /// <summary>
         /// The players current high scores in each level
         /// </summary>
-        private Dictionary<string, int> _levelHighScore;
+        private Dictionary<string, int> levelHighScores;
 
-        //[SerializeField]
-        //private Variables _globalVariables;
-        //public Variables GlobalVariables => _globalVariables;
-        // TODO Set this to true when the player starts a new game!
-        //public bool BeginNewGame { get; set; }
-        //public bool ChangingScene { get; set; }
         [SerializeField]
         private SceneController _sceneController;
 
         [SerializeField]
         private AudioSource audioSource;
+        [SerializeField]
+        private AudioSource musicAudioSource;
+        public AudioSource MusicAudioSource => musicAudioSource;
+
         public AudioSource AudioSource => audioSource;
 
         //private LevelStateController levelStateController;
@@ -67,22 +63,44 @@ namespace BlueOrb.Base.Manager
         protected override void Awake()
         {
             base.Awake();
-            _levelHighScore = new Dictionary<string, int>();
-            //BeginNewGame = true;
+            LoadGame();
         }
 
-        public override string GetId()
-        {
-            return "Game State Controller";
-        }
+        public override string GetId() => "Game State Controller";
 
         public override void Init()
         {
             if (_hasInited)
                 return;
             base.Init();
+        }
 
-            //GlobalVariables.Init();
+        public void SaveGame()
+        {
+            PersistData persistData = new PersistData
+            {
+                LootLockerMemberId = lootLockerMemberId,
+                LootLockerDeviceId = lootLockerDeviceId,
+                UserId = userId,
+                UserName = userName,
+                HighScores = levelHighScores
+            };
+
+            this.persistenceController.Save(persistenceController.SaveFileName, persistData);
+        }
+
+        public void LoadGame()
+        {
+            PersistData persistData = this.persistenceController.Load<PersistData>(persistenceController.SaveFileName);
+            if (persistData == null)
+            {
+                return;
+            }
+            this.lootLockerDeviceId = persistData.LootLockerDeviceId;
+            this.lootLockerMemberId = persistData.LootLockerMemberId;
+            this.userId = persistData.UserId;
+            this.userName = persistData.UserName;
+            this.levelHighScores = persistData.HighScores;
         }
 
         /// <summary>

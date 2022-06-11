@@ -6,10 +6,6 @@ namespace BlueOrb.Physics
     [Serializable]
     public class PhysicsData
     {
-        [SerializeField]
-        private bool _instantForce = false;
-        public bool InstantForce { get => _instantForce; set => _instantForce = value; }
-
         public enum TurnModeEnum
         {
             TowardsSteeringForce = 0,
@@ -223,7 +219,6 @@ namespace BlueOrb.Physics
 
         public virtual void CopyFrom(PhysicsData from)
         {
-            this.InstantForce = from.InstantForce;
             this._groundCheckDistance = from._groundCheckDistance;
             this._groundLayer = from._groundLayer;
             this._jumpVelocity = from._jumpVelocity;

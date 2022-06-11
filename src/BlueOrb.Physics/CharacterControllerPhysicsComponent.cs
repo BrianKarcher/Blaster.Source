@@ -276,18 +276,7 @@ namespace BlueOrb.Physics
                 return;
             }
 
-            if (Controller.GetPhysicsData().InstantForce)
-            {
-                SetVelocity2(_steeringForce.xz().normalized * _controller.GetPhysicsData().MaxSpeed);
-                //SetVelocity2(_steeringForce.xz().normalized * forwardAndTurnAmount.forwardAmount * _controller.GetPhysicsData().MaxSpeed);
-            }
-            else
-            {
-                this.velocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
-                //this.steeringVelocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
-                //AddForce(steeringForce * _controller.GetPhysicsData().ForceMultiplier);
-                //AddForce(transform.forward * forwardAndTurnAmount.forwardAmount * _controller.GetPhysicsData().ForceMultiplier);
-            }
+            this.velocity += steeringForce * _controller.GetPhysicsData().ForceMultiplier * Time.deltaTime;
             var maxSpeed = _controller.GetPhysicsData().MaxSpeed * _controller.GetPhysicsData().MaxSpeedMultiplier;
             //if (this.steeringVelocity.magnitude > maxSpeed)
             //{
