@@ -83,7 +83,7 @@ namespace BlueOrb.Controller.Component
             this.toggleProjectileIndex = MessageDispatcher.Instance.StartListening(this.toggleProjectileMessage, MessageId, (data) =>
             {
                 float direction = (float)data.ExtraInfo;
-                Debug.Log($"(Shooter Controller) Toggle Projectile to {direction}");
+                Debug.Log($"(Shooter Controller) Toggle Projectile to direction: {direction}");
                 projectileToggle.Toggle(direction > 0);
             });
         }

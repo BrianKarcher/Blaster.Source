@@ -36,8 +36,15 @@ namespace BlueOrb.Controller.Persistence
             //Create the stream to add object into it.
             using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read))
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                return (T)formatter.Deserialize(fileStream);
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    return (T)formatter.Deserialize(fileStream);
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 
