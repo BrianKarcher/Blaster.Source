@@ -7,5 +7,6 @@ namespace BlueOrb.Controller.Persistence
     {
         public float SoundEffectVolume { get; set; }
         public float MusicVolume { get; set; }
+        public float Sensitivity { get; set; }
     }
 }

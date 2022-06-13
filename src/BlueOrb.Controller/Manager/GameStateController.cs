@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using BlueOrb.Base.Config;
 using BlueOrb.Controller.Persistence;
+using BlueOrb.Controller.Manager;
 
 namespace BlueOrb.Base.Manager
 {
@@ -24,6 +25,10 @@ namespace BlueOrb.Base.Manager
         [SerializeField]
         private PersistenceController persistenceController;
         public PersistenceController PersistenceController => persistenceController;
+
+        [SerializeField]
+        private SettingsController2 settingsController;
+        public SettingsController2 SettingsController => settingsController;
 
         private string lootLockerDeviceId;
         private string lootLockerMemberId;

@@ -1,4 +1,5 @@
-﻿using BlueOrb.Common.Components;
+﻿using BlueOrb.Base.Manager;
+using BlueOrb.Common.Components;
 using Cinemachine;
 using Rewired;
 using System;
@@ -174,6 +175,8 @@ namespace BlueOrb.Controller.Camera
             var sensitivity = 1.0f;
             if (_isZoomedIn)
                 sensitivity /= 8;
+
+            sensitivity *= GameStateController.Instance.SettingsController.GetSensitivity();
 
             //var rot = _objectToRotate.eulerAngles;
             //rot.y += mouseMovement.x * mouseSensitivityFactor;
