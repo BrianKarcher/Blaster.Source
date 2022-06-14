@@ -162,13 +162,13 @@ namespace BlueOrb.Controller.Damage
             // No stats? Dead!
             if (_entityStatsComponent == null)
             {
-                Debug.LogError($"(DamageComponent) Entity killed: {_componentRepository.name}");
+                Debug.LogWarning($"(DamageComponent) Entity killed: {_componentRepository.name}");
                 EntityIsDead();
             }
             else
             {
                 float damageAmount = Math.Abs(damageInfo.DamageAmount) * -1f;
-                Debug.LogError($"(DamageComponent) Damaging entity {_componentRepository.name} {damageAmount} hp,  damaged by {damageInfo.DamagedByEntity.name}");
+                Debug.Log($"(DamageComponent) Damaging entity {_componentRepository.name} {damageAmount} hp,  damaged by {damageInfo.DamagedByEntity.name}");
                 _entityStatsComponent.AddHp(damageAmount);
             }
 
