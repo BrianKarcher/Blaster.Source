@@ -25,6 +25,8 @@ namespace BlueOrb.Controller.Manager
         [SerializeField] private string setLevelBeginMessage = "SetLevelBegin";
         [SerializeField] private string setLevelEndMessage = "SetLevelEnd";
 
+        public bool EnableInput { get; set; } = true;
+
         //public void SetLevelBegan(bool hasBegun)
         //{
         //    _isLevelBegun = hasBegun;

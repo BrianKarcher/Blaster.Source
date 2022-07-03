@@ -1,5 +1,6 @@
 ﻿using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
+using BlueOrb.Controller.Manager;
 using Cinemachine;
 using Rewired;
 using System;
@@ -74,6 +75,10 @@ namespace BlueOrb.Controller.Camera
 
         [SerializeField]
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
+
+        [SerializeField]
+        private LevelStateController levelStateController;
+
         private bool _isZoomedIn;
 
         public float yaw;
@@ -86,6 +91,7 @@ namespace BlueOrb.Controller.Camera
         {
             base.Awake();
             _isZoomedIn = false;
+            levelStateController = GameObject.FindObjectOfType<LevelStateController>();
         }
 
         void Start()
@@ -149,6 +155,10 @@ namespace BlueOrb.Controller.Camera
 
         void Update()
         {
+            if (!levelStateController.HasLevelBegun || !levelStateController.EnableInput)
+            {
+                return;
+            }
             //var input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             //var speed = input.y;
             //speed = Mathf.Clamp(speed, -1f, 1f);
