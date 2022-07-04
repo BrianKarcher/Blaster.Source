@@ -11,8 +11,6 @@
         float GetMaxHp();
 
         bool HasLevelBegun { get; }
-        //void SetMaxHp(float maxHp);
-        //void AddHp(float hp);
-        //void SetCurrentHp(float hp);
+        bool EnableInput { get; set; }
     }
 }
