@@ -80,13 +80,14 @@ namespace BlueOrb.Controller.Manager
         private void Start()
         {
             //GameStateController.Instance.LevelStateController = this;
-            SceneSetup sceneSetup = GameObject.FindObjectOfType<SceneSetup>();
-            if (sceneSetup == null)
-            {
-                Debug.LogError("No scene setup. Must have scene setup!");
-                return;
-            }
-            this.currentHp = this.maxHp = sceneSetup.SceneConfig.MaxHp;
+            //SceneSetup sceneSetup = GameObject.FindObjectOfType<SceneSetup>();
+            //if (sceneSetup == null)
+            //{
+            //    Debug.LogError("No scene setup. Must have scene setup!");
+            //    return;
+            //}
+            //this.currentHp = this.maxHp = sceneSetup.SceneConfig.MaxHp;
+            //UpdateUI();
         }
 
         public void StartLevel()

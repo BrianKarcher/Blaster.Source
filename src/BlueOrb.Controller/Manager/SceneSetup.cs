@@ -43,13 +43,13 @@ namespace BlueOrb.Controller.Manager
         {
             _player = EntityContainer.Instance.GetMainCharacter();
             Debug.Log("Scene Setup Starting");
-            if (SceneConfig != null)
-            {
-                //EntityContainer.Instance.LevelStateController.SetMaxHp(SceneConfig.MaxHp);
+            //if (SceneConfig != null)
+            //{
+            //    //EntityContainer.Instance.LevelStateController.SetMaxHp(SceneConfig.MaxHp);
 
-                MessageDispatcher.Instance.DispatchMsg("SetMaxHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
-                MessageDispatcher.Instance.DispatchMsg("SetCurrentHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
-            }
+            //    MessageDispatcher.Instance.DispatchMsg("SetMaxHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
+            //    MessageDispatcher.Instance.DispatchMsg("SetCurrentHp", 0f, string.Empty, EntityContainer.Instance.GetMainCharacter().GetId(), SceneConfig.MaxHp);
+            //}
             
             //if (GameStateController.Instance.BeginNewGame)
             //{
