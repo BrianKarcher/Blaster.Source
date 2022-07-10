@@ -43,7 +43,7 @@ namespace BlueOrb.Controller.Damage
         private void UpdateHud()
         {
             MessageDispatcher.Instance.DispatchMsg("UpdateStatsInHud", 0f, this.GetId(), "UI Controller", _entityStats);
-            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (GetCurrentHp(), _entityStats.MaxHP));
+            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (GetCurrentHp(), GetMaxHp()));
         }
     }
 }
