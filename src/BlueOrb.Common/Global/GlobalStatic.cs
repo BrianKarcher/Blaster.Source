@@ -7,5 +7,6 @@ namespace BlueOrb.Base.Global
         public static string NextScene { get; set; }
         public static SceneConfig NextSceneConfig { get; set; }
         public static string Difficulty { get; set; }
+        public static bool NewHighScore { get; set; }
     }
 }

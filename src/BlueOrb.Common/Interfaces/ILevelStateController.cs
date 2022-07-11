@@ -9,6 +9,7 @@
         float GetCurrentHp();
         void SetCurrentHp(float hp);
         float GetMaxHp();
+        void ProcessEndStage();
 
         bool HasLevelBegun { get; }
         bool EnableInput { get; set; }

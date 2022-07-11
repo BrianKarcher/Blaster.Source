@@ -1,8 +1,10 @@
-﻿using BlueOrb.Base.Interfaces;
+﻿using BlueOrb.Base.Global;
+using BlueOrb.Base.Interfaces;
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Component;
+using BlueOrb.Controller.Scene;
 using BlueOrb.Messaging;
 using UnityEngine;
 
@@ -176,6 +178,13 @@ namespace BlueOrb.Controller.Manager
             base.StopListening();
             MessageDispatcher.Instance.StopListening("AddPoints", _componentRepository.GetId(), _addPointsIndex);
             MessageDispatcher.Instance.StopListening(setLevelBeginMessage, _componentRepository.GetId(), setLevelBeginIndex);
+        }
+
+        public void ProcessEndStage()
+        {
+            // TODO : Store this static variable in a better variable. Maybe CurrentLevel? (keep NextSceneConfig as is so it knows where to direct to next in the other area)
+            SceneConfig sceneConfig = GlobalStatic.NextSceneConfig;
+            GameStateController.Instance.EnterHighScore(sceneConfig.UniqueId, this._currentScore);
         }
     }
 

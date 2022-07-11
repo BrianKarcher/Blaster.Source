@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -18,11 +19,25 @@ namespace BlueOrb.Controller.Persistence
         public void Save<T>(string fileName, T persistData)
         {
             //Create the stream to add object into it.
-            using (FileStream fileStream = new FileStream(GetPath(fileName), FileMode.Create, FileAccess.Write))
+
+            // TODO Making it readable for debugging purposes. Change to binary before release.
+            // TODO Make text/binary serializing an option in the GameSettingsConfig.
+            try
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(fileStream, persistData);
+                using (StreamWriter sw = new StreamWriter(fileName))
+                {
+                    string strData = JsonConvert.SerializeObject(persistData);
+                    sw.Write(strData);
+                }
             }
+            catch { }
+            //using (FileStream fileStream = new FileStream(GetPath(fileName), FileMode.Create, FileAccess.Write))
+            //{
+            //    //BinaryFormatter formatter = new BinaryFormatter();
+            //    //formatter.Serialize(fileStream, persistData);
+            //    string strData = JsonConvert.SerializeObject(persistData);
+            //    fileStream.writ
+            //}
         }
 
         public T Load<T>(string fileName)
@@ -33,19 +48,31 @@ namespace BlueOrb.Controller.Persistence
             {
                 return null;
             }
-            //Create the stream to add object into it.
-            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read))
+            try
             {
-                try
+                using (StreamReader sr = new StreamReader(filePath))
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    return (T)formatter.Deserialize(fileStream);
-                }
-                catch
-                {
-                    return null;
+                    T persistData = JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
+                    return persistData;
                 }
             }
+            catch
+            {
+                return null;
+            }
+            //Create the stream to add object into it.
+            //using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read))
+            //{
+            //    try
+            //    {
+            //        BinaryFormatter formatter = new BinaryFormatter();
+            //        return (T)formatter.Deserialize(fileStream);
+            //    }
+            //    catch
+            //    {
+            //        return null;
+            //    }
+            //}
         }
 
         public bool DoesExist(string fileName) => File.Exists(GetPath(fileName));

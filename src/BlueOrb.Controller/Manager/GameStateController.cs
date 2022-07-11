@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using BlueOrb.Base.Config;
 using BlueOrb.Controller.Persistence;
 using BlueOrb.Controller.Manager;
+using BlueOrb.Base.Global;
+using BlueOrb.Controller.Scene;
 
 namespace BlueOrb.Base.Manager
 {
@@ -29,11 +31,6 @@ namespace BlueOrb.Base.Manager
         [SerializeField]
         private SettingsController2 settingsController;
         public SettingsController2 SettingsController => settingsController;
-
-        private string lootLockerDeviceId;
-        private string lootLockerMemberId;
-        private string userId;
-        private string userName;
 
         /// <summary>
         /// The players current high scores in each level
@@ -82,29 +79,22 @@ namespace BlueOrb.Base.Manager
 
         public void SaveGame()
         {
-            PersistData persistData = new PersistData
+            PersistUserScores persistUserScores = new PersistUserScores
             {
-                LootLockerMemberId = lootLockerMemberId,
-                LootLockerDeviceId = lootLockerDeviceId,
-                UserId = userId,
-                UserName = userName,
                 HighScores = levelHighScores
             };
 
-            this.persistenceController.Save(persistenceController.SaveFileName, persistData);
+            this.persistenceController.Save(persistenceController.SaveFileName, persistUserScores);
         }
 
         public void LoadGame()
         {
-            PersistData persistData = this.persistenceController.Load<PersistData>(persistenceController.SaveFileName);
+            PersistUserScores persistData = this.persistenceController.Load<PersistUserScores>(persistenceController.SaveFileName);
             if (persistData == null)
             {
+                this.levelHighScores = new Dictionary<string, int>();
                 return;
             }
-            this.lootLockerDeviceId = persistData.LootLockerDeviceId;
-            this.lootLockerMemberId = persistData.LootLockerMemberId;
-            this.userId = persistData.UserId;
-            this.userName = persistData.UserName;
             this.levelHighScores = persistData.HighScores;
         }
 
@@ -237,6 +227,20 @@ namespace BlueOrb.Base.Manager
             //Debug.Log("(GameStateController) FadeAndLoadScene called");
 
 
+        }
+
+        public bool EnterHighScore(string level, int levelScore)
+        {
+            this.levelHighScores.TryGetValue(level, out int highScore);
+            if (levelScore > highScore)
+            {
+                highScore = levelScore;
+                this.levelHighScores[level] = highScore;
+                GlobalStatic.NewHighScore = true;
+                SaveGame();
+                return true;
+            }
+            return false;
         }
     }
 }
