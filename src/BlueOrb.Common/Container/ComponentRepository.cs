@@ -17,9 +17,10 @@ namespace BlueOrb.Common.Container
         private GameObject _target;
         public GameObject Target { get
             {
-                if (_target == null && _defaultTargetIsPlayer)
+                IEntity mainCharacter = EntityContainer.Instance.GetMainCharacter();
+                if (_target == null && _defaultTargetIsPlayer && mainCharacter != null)
                 {
-                    _target = EntityContainer.Instance.GetMainCharacter().gameObject;
+                    _target = mainCharacter.gameObject;
                 }
                 return _target;
             }

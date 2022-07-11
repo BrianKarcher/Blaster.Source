@@ -105,7 +105,10 @@ namespace BlueOrb.Controller.Damage
                     //    return false;
                     //}
 
-                    _physicsComponent.Controller.BounceFromLocation = damageInfo.DamagedByEntity.GetFootPosition();
+                    if (_physicsComponent != null)
+                    {
+                        _physicsComponent.Controller.BounceFromLocation = damageInfo.DamagedByEntity.GetFootPosition();
+                    }
 
                     Debug.Log($"{this.name} damaged by {damageInfo.DamagedByEntity.name}");
 
