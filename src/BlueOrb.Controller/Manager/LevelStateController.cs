@@ -25,7 +25,6 @@ namespace BlueOrb.Controller.Manager
         public bool HasLevelBegun => hasLevelBegun;
         //[SerializeField] private string levelStartMessage = "LevelStart";
         [SerializeField] private string setLevelBeginMessage = "SetLevelBegin";
-        [SerializeField] private string setLevelEndMessage = "SetLevelEnd";
 
         public bool EnableInput { get; set; } = true;
 
@@ -154,13 +153,6 @@ namespace BlueOrb.Controller.Manager
                     return;
                 StartLevel();
             });
-            setLevelBeginIndex = MessageDispatcher.Instance.StartListening(this.setLevelEndMessage, _componentRepository.GetId(), (data) =>
-            {
-                Debug.Log($"(LevelStateController) Received {setLevelBeginMessage} mesage");
-                if (data.ReceiverId != _componentRepository.GetId())
-                    return;
-                this.hasLevelBegun = false;
-            });
             //_setProjectileId = MessageDispatcher.Instance.StartListening("SetProjectile", "Level State", (data) =>
             //{
             //    var projectileConfig = data.ExtraInfo as ProjectileConfig;
@@ -183,8 +175,16 @@ namespace BlueOrb.Controller.Manager
         public void ProcessEndStage()
         {
             // TODO : Store this static variable in a better variable. Maybe CurrentLevel? (keep NextSceneConfig as is so it knows where to direct to next in the other area)
+            this.hasLevelBegun = false;
             SceneConfig sceneConfig = GlobalStatic.NextSceneConfig;
+            MessageDispatcher.Instance.DispatchMsg("AbortLevel", 0f, this.GetId(), "Game Controller", null);
             GameStateController.Instance.EnterHighScore(sceneConfig.UniqueId, this._currentScore);
+            MessageDispatcher.Instance.DispatchMsg("LevelDetail", 0f, this.GetId(), "UI Controller", null);
+        }
+
+        public void OnDiedOkClicked()
+        {
+            MessageDispatcher.Instance.DispatchMsg("OkClicked", 0f, this.GetId(), this.GetId(), null);
         }
     }
 
