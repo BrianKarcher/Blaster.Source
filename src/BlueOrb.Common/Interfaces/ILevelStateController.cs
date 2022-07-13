@@ -5,10 +5,12 @@
         IShooterComponent ShooterComponent { get; }
 
         void AddPoints(int points);
+        int GetCurrentScore();
         void PrepareStartStageData();
         float GetCurrentHp();
         void SetCurrentHp(float hp);
         float GetMaxHp();
+        void SetMaxHp(float hp);
         void ProcessEndStage();
 
         bool HasLevelBegun { get; }

@@ -7,6 +7,7 @@ using BlueOrb.Controller.Persistence;
 using BlueOrb.Controller.Manager;
 using BlueOrb.Base.Global;
 using BlueOrb.Controller.Scene;
+using BlueOrb.Messaging;
 
 namespace BlueOrb.Base.Manager
 {
@@ -238,9 +239,12 @@ namespace BlueOrb.Base.Manager
                 this.levelHighScores[level] = highScore;
                 GlobalStatic.NewHighScore = true;
                 SaveGame();
+                Debug.Log("New PB!");
                 return true;
             }
             return false;
         }
+
+        public int GetHighScore(string uniqueId) => levelHighScores[uniqueId];
     }
 }

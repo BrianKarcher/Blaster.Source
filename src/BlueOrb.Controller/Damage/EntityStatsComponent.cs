@@ -80,10 +80,9 @@ namespace BlueOrb.Controller.Damage
             _entityStats.CurrentHP = hp;
         }
 
-        protected virtual float GetMaxHp()
-        {
-            return _entityStats.MaxHP;
-        }
+        protected virtual float GetMaxHp() => _entityStats.MaxHP;
+
+        protected virtual void SetMaxHp(float hp) => _entityStats.MaxHP = hp;
 
         public bool IsDead()
         {

@@ -14,8 +14,12 @@ namespace BlueOrb.Controller.Damage
             if (sceneSetup == null)
             {
                 Debug.LogError("No scene setup. Must have scene setup!");
+                SetMaxHp(5);
+                SetCurrentHp(5);
+                UpdateHud();
                 return;
             }
+            SetMaxHp(sceneSetup.SceneConfig.MaxHp);
             SetCurrentHp(sceneSetup.SceneConfig.MaxHp);
             UpdateHud();
         }
@@ -30,10 +34,9 @@ namespace BlueOrb.Controller.Damage
             return EntityContainer.Instance.LevelStateController.GetMaxHp();
         }
 
-        protected override void SetCurrentHp(float hp)
-        {
-            EntityContainer.Instance.LevelStateController.SetCurrentHp(hp);
-        }
+        protected override void SetCurrentHp(float hp) => EntityContainer.Instance.LevelStateController.SetCurrentHp(hp);
+
+        protected override void SetMaxHp(float hp) => EntityContainer.Instance.LevelStateController.SetMaxHp(hp);
 
         protected override void HpChanged()
         {

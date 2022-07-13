@@ -18,8 +18,8 @@ namespace BlueOrb.Controller.Manager
     [AddComponentMenu("BlueOrb/Manager/Level State")]
     public class LevelStateController : ComponentBase<LevelStateController>, ILevelStateController
     {
-        public int _currentScore;
-        public int _highScore;
+        private int _currentScore;
+        private int _highScore;
         private const string Id = "Level Controller";
         private bool hasLevelBegun = false;
         public bool HasLevelBegun => hasLevelBegun;
@@ -45,10 +45,12 @@ namespace BlueOrb.Controller.Manager
         private long _addPointsIndex, setLevelBeginIndex;
 
         public float GetCurrentHp() => currentHp;
+        public int GetCurrentScore() => _currentScore;
 
         public void SetCurrentHp(float hp) => currentHp = hp;
 
         public float GetMaxHp() => maxHp;
+        public void SetMaxHp(float hp) => maxHp = hp;
 
 
         //private static LevelStateController _instance;
@@ -178,7 +180,10 @@ namespace BlueOrb.Controller.Manager
             this.hasLevelBegun = false;
             SceneConfig sceneConfig = GlobalStatic.NextSceneConfig;
             MessageDispatcher.Instance.DispatchMsg("AbortLevel", 0f, this.GetId(), "Game Controller", null);
-            GameStateController.Instance.EnterHighScore(sceneConfig.UniqueId, this._currentScore);
+            if (sceneConfig != null)
+            {
+                GameStateController.Instance.EnterHighScore(sceneConfig.UniqueId, this._currentScore);
+            }
             MessageDispatcher.Instance.DispatchMsg("LevelDetail", 0f, this.GetId(), "UI Controller", null);
         }
 
