@@ -178,6 +178,7 @@ namespace BlueOrb.Controller.Manager
         {
             // TODO : Store this static variable in a better variable. Maybe CurrentLevel? (keep NextSceneConfig as is so it knows where to direct to next in the other area)
             this.hasLevelBegun = false;
+            GlobalStatic.StageComplete = true;
             SceneConfig sceneConfig = GlobalStatic.NextSceneConfig;
             MessageDispatcher.Instance.DispatchMsg("AbortLevel", 0f, this.GetId(), "Game Controller", null);
             if (sceneConfig != null)

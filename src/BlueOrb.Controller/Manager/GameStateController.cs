@@ -245,6 +245,11 @@ namespace BlueOrb.Base.Manager
             return false;
         }
 
-        public int GetHighScore(string uniqueId) => levelHighScores[uniqueId];
+        public int GetHighScore(string uniqueId)
+        {
+            int score;
+            levelHighScores.TryGetValue(uniqueId, out score);
+            return score;
+        }
     }
 }
