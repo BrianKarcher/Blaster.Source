@@ -16,12 +16,12 @@ namespace BlueOrb.Controller.Damage
                 Debug.LogError("No scene setup. Must have scene setup!");
                 SetMaxHp(5);
                 SetCurrentHp(5);
-                UpdateHud();
+                UpdateHud(true);
                 return;
             }
             SetMaxHp(sceneSetup.SceneConfig.MaxHp);
             SetCurrentHp(sceneSetup.SceneConfig.MaxHp);
-            UpdateHud();
+            UpdateHud(true);
         }
 
         protected override float GetCurrentHp()
@@ -40,13 +40,13 @@ namespace BlueOrb.Controller.Damage
 
         protected override void HpChanged()
         {
-            UpdateHud();
+            UpdateHud(false);
         }
 
-        private void UpdateHud()
+        private void UpdateHud(bool immediate)
         {
             MessageDispatcher.Instance.DispatchMsg("UpdateStatsInHud", 0f, this.GetId(), "UI Controller", _entityStats);
-            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (GetCurrentHp(), GetMaxHp()));
+            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (GetCurrentHp(), GetMaxHp(), immediate));
         }
     }
 }

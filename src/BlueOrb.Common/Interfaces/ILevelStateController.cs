@@ -6,7 +6,6 @@
 
         void AddPoints(int points);
         int GetCurrentScore();
-        void PrepareStartStageData();
         float GetCurrentHp();
         void SetCurrentHp(float hp);
         float GetMaxHp();

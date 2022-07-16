@@ -97,8 +97,8 @@ namespace BlueOrb.Controller.Manager
         {
             Debug.Log("(LevelStateController) Set Level Begun variable");
             hasLevelBegun = true;
-            //MessageDispatcher.Instance.DispatchMsg("LevelStart", 0f, _componentRepository.GetId(), null, null);
-            UpdateUI();
+            _currentScore = 0;
+            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, true));
         }
 
         //public void SetCurrentHp(float hp)
@@ -119,21 +119,15 @@ namespace BlueOrb.Controller.Manager
         //    UpdateUI();
         //}
 
-        public void PrepareStartStageData()
-        {
-            _currentScore = 0;
-            UpdateUI();
-        }
-
         public void AddPoints(int points)
         {
             _currentScore += points;
-            UpdateUI();
+            UpdateUI(false);
         }
 
-        private void UpdateUI()
+        private void UpdateUI(bool immediate)
         {
-            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
+            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, immediate));
             MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (this.currentHp, this.maxHp));
         }
 
@@ -145,12 +139,13 @@ namespace BlueOrb.Controller.Manager
             {
                 var points = (PointsData)data.ExtraInfo;
                 _currentScore += points.Points;
-                MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", _currentScore);
+                MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, false));
                 MessageDispatcher.Instance.DispatchMsg("CreatePointsLabel", 0f, _componentRepository.GetId(), "UI Controller", points);
             });
             setLevelBeginIndex = MessageDispatcher.Instance.StartListening(setLevelBeginMessage, _componentRepository.GetId(), (data) =>
             {
                 Debug.Log($"(LevelStateController) Received {setLevelBeginMessage} mesage");
+                _currentScore = 0;
                 if (data.ReceiverId != _componentRepository.GetId())
                     return;
                 StartLevel();
