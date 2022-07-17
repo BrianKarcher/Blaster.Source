@@ -183,7 +183,7 @@ namespace BlueOrb.Base.Manager
 
 
 
-        public void LoadScene(string sceneName)
+        public void LoadScene(string sceneName, bool fade)
         {
             //ChangingScene = true;
             // Log the next Spawnpoint before ClearScene deletes it
@@ -200,15 +200,15 @@ namespace BlueOrb.Base.Manager
             //Debug.Log("Loading scene, entity count = " + EntityContainer._instance.EntityInstanceMap.Count);
             //Application.LoadLevel(sceneName);
 
-            _sceneController.FadeAndLoadScene(sceneName);
+            _sceneController.FadeAndLoadScene(sceneName, fade);
             //Debug.Log("(GameStateController) FadeAndLoadScene called");
 
 
         }
 
-        public void LoadScene(string sceneName, string spawnPointId)
+        public void LoadScene(string sceneName, string spawnPointId, bool fade)
         {
-            LoadScene(sceneName);
+            LoadScene(sceneName, fade);
             //ChangingScene = true;
             // Log the next Spawnpoint before ClearScene deletes it
             //SpawnpointUniqueId = spawnPointId;

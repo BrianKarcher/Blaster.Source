@@ -78,7 +78,7 @@ namespace BlueOrb.Controller
         //    }
         //}
 
-        public void FadeAndLoadScene(string sceneName)
+        public void FadeAndLoadScene(string sceneName, bool fade)
         {
             OverlayAnimator.gameObject.SetActive(true);
             Debug.Log($"Loading scene {sceneName}");
@@ -87,7 +87,7 @@ namespace BlueOrb.Controller
             if (_currentSceneSwitch != null)
                 StopCoroutine(_currentSceneSwitch);
             //StopCoroutine()
-            _currentSceneSwitch = StartCoroutine(FadeAndSwitchScenes(sceneName));
+            _currentSceneSwitch = StartCoroutine(FadeAndSwitchScenes(sceneName, fade));
         }
 
         public bool IsSceneLoaded(string sceneName)
@@ -108,9 +108,12 @@ namespace BlueOrb.Controller
         //    SceneManager.LoadScene(sceneName);
         //}
 
-        private IEnumerator FadeAndSwitchScenes(string sceneName)
+        private IEnumerator FadeAndSwitchScenes(string sceneName, bool fade)
         {
-            yield return StartCoroutine(Fade(FadeOutAnimTriggerName, 1f));
+            if (fade)
+            {
+                yield return StartCoroutine(Fade(FadeOutAnimTriggerName, 1f));
+            }
             if (BeforeSceneUnload != null)
                 BeforeSceneUnload();
             for (int i = 0; i < SceneManager.sceneCount; i++)
@@ -139,10 +142,13 @@ namespace BlueOrb.Controller
             //}
             //else if (sceneSetup.GetSceneLoadPerformFadeIn())
             //{
+            if (fade)
+            {
                 yield return StartCoroutine(Fade(FadeInAnimTriggerName, 0f));
-                //Debug.Log("Performing fade in (BeginSceneState).");
-                //GameController.Instance.GetGraphicsEngine().TweenOverlayToColor(_overlayColor);
-                //base.TweenOverlayToColor();
+            }
+            //Debug.Log("Performing fade in (BeginSceneState).");
+            //GameController.Instance.GetGraphicsEngine().TweenOverlayToColor(_overlayColor);
+            //base.TweenOverlayToColor();
             //}
 
         }

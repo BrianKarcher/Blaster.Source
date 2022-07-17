@@ -37,7 +37,7 @@ namespace BlueOrb.Controller
             if (other.tag != _tag)
                 return;
             Debug.Log($"Changing scenes to {_sceneConfig.SceneName} - {_spawnPointUniqueId}");
-            GameStateController.Instance.LoadScene(_sceneConfig.SceneName, _spawnPointUniqueId);
+            GameStateController.Instance.LoadScene(_sceneConfig.SceneName, _spawnPointUniqueId, true);
         }
 
     }
