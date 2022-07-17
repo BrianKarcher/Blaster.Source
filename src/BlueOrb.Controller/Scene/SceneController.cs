@@ -1,11 +1,8 @@
 ﻿using BlueOrb.Base.Global;
-using BlueOrb.Base.Manager;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Manager;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -83,6 +80,7 @@ namespace BlueOrb.Controller
 
         public void FadeAndLoadScene(string sceneName)
         {
+            OverlayAnimator.gameObject.SetActive(true);
             Debug.Log($"Loading scene {sceneName}");
             // In case scenes get switched quickly and the previous one didn't fully load, just abort it
             // and load this instead.
