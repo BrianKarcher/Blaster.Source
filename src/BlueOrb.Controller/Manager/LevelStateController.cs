@@ -19,7 +19,6 @@ namespace BlueOrb.Controller.Manager
     public class LevelStateController : ComponentBase<LevelStateController>, ILevelStateController
     {
         private int _currentScore;
-        private int _highScore;
         private const string Id = "Level Controller";
         private bool hasLevelBegun = false;
         public bool HasLevelBegun => hasLevelBegun;
@@ -46,6 +45,7 @@ namespace BlueOrb.Controller.Manager
 
         public float GetCurrentHp() => currentHp;
         public int GetCurrentScore() => _currentScore;
+        public void SetCurrentScore(int score) => _currentScore = score;
 
         public void SetCurrentHp(float hp) => currentHp = hp;
 
@@ -97,8 +97,6 @@ namespace BlueOrb.Controller.Manager
         {
             Debug.Log("(LevelStateController) Set Level Begun variable");
             hasLevelBegun = true;
-            _currentScore = 0;
-            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, true));
         }
 
         //public void SetCurrentHp(float hp)
@@ -125,10 +123,13 @@ namespace BlueOrb.Controller.Manager
             UpdateUI(false);
         }
 
+        public void UpdateUIScore(bool immediate)
+            => MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, immediate));
+
         private void UpdateUI(bool immediate)
         {
-            MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, immediate));
-            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (this.currentHp, this.maxHp));
+            UpdateUIScore(immediate);
+            MessageDispatcher.Instance.DispatchMsg("SetHp", 0f, this.GetId(), "Hud Controller", (this.currentHp, this.maxHp, immediate));
         }
 
         public override void StartListening()

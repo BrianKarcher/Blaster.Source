@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BlueOrb.Controller.Persistence
 {
+    [Serializable]
     public class PersistUserScores
     {
         // Scene Unique Id : score

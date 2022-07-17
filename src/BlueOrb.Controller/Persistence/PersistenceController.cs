@@ -21,21 +21,24 @@ namespace BlueOrb.Controller.Persistence
 
             // TODO Making it readable for debugging purposes. Change to binary before release.
             // TODO Make text/binary serializing an option in the GameSettingsConfig.
-            try
+
+            //using (StreamWriter sw = new StreamWriter(fileName))
+            //{
+            //    string strData = JsonConvert.SerializeObject(persistData);
+            //    sw.Write(strData);
+            //}
+            using (FileStream fileStream = new FileStream(GetPath(fileName), FileMode.Create, FileAccess.Write))
             {
-                //using (StreamWriter sw = new StreamWriter(fileName))
-                //{
-                //    string strData = JsonConvert.SerializeObject(persistData);
-                //    sw.Write(strData);
-                //}
-                using (FileStream fileStream = new FileStream(GetPath(fileName), FileMode.Create, FileAccess.Write))
+                try
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(fileStream, persistData);
                 }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
             }
-            catch { }
-
         }
 
         public T Load<T>(string fileName)
@@ -66,8 +69,9 @@ namespace BlueOrb.Controller.Persistence
                     BinaryFormatter formatter = new BinaryFormatter();
                     return (T)formatter.Deserialize(fileStream);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Debug.LogException(ex);
                     return null;
                 }
             }

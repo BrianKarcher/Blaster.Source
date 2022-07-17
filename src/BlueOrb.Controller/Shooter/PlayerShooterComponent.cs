@@ -251,17 +251,19 @@ namespace BlueOrb.Controller.Component
 
             // var rtn = UnityEngine.Physics.Raycast(rayOrigin, _camera.transform.forward, out hitInfo, maxDistance, layerMask);
 
-            var rtn = UnityEngine.Physics.Raycast(ray, out var hitInfo, maxRaycastDistance, _layerMask);
+            Debug.DrawRay(ray.origin, ray.direction * 20f, Color.yellow, 5f);
+
+            var rtn = UnityEngine.Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDistance, _layerMask);
             //if (!_camera.Raycast(1000f, _layerMask, out var hitInfo))
             if (!rtn)
             {
-                //Debug.Log("Shooter Raycast No Hit");
+                Debug.Log("Shooter Raycast No Hit");
                 // If raycast no-hit, just point down the camera forward direction very far
                 return _camera.transform.TransformPoint(new Vector3(0f, 0f, 1000f)) - _spawnPointPosition.transform.position;
             }
             else
             {
-                Debug.Log("Shooter Raycast Hit");
+                Debug.Log($"Shooter Raycast Hit {(hitInfo.collider.attachedRigidbody != null ? hitInfo.collider.attachedRigidbody.name : hitInfo.collider.name)}");
                 return hitInfo.point - _spawnPointPosition.transform.position;
             }
         }

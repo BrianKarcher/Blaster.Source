@@ -21,7 +21,9 @@ namespace BlueOrb.Controller.Damage
             }
             SetMaxHp(sceneSetup.SceneConfig.MaxHp);
             SetCurrentHp(sceneSetup.SceneConfig.MaxHp);
+            SetCurrentScore(0);
             UpdateHud(true);
+            EntityContainer.Instance.LevelStateController.UpdateUIScore(true);
         }
 
         protected override float GetCurrentHp()
@@ -35,6 +37,8 @@ namespace BlueOrb.Controller.Damage
         }
 
         protected override void SetCurrentHp(float hp) => EntityContainer.Instance.LevelStateController.SetCurrentHp(hp);
+
+        private void SetCurrentScore(int score) => EntityContainer.Instance.LevelStateController.SetCurrentScore(score);
 
         protected override void SetMaxHp(float hp) => EntityContainer.Instance.LevelStateController.SetMaxHp(hp);
 
