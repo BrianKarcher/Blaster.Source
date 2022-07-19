@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Inventory
 {
-    [AddComponentMenu("RQ/Components/Inventory")]
+    [AddComponentMenu("BlueOrb/Components/Inventory")]
     public class InventoryComponent : ComponentBase<InventoryComponent>
     {
         private long _addItemId;
@@ -29,7 +29,7 @@ namespace BlueOrb.Controller.Inventory
             _addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
             {
                 var item = (ItemDesc)data.ExtraInfo;
-                Debug.Log($"Adding item {item.ItemConfig.name}, qty {item.Qty}");                
+                Debug.Log($"Adding item {item.ItemConfig.name}, qty {item.Qty}");
                 AddItem(item);
             });
         }
@@ -49,7 +49,10 @@ namespace BlueOrb.Controller.Inventory
             {
                 itemConfigAndCount = item.Clone();
                 _inventoryData.Add(itemConfigAndCount);
-                //Items.Add(itemConfigAndCount);
+                if (item.ItemConfig.InstantiatePrefab && item.ItemConfig.ReferencePrefab != null)
+                {
+                    GameObject.Instantiate(item.ItemConfig.ReferencePrefab, this.transform);
+                }
             }
             else
             {
@@ -58,11 +61,6 @@ namespace BlueOrb.Controller.Inventory
             }
             
             MessageDispatcher.Instance.DispatchMsg("ItemAdded", 0, null, _componentRepository.GetId(), itemConfigAndCount);
-        }
-
-        public void ToggleMold(bool isAsc)
-        {
-
         }
     }
 }

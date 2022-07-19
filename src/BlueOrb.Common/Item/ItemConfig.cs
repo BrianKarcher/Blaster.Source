@@ -13,6 +13,7 @@ namespace BlueOrb.Base.Item
         public Color HUDColor;
         public float SellCost;
         public float PurchaseCost;
+        public bool InstantiatePrefab;
         public GameObject ReferencePrefab;
     }
 }

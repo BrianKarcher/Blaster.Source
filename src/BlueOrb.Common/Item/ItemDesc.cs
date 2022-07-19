@@ -1,5 +1,4 @@
-﻿using BlueOrb.Base.Item;
-using System;
+﻿using System;
 
 namespace BlueOrb.Base.Item
 {
