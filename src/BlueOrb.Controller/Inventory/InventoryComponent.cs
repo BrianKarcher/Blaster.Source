@@ -1,66 +1,54 @@
 ﻿using BlueOrb.Base.Item;
 using BlueOrb.Common.Components;
 using BlueOrb.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Inventory
 {
     [AddComponentMenu("BlueOrb/Components/Inventory")]
-    public class InventoryComponent : ComponentBase<InventoryComponent>
+    public class InventoryComponent : ComponentBase<InventoryComponent>, IInventoryComponent
     {
-        private long _addItemId;
+        public const string RemoveItemMessage = "RemoveItem";
+        private long addItemId;
 
         [SerializeField]
-        private InventoryData _inventoryData;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            //ItemsByType = new Dictionary<ItemTypeEnum, ItemDesc>();
-        }
+        private InventoryData inventoryData;
 
         public override void StartListening()
         {
             base.StartListening();
-            _addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
+            addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
             {
                 var item = (ItemDesc)data.ExtraInfo;
                 Debug.Log($"Adding item {item.ItemConfig.name}, qty {item.Qty}");
                 AddItem(item);
+            });
+            MessageDispatcher.Instance.StartListening(RemoveItemMessage, _componentRepository.GetId(), (data) =>
+            {
+                var item = (ItemDesc)data.ExtraInfo;
+                RemoveItem(item);
             });
         }
 
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening("AddItem", _componentRepository.GetId(), _addItemId);
+            MessageDispatcher.Instance.StopListening("AddItem", _componentRepository.GetId(), addItemId);
         }
 
         public void AddItem(ItemDesc item)
         {
-            var itemConfigAndCount = _inventoryData.Items.FirstOrDefault(i => i.ItemConfig == item.ItemConfig);
-            // Prevent duplication of Items, just adjust the Qty if the item is already in the inventory
-            //ItemDesc itemToUpdate = null;
-            if (itemConfigAndCount == null)
+            this.inventoryData.Add(item);
+            if (item.ItemConfig.InstantiatePrefab && item.ItemConfig.ReferencePrefab != null)
             {
-                itemConfigAndCount = item.Clone();
-                _inventoryData.Add(itemConfigAndCount);
-                if (item.ItemConfig.InstantiatePrefab && item.ItemConfig.ReferencePrefab != null)
-                {
-                    GameObject.Instantiate(item.ItemConfig.ReferencePrefab, this.transform);
-                }
+                GameObject.Instantiate(item.ItemConfig.ReferencePrefab, this.transform);
             }
-            else
-            {
-                //itemConfigAndCount = itemConfigAndCount;
-                itemConfigAndCount.Qty += item.Qty;
-            }
-            
-            MessageDispatcher.Instance.DispatchMsg("ItemAdded", 0, null, _componentRepository.GetId(), itemConfigAndCount);
+        }
+
+        public void RemoveItem(ItemDesc item)
+        {
+            Debug.Log($"Removing item {item.ItemConfig.name}");
+            this.inventoryData.Remove(item.ItemConfig.UniqueId);
         }
     }
 }

@@ -4,6 +4,7 @@ using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Component;
+using BlueOrb.Controller.Inventory;
 using BlueOrb.Controller.Scene;
 using BlueOrb.Messaging;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace BlueOrb.Controller.Manager
     public class LevelStateController : ComponentBase<LevelStateController>, ILevelStateController
     {
         private int _currentScore;
-        private const string Id = "Level Controller";
+        public const string Id = "Level Controller";
         private bool hasLevelBegun = false;
         public bool HasLevelBegun => hasLevelBegun;
         //[SerializeField] private string levelStartMessage = "LevelStart";
@@ -52,6 +53,10 @@ namespace BlueOrb.Controller.Manager
         public float GetMaxHp() => maxHp;
         public void SetMaxHp(float hp) => maxHp = hp;
 
+        [SerializeField]
+        private InventoryComponent inventoryComponent;
+
+        public InventoryComponent InventoryComponent => inventoryComponent;
 
         //private static LevelStateController _instance;
         //[HideInInspector]
@@ -69,30 +74,17 @@ namespace BlueOrb.Controller.Manager
         //}
 
         public override string GetId()
-        {
-            return Id;
-        }
+            => Id;
 
-        //private long _setProjectileId;
         protected override void Awake()
         {
             base.Awake();
             EntityContainer.Instance.LevelStateController = this;
         }
 
-        private void Start()
-        {
-            //GameStateController.Instance.LevelStateController = this;
-            //SceneSetup sceneSetup = GameObject.FindObjectOfType<SceneSetup>();
-            //if (sceneSetup == null)
-            //{
-            //    Debug.LogError("No scene setup. Must have scene setup!");
-            //    return;
-            //}
-            //this.currentHp = this.maxHp = sceneSetup.SceneConfig.MaxHp;
-            //UpdateUI();
-        }
-
+        /// <summary>
+        /// Get called after the countdown is complete
+        /// </summary>
         public void StartLevel()
         {
             Debug.Log("(LevelStateController) Set Level Begun variable");

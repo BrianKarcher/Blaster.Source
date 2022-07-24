@@ -1,8 +1,6 @@
 ﻿using BlueOrb.Base.Item;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 
 namespace BlueOrb.Controller.Inventory
 {
@@ -12,29 +10,27 @@ namespace BlueOrb.Controller.Inventory
     [Serializable]
     public class InventoryData
     {
-        public List<ItemDesc> Items;
-        /// <summary>
-        /// Alternate way of storing the same group of items, grouped by Type. 
-        /// This allows us to use the Dictionary to retrieve the items faster if we know the type.
-        /// </summary>
-        public Dictionary<ItemTypeEnum, List<ItemDesc>> ItemsByType;
-
-        public InventoryData()
-        {
-            ItemsByType = new Dictionary<ItemTypeEnum, List<ItemDesc>>();
-        }
+        public Dictionary<string, ItemDesc> Items;
 
         public void Add(ItemDesc item)
         {
-            Items.Add(item);
-            ItemsByType.TryGetValue(item.ItemConfig.ItemType, out var items);
-            if (items == null)
+            // Prevent duplication of Items, just adjust the Qty if the item is already in the inventory
+            if (!Items.TryGetValue(item.ItemConfig.UniqueId, out ItemDesc itemConfigAndCount))
             {
-                items = new List<ItemDesc>();
-                ItemsByType.Add(item.ItemConfig.ItemType, items);
+                Items.Add(item.ItemConfig.UniqueId, item.Clone());
             }
-            //ItemsByType.Add(item.ItemConfig.ItemType, item);
-            items.Add(item);
+            else
+            {
+                itemConfigAndCount.Qty += item.Qty;
+            }
+        }
+
+        public void Remove(string uniqueId)
+        {
+            if (Items.ContainsKey(uniqueId))
+            {
+                Items.Remove(uniqueId);
+            }
         }
     }
 }
