@@ -8,6 +8,7 @@ namespace BlueOrb.Controller.Inventory
     [AddComponentMenu("BlueOrb/Components/Inventory")]
     public class InventoryComponent : ComponentBase<InventoryComponent>, IInventoryComponent
     {
+        public const string AddItemMessage = "AddItem";
         public const string RemoveItemMessage = "RemoveItem";
         private long addItemId;
 
@@ -17,7 +18,7 @@ namespace BlueOrb.Controller.Inventory
         public override void StartListening()
         {
             base.StartListening();
-            addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
+            addItemId = MessageDispatcher.Instance.StartListening(AddItemMessage, _componentRepository.GetId(), (data) =>
             {
                 var item = (ItemDesc)data.ExtraInfo;
                 Debug.Log($"Adding item {item.ItemConfig.name}, qty {item.Qty}");
@@ -26,14 +27,14 @@ namespace BlueOrb.Controller.Inventory
             MessageDispatcher.Instance.StartListening(RemoveItemMessage, _componentRepository.GetId(), (data) =>
             {
                 var item = (ItemDesc)data.ExtraInfo;
-                RemoveItem(item);
+                RemoveItem(item.ItemConfig.UniqueId);
             });
         }
 
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening("AddItem", _componentRepository.GetId(), addItemId);
+            MessageDispatcher.Instance.StopListening(AddItemMessage, _componentRepository.GetId(), addItemId);
         }
 
         public void AddItem(ItemDesc item)
@@ -45,10 +46,12 @@ namespace BlueOrb.Controller.Inventory
             }
         }
 
-        public void RemoveItem(ItemDesc item)
+        public void RemoveItem(string uniqueId)
         {
-            Debug.Log($"Removing item {item.ItemConfig.name}");
-            this.inventoryData.Remove(item.ItemConfig.UniqueId);
+            Debug.Log($"Removing item {uniqueId}");
+            this.inventoryData.Remove(uniqueId);
         }
+
+        public bool ContainsItem(string uniqueId) => this.inventoryData.Contains(uniqueId);
     }
 }

@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Buff
 {
-    [AddComponentMenu("BlueOrb/Buff/HealPlayer")]
-    public class HealPlayer : MonoBehaviour
+    [AddComponentMenu("BlueOrb/Buff/HealPlayerBuff")]
+    public class HealPlayerBuff : MonoBehaviour
     {
         private void Start()
         {

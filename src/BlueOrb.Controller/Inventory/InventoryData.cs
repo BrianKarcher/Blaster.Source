@@ -32,5 +32,7 @@ namespace BlueOrb.Controller.Inventory
                 Items.Remove(uniqueId);
             }
         }
+
+        public bool Contains(string uniqueId) => Items.ContainsKey(uniqueId);
     }
 }
