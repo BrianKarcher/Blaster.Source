@@ -13,10 +13,12 @@ namespace BlueOrb.Controller.Manager
         private BuffConfig buffConfig;
 
         private float endTime;
+        private float startTime;
 
         private void Start()
         {
-            endTime = Time.time + buffConfig.Duration;
+            this.startTime = Time.time;
+            this.endTime = Time.time + buffConfig.Duration;
             // TODO : Update the HUD for the buff icon
         }
 
