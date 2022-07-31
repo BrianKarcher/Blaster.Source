@@ -6,10 +6,10 @@ namespace BlueOrb.Editor.Skill
     [CustomEditor(typeof(BuffConfig), true)]
     public class BuffConfigEditor : ConfigEditorBase<BuffConfig>
     {
-        [MenuItem("Assets/Create/BlueOrb/Buff/Buff Config")]
+        [MenuItem("Assets/Create/Blue Orb/Buff/Buff Config")]
         public static void CreateNewAsset()
         {
-            CreateAsset("NewItemConfig.asset");
+            CreateAsset("New Buff Config.asset");
         }
     }
 }

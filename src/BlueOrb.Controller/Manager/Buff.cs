@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Manager
 {
-    [AddComponentMenu("BlueOrb/Buff/BuffBase")]
+    [AddComponentMenu("BlueOrb/Buff/Buff")]
     public class Buff : ComponentBase<Buff>
     {
         [SerializeField]
