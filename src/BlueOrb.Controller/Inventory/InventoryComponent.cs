@@ -26,8 +26,13 @@ namespace BlueOrb.Controller.Inventory
             });
             MessageDispatcher.Instance.StartListening(RemoveItemMessage, _componentRepository.GetId(), (data) =>
             {
-                var item = (ItemDesc)data.ExtraInfo;
-                RemoveItem(item.ItemConfig.UniqueId);
+                if (data.ExtraInfo == null)
+                {
+                    Debug.LogError($"(InventoryComponent) No item sent to remove.");
+                    return;
+                }
+                var item = (string)data.ExtraInfo;
+                RemoveItem(item);
             });
         }
 

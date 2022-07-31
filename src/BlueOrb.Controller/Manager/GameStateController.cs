@@ -7,6 +7,7 @@ using BlueOrb.Controller.Persistence;
 using BlueOrb.Controller.Manager;
 using BlueOrb.Base.Global;
 using BlueOrb.Common.Container;
+using BlueOrb.Controller.UI;
 
 namespace BlueOrb.Base.Manager
 {
@@ -48,9 +49,16 @@ namespace BlueOrb.Base.Manager
 
         public AudioSource AudioSource => audioSource;
 
+        [SerializeField]
+        private GameObject goUIController;
+
+        private IUIController uiController;
+        public IUIController UIController => uiController;
+
         protected override void Awake()
         {
             base.Awake();
+            this.uiController = goUIController.GetComponent<IUIController>();
             LoadGame();
         }
 

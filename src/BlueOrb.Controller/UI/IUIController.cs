@@ -2,6 +2,6 @@
 {
     public interface IUIController
     {
-        IHudController Hud { get; }
+        IHudController HudController { get; }
     }
 }
