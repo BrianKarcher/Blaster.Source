@@ -25,7 +25,7 @@ namespace BlueOrb.Controller.Damage
         private GameObject _deflectPrefab;
         [Tag]
         [SerializeField]
-        private string _deflectTag;        
+        private string _deflectTag;
 
         protected override void Awake()
         {
@@ -36,90 +36,9 @@ namespace BlueOrb.Controller.Damage
             {
                 _externalDamageDelegate = telegram =>
                 {
-                    // The previous damage has not been reacted to yet. Do not accept more damage until
-                    // previous has been reacted to.
-                    //if (DamageInfo.IsDamaged)
-                    //    return true;
-
                     var damageInfo = (DamageEntityInfo)telegram.ExtraInfo;
-                    if (damageInfo == null)
-                    {
-                        Debug.LogError("No DamageEntityInfo in ExternalDamage");
-                        return;
-                    }
-
-                    // TODO Implement Deflections
-                    //if (damageInfo.MyCollider != null)
-                    //{
-                    //    //var myCollisionComponent = damageInfo.MyCollider.GetComponent<CollisionComponent>();
-                    //    //if (myCollisionComponent.CollisionData.CurrentlyDeflecting)
-                    //    if (damageInfo.MyCollider.tag == _deflectTag)
-                    //    {
-                    //        var attackerId = damageInfo.DamagedByEntity.GetId();
-
-                    //        var vectorToDamageSource = damageInfo.DamagedByEntity.GetFootPosition() -
-                    //       _componentRepository.GetPosition();
-
-                    //        //var vectorToDamageSource = damageInfo.DamageSourceLocation -
-                    //        //                           _componentRepository.GetPosition();
-
-                    //        var rotation = Quaternion.LookRotation(vectorToDamageSource);
-
-                    //        //var angle = Vector2.SignedAngle(Vector2.right, vectorToDamageSource);
-                    //        //var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-                    //        if (_deflectPrefab != null)
-                    //        {
-                    //            var deflectGO = GameObject.Instantiate(_deflectPrefab,
-                    //                _componentRepository.transform.position, rotation);
-                    //            deflectGO.transform.SetParent(_componentRepository.transform);
-                    //        }
-                    //        MessageDispatcher.Instance.DispatchMsg("SetDamageSourceLocation", 0f, _componentRepository.GetId(),
-                    //            attackerId, _componentRepository.GetFootPosition());
-                    //        Debug.Log($"{_componentRepository.name} deflect attack from {damageInfo.DamagedByEntity.name}");
-                    //        MessageDispatcher.Instance.DispatchMsg("Deflect", 0f, _componentRepository.GetId(),
-                    //            attackerId, null);
-                    //        return;
-                    //    }
-                    //}
-
-                    Debug.Log($"Eternal damage message received on {_componentRepository.name}");
-                    if (!_damageComponentData.TakesDamage)
-                    {
-                        Debug.Log($"Entity {_componentRepository.name} does not take damage");
-                        return;
-                    }
-
-                    if (damageInfo.MyCollider == null)
-                    {
-                        Debug.Log($"Entity {_componentRepository.name} has no collider, not taking damage.");
-                        return;
-                    }
-
-                    //if (damageInfo.MyCollider != null && !damageInfo.CollisionHit.ReceivesDamage())
-                    //    return false;
-
-                    //if (!_damageData.Vulnerable)
-                    //{
-                    //    MessageDispatcher2.Instance.DispatchMsg("AttackedButInvulnerable", 0f, this.UniqueId,
-                    //        _componentRepository.UniqueId, null);
-                    //    return false;
-                    //}
-
-                    if (_physicsComponent != null)
-                    {
-                        _physicsComponent.Controller.BounceFromLocation = damageInfo.DamagedByEntity.GetFootPosition();
-                    }
-
-                    Debug.Log($"{this.name} damaged by {damageInfo.DamagedByEntity.name}");
-
-                    DamageSelf(damageInfo);
-
-                    return;
+                    ReceiveDamage(damageInfo);
                 };
-                //_setDamageSourceLocationDelegate = (data) =>
-                //{
-                //    BounceFromLocation = (Vector3) data.ExtraInfo;
-                //};
             }
         }
 
@@ -147,6 +66,86 @@ namespace BlueOrb.Controller.Damage
             //MessageDispatcher.Instance.StopListening("SetDamageSourceLocation", _componentRepository.GetId(), _setDamageSourceLocationId);
         }
 
+        public void ReceiveDamage(DamageEntityInfo damageInfo)
+        {
+            if (damageInfo == null)
+            {
+                Debug.LogError("No DamageEntityInfo in ExternalDamage");
+                return;
+            }
+
+            // The previous damage has not been reacted to yet. Do not accept more damage until
+            // previous has been reacted to.
+            //if (DamageInfo.IsDamaged)
+            //    return true;
+
+            // TODO Implement Deflections
+            //if (damageInfo.MyCollider != null)
+            //{
+            //    //var myCollisionComponent = damageInfo.MyCollider.GetComponent<CollisionComponent>();
+            //    //if (myCollisionComponent.CollisionData.CurrentlyDeflecting)
+            //    if (damageInfo.MyCollider.tag == _deflectTag)
+            //    {
+            //        var attackerId = damageInfo.DamagedByEntity.GetId();
+
+            //        var vectorToDamageSource = damageInfo.DamagedByEntity.GetFootPosition() -
+            //       _componentRepository.GetPosition();
+
+            //        //var vectorToDamageSource = damageInfo.DamageSourceLocation -
+            //        //                           _componentRepository.GetPosition();
+
+            //        var rotation = Quaternion.LookRotation(vectorToDamageSource);
+
+            //        //var angle = Vector2.SignedAngle(Vector2.right, vectorToDamageSource);
+            //        //var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            //        if (_deflectPrefab != null)
+            //        {
+            //            var deflectGO = GameObject.Instantiate(_deflectPrefab,
+            //                _componentRepository.transform.position, rotation);
+            //            deflectGO.transform.SetParent(_componentRepository.transform);
+            //        }
+            //        MessageDispatcher.Instance.DispatchMsg("SetDamageSourceLocation", 0f, _componentRepository.GetId(),
+            //            attackerId, _componentRepository.GetFootPosition());
+            //        Debug.Log($"{_componentRepository.name} deflect attack from {damageInfo.DamagedByEntity.name}");
+            //        MessageDispatcher.Instance.DispatchMsg("Deflect", 0f, _componentRepository.GetId(),
+            //            attackerId, null);
+            //        return;
+            //    }
+            //}
+
+            Debug.Log($"Eternal damage message received on {_componentRepository.name}");
+            if (!_damageComponentData.TakesDamage)
+            {
+                Debug.Log($"Entity {_componentRepository.name} does not take damage");
+                return;
+            }
+
+            if (damageInfo.MyCollider == null)
+            {
+                Debug.Log($"Entity {_componentRepository.name} has no collider, not taking damage.");
+                return;
+            }
+
+            //if (damageInfo.MyCollider != null && !damageInfo.CollisionHit.ReceivesDamage())
+            //    return false;
+
+            //if (!_damageData.Vulnerable)
+            //{
+            //    MessageDispatcher2.Instance.DispatchMsg("AttackedButInvulnerable", 0f, this.UniqueId,
+            //        _componentRepository.UniqueId, null);
+            //    return false;
+            //}
+
+            if (_physicsComponent != null && damageInfo.DamagedByEntity != null)
+            {
+                _physicsComponent.Controller.BounceFromLocation = damageInfo.DamagedByEntity.GetFootPosition();
+            }
+
+            Debug.Log($"{this.name} damaged by {damageInfo.DamagedByEntity?.name}");
+
+            DamageSelf(damageInfo);
+        }
+
         private void DamageSelf(DamageEntityInfo damageInfo)
         {
             //DamageInfo.DamageAmount = damageInfo.DamageAmount;
@@ -171,7 +170,7 @@ namespace BlueOrb.Controller.Damage
             else
             {
                 float damageAmount = Math.Abs(damageInfo.DamageAmount) * -1f;
-                Debug.Log($"(DamageComponent) Damaging entity {_componentRepository.name} {damageAmount} hp,  damaged by {damageInfo.DamagedByEntity.name}");
+                Debug.Log($"(DamageComponent) Damaging entity {_componentRepository.name} {damageAmount} hp,  damaged by {damageInfo.DamagedByEntity?.name}");
                 _entityStatsComponent.AddHp(damageAmount);
             }
 

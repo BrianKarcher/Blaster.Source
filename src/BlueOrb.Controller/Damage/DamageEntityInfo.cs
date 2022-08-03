@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BlueOrb.Common.Container;
+﻿using BlueOrb.Common.Container;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Damage
