@@ -1,4 +1,6 @@
-﻿namespace BlueOrb.Base.Interfaces
+﻿using BlueOrb.Controller.Inventory;
+
+namespace BlueOrb.Base.Interfaces
 {
     public interface ILevelStateController
     {
@@ -16,5 +18,6 @@
 
         bool HasLevelBegun { get; }
         bool EnableInput { get; set; }
+        InventoryComponent InventoryComponent { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BlueOrb.Base.Manager;
+﻿using BlueOrb.Base.Item;
+using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Controller.Buff;
 using BlueOrb.Controller.Inventory;
@@ -25,6 +26,8 @@ namespace BlueOrb.Controller.Manager
             this.endTime = Time.time + buffConfig.Duration;
             iconWithProgressBar = GameStateController.Instance.UIController.HudController.CreateBuffUI().GetComponent<IIconWithProgressBar>();
             iconWithProgressBar.SetValue(0.5f);
+            MessageDispatcher.Instance.DispatchMsg(InventoryComponent.AddItemMessage, 0f, this._componentRepository.GetId(),
+                LevelStateController.Id, new ItemDesc() { ItemConfig = buffConfig, Qty = 1 });
             // TODO : Update the HUD for the buff icon
         }
 

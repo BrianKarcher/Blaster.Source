@@ -10,7 +10,7 @@ namespace BlueOrb.Controller.Inventory
     [Serializable]
     public class InventoryData
     {
-        public Dictionary<string, ItemDesc> Items;
+        public Dictionary<string, ItemDesc> Items = new Dictionary<string, ItemDesc>();
 
         public void Add(ItemDesc item)
         {

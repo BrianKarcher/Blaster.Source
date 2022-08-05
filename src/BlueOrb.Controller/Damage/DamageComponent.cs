@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using BlueOrb.Base.Attributes;
 using BlueOrb.Base.Components;
+using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
-using BlueOrb.Common.Container;
+using BlueOrb.Controller.Buff;
 using BlueOrb.Messaging;
 using BlueOrb.Physics;
 using UnityEngine;
@@ -26,6 +25,9 @@ namespace BlueOrb.Controller.Damage
         [Tag]
         [SerializeField]
         private string _deflectTag;
+
+        [SerializeField]
+        private BuffConfig immunityBuffConfig;
 
         protected override void Awake()
         {
@@ -71,6 +73,13 @@ namespace BlueOrb.Controller.Damage
             if (damageInfo == null)
             {
                 Debug.LogError("No DamageEntityInfo in ExternalDamage");
+                return;
+            }
+
+            if (immunityBuffConfig != null
+                && GameStateController.Instance.LevelStateController.InventoryComponent.ContainsItem(immunityBuffConfig.UniqueId))
+            {
+                // As long as you have the item in inventory, that means Immunity is active. So just return.
                 return;
             }
 

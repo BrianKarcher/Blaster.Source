@@ -1,12 +1,8 @@
-﻿using BlueOrb.Base.Interfaces;
-using BlueOrb.Base.Item;
+﻿using BlueOrb.Base.Item;
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
-using BlueOrb.Controller.Player;
-using BlueOrb.Messaging;
 using BlueOrb.Physics;
-using System;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Component
@@ -133,21 +129,21 @@ namespace BlueOrb.Controller.Component
         public void ShootMainProjectile()
         {
             //Debug.Log("Shooting Main Projectile");
-            var projectileConfig = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentMainProjectileConfig;
+            var projectileConfig = GameStateController.Instance.LevelStateController.ShooterComponent.CurrentMainProjectileConfig;
             ProcessShoot(projectileConfig);
         }
 
         public void ShootSecondaryProjectile()
         {
             //Debug.Log("Shooting Secondary Projectile");
-            var projectileInventory = EntityContainer.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectile;
+            var projectileInventory = GameStateController.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectile;
             ProcessShoot(projectileInventory.ProjectileConfig);
             DecreaseAmmo();
         }
 
         private void DecreaseAmmo()
         {
-            EntityContainer.Instance.LevelStateController.ShooterComponent.AddAmmoToSelected(-1);
+            GameStateController.Instance.LevelStateController.ShooterComponent.AddAmmoToSelected(-1);
         }
 
         private void ProcessShoot(ProjectileConfig projectileConfig)

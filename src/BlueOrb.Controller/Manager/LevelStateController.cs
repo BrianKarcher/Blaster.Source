@@ -2,7 +2,6 @@
 using BlueOrb.Base.Interfaces;
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
-using BlueOrb.Common.Container;
 using BlueOrb.Controller.Component;
 using BlueOrb.Controller.Inventory;
 using BlueOrb.Controller.Scene;
@@ -79,7 +78,7 @@ namespace BlueOrb.Controller.Manager
         protected override void Awake()
         {
             base.Awake();
-            EntityContainer.Instance.LevelStateController = this;
+            GameStateController.Instance.LevelStateController = this;
         }
 
         /// <summary>

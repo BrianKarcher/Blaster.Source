@@ -1,4 +1,5 @@
-﻿using BlueOrb.Common.Container;
+﻿using BlueOrb.Base.Manager;
+using BlueOrb.Common.Container;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Buff
@@ -8,7 +9,7 @@ namespace BlueOrb.Controller.Buff
     {
         private void Start()
         {
-            EntityContainer.Instance.LevelStateController.SetCurrentHp(EntityContainer.Instance.LevelStateController.GetMaxHp());
+            GameStateController.Instance.LevelStateController.SetCurrentHp(GameStateController.Instance.LevelStateController.GetMaxHp());
         }
 
         private void Update()

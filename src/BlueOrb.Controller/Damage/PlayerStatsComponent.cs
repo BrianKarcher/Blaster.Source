@@ -1,4 +1,4 @@
-﻿using BlueOrb.Common.Container;
+﻿using BlueOrb.Base.Manager;
 using BlueOrb.Controller.Manager;
 using BlueOrb.Messaging;
 using UnityEngine;
@@ -23,29 +23,20 @@ namespace BlueOrb.Controller.Damage
             SetCurrentHp(sceneSetup.SceneConfig.MaxHp);
             SetCurrentScore(0);
             UpdateHud(true);
-            EntityContainer.Instance.LevelStateController.UpdateUIScore(true);
+            GameStateController.Instance.LevelStateController.UpdateUIScore(true);
         }
 
-        protected override float GetCurrentHp()
-        {
-            return EntityContainer.Instance.LevelStateController.GetCurrentHp();
-        }
+        protected override float GetCurrentHp() => GameStateController.Instance.LevelStateController.GetCurrentHp();
 
-        protected override float GetMaxHp()
-        {
-            return EntityContainer.Instance.LevelStateController.GetMaxHp();
-        }
+        protected override float GetMaxHp() => GameStateController.Instance.LevelStateController.GetMaxHp();
 
-        protected override void SetCurrentHp(float hp) => EntityContainer.Instance.LevelStateController.SetCurrentHp(hp);
+        protected override void SetCurrentHp(float hp) => GameStateController.Instance.LevelStateController.SetCurrentHp(hp);
 
-        private void SetCurrentScore(int score) => EntityContainer.Instance.LevelStateController.SetCurrentScore(score);
+        private void SetCurrentScore(int score) => GameStateController.Instance.LevelStateController.SetCurrentScore(score);
 
-        protected override void SetMaxHp(float hp) => EntityContainer.Instance.LevelStateController.SetMaxHp(hp);
+        protected override void SetMaxHp(float hp) => GameStateController.Instance.LevelStateController.SetMaxHp(hp);
 
-        protected override void HpChanged()
-        {
-            UpdateHud(false);
-        }
+        protected override void HpChanged() => UpdateHud(false);
 
         private void UpdateHud(bool immediate)
         {

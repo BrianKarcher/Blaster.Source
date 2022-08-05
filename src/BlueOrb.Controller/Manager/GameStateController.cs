@@ -8,6 +8,7 @@ using BlueOrb.Controller.Manager;
 using BlueOrb.Base.Global;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.UI;
+using BlueOrb.Base.Interfaces;
 
 namespace BlueOrb.Base.Manager
 {
@@ -54,6 +55,11 @@ namespace BlueOrb.Base.Manager
 
         private IUIController uiController;
         public IUIController UIController => uiController;
+
+        private ILevelStateController _levelStateController;
+
+        public ILevelStateController LevelStateController { get => _levelStateController; set => _levelStateController = value; }
+
 
         protected override void Awake()
         {
