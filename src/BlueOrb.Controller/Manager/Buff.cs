@@ -29,10 +29,15 @@ namespace BlueOrb.Controller.Manager
             MessageDispatcher.Instance.DispatchMsg(InventoryComponent.AddItemMessage, 0f, this._componentRepository.GetId(),
                 LevelStateController.Id, new ItemDesc() { ItemConfig = buffConfig, Qty = 1 });
             // TODO : Update the HUD for the buff icon
+            if (buffConfig.HUDImageSelected != null)
+            {
+                iconWithProgressBar.SetImage(buffConfig.HUDImageSelected);
+            }
         }
 
         private void Update()
         {
+            float progress = (this.endTime - this.startTime) / (startTime - Time.time);
             //if (Time.time > endTime)
             //{
             //    GameObject.Destroy(this._componentRepository.gameObject);
