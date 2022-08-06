@@ -16,6 +16,7 @@ namespace BlueOrb.Controller.Manager
         private BuffConfig buffConfig;
 
         private IIconWithProgressBar iconWithProgressBar;
+        private GameObject iconWithProgressBarGo;
 
         private float endTime;
         private float startTime;
@@ -24,7 +25,8 @@ namespace BlueOrb.Controller.Manager
         {
             this.startTime = Time.time;
             this.endTime = Time.time + buffConfig.Duration;
-            iconWithProgressBar = GameStateController.Instance.UIController.HudController.CreateBuffUI().GetComponent<IIconWithProgressBar>();
+            iconWithProgressBarGo = GameStateController.Instance.UIController.HudController.CreateBuffUI();
+            iconWithProgressBar = iconWithProgressBarGo.GetComponent<IIconWithProgressBar>();
             iconWithProgressBar.SetValue(0.5f);
             MessageDispatcher.Instance.DispatchMsg(InventoryComponent.AddItemMessage, 0f, this._componentRepository.GetId(),
                 LevelStateController.Id, new ItemDesc() { ItemConfig = buffConfig, Qty = 1 });
@@ -37,18 +39,20 @@ namespace BlueOrb.Controller.Manager
 
         private void Update()
         {
-            float progress = (this.endTime - this.startTime) / (startTime - Time.time);
-            //if (Time.time > endTime)
-            //{
-            //    GameObject.Destroy(this._componentRepository.gameObject);
-            //}
+            float progress = 1f - ((Time.time - startTime) / (this.endTime - this.startTime));
+            iconWithProgressBar.SetValue(progress);
+            if (Time.time > endTime)
+            {
+                GameObject.Destroy(iconWithProgressBarGo);
+                GameObject.Destroy(this._componentRepository.gameObject);
+            }
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            MessageDispatcher.Instance.DispatchMsg(InventoryComponent.RemoveItemMessage, 0f, this._componentRepository.GetId(),
-                LevelStateController.Id, buffConfig.UniqueId);
+            MessageDispatcher.Instance.DispatchMsg(InventoryComponent.AddItemMessage, 0f, this._componentRepository.GetId(),
+                LevelStateController.Id, new ItemDesc() { ItemConfig = buffConfig, Qty = -1 });
         }
     }
 }

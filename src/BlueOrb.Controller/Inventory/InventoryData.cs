@@ -17,11 +17,16 @@ namespace BlueOrb.Controller.Inventory
             // Prevent duplication of Items, just adjust the Qty if the item is already in the inventory
             if (!Items.TryGetValue(item.ItemConfig.UniqueId, out ItemDesc itemConfigAndCount))
             {
-                Items.Add(item.ItemConfig.UniqueId, item.Clone());
+                itemConfigAndCount = item.Clone();
+                Items.Add(item.ItemConfig.UniqueId, itemConfigAndCount);
             }
             else
             {
                 itemConfigAndCount.Qty += item.Qty;
+            }
+            if (itemConfigAndCount.Qty <= 0)
+            {
+                Remove(itemConfigAndCount.ItemConfig.UniqueId);
             }
         }
 
