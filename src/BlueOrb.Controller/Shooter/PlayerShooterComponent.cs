@@ -2,6 +2,7 @@
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
+using BlueOrb.Controller.Buff;
 using BlueOrb.Physics;
 using UnityEngine;
 
@@ -33,6 +34,9 @@ namespace BlueOrb.Controller.Component
         [SerializeField] private string _changeProjectileSendMessage;
 
         [SerializeField] private GameObject _shooterGameObject;
+
+        [SerializeField]
+        private BuffConfig infniteAmmoBuffConfig;
 
         //private ProjectileConfig _currentProjectile;
 
@@ -138,6 +142,12 @@ namespace BlueOrb.Controller.Component
             //Debug.Log("Shooting Secondary Projectile");
             var projectileInventory = GameStateController.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectile;
             ProcessShoot(projectileInventory.ProjectileConfig);
+            if (this.infniteAmmoBuffConfig != null
+                && GameStateController.Instance.LevelStateController.InventoryComponent.ContainsItem(this.infniteAmmoBuffConfig.UniqueId))
+            {
+                // As long as you have the item in inventory, that means Infinite Ammo is active. So just return.
+                return;
+            }
             DecreaseAmmo();
         }
 
