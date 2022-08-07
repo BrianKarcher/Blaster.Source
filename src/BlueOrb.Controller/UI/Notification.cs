@@ -1,5 +1,4 @@
-﻿using BlueOrb.Base.Manager;
-using BlueOrb.Messaging;
+﻿using BlueOrb.Messaging;
 using UnityEngine;
 
 namespace BlueOrb.Controller.UI
@@ -12,7 +11,6 @@ namespace BlueOrb.Controller.UI
 
         private void Start()
         {
-            GameStateController.Instance.LevelStateController.SetCurrentHp(GameStateController.Instance.LevelStateController.GetMaxHp());
             MessageDispatcher.Instance.DispatchMsg("Notification", 0f, null, "Hud Controller", notificationMessage);
         }
     }

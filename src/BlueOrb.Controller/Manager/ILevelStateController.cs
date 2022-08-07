@@ -1,4 +1,5 @@
 ﻿using BlueOrb.Controller.Inventory;
+using BlueOrb.Controller.Manager;
 
 namespace BlueOrb.Base.Interfaces
 {
@@ -15,6 +16,7 @@ namespace BlueOrb.Base.Interfaces
         void SetMaxHp(float hp);
         void ProcessEndStage();
         void UpdateUIScore(bool immediate);
+        PointsMultiplier PointsMultiplier();
 
         bool HasLevelBegun { get; }
         bool EnableInput { get; set; }

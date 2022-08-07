@@ -132,22 +132,38 @@ namespace BlueOrb.Controller
 
         public void SetTurnSpeed(float speed)
         {
-            _animator.SetFloat(_turnSpeedAnim, speed);
+            SetFloat(_turnSpeedAnim, speed);
         }
 
         public void SetSideSpeed(float speed)
         {
-            _animator.SetFloat(_sideSpeedAnim, speed);
+            SetFloat(_sideSpeedAnim, speed);
         }
 
         public void SetForwardSpeed(float speed)
         {
-            _animator.SetFloat(_forwardSpeedAnim, speed);
+            SetFloat(_forwardSpeedAnim, speed);
         }
 
         public void SetVerticalSpeed(float speed)
         {
-            _animator.SetFloat(_verticalSpeedAnim, speed);
+            SetFloat(_verticalSpeedAnim, speed);
+        }
+
+        private void SetFloat(string name, float value)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this._animator.SetFloat(name, value);
+            }
+        }
+
+        public void SetTrigger(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this._animator.SetTrigger(name);
+            }
         }
 
         public void SetIsBlocking(bool blocking) => _animator.SetBool(_isBlockingAnim, blocking);
@@ -161,12 +177,6 @@ namespace BlueOrb.Controller
         }
 
         public bool GetBool(string anim) => _animator.GetBool(anim);
-
-        public void SetTrigger(string anim)
-        {
-            Debug.Log($"Setting Anim Trigger {anim}");
-            _animator.SetTrigger(anim);
-        }
 
         public void SetAttackTrigger(int num) => _animator.SetTrigger(_attackAnim[num]);
     }

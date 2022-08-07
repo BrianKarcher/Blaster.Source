@@ -164,7 +164,6 @@ namespace BlueOrb.Controller.Damage
             //DamageInfo.DamageSourceLocation = damageInfo.DamageSourceLocation;
             //DamageInfo.Tag = damageInfo.Tag;
             //DamageInfo.CollisionDamageType = damageInfo.CollisionDamageType;
-            //SendDamageNotification();
 
             // TODO Create a Hit Effect!!!
             //if (_hitEffect != null)

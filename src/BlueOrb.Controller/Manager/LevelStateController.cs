@@ -57,6 +57,9 @@ namespace BlueOrb.Controller.Manager
 
         public InventoryComponent InventoryComponent => inventoryComponent;
 
+        private PointsMultiplier pointsMultiplier = new PointsMultiplier();
+        public PointsMultiplier PointsMultiplier() => pointsMultiplier;
+
         //private static LevelStateController _instance;
         //[HideInInspector]
         //public static LevelStateController Instance
@@ -88,6 +91,12 @@ namespace BlueOrb.Controller.Manager
         {
             Debug.Log("(LevelStateController) Set Level Begun variable");
             hasLevelBegun = true;
+            this.pointsMultiplier.Clear();
+        }
+
+        public void EndLevel()
+        {
+
         }
 
         //public void SetCurrentHp(float hp)
