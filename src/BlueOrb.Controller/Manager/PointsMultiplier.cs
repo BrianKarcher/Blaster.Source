@@ -1,4 +1,6 @@
-﻿using BlueOrb.Messaging;
+﻿using BlueOrb.Base.Manager;
+using BlueOrb.Controller.Buff;
+using BlueOrb.Messaging;
 using System;
 using UnityEngine;
 
@@ -7,19 +9,22 @@ namespace BlueOrb.Controller.Manager
     [Serializable]
     public class PointsMultiplier
     {
+        private const string SetMultiplierMessage = "SetMultiplier";
+        private const string SetConsecutiveHitsMessage = "SetConsecutiveHits";
         private int pointsMultiplier;
         private int consecutiveHits;
 
         public void Clear()
         {
             this.pointsMultiplier = 1;
-            this.consecutiveHits = 0;
+            SetConsecutiveHits(0);
             SetMultiplierInUI();
         }
 
         public void IncrementConsecutiveHits()
         {
-            this.consecutiveHits++;
+            SetConsecutiveHits(this.consecutiveHits + 1);
+            
             Log();
             if (this.consecutiveHits % 5 == 0)
             {
@@ -29,9 +34,15 @@ namespace BlueOrb.Controller.Manager
 
         public void ResetConsecutiveHits()
         {
-            this.consecutiveHits = 0;
+            SetConsecutiveHits(0);
             Log();
             ResetPointsMultiplier();
+        }
+
+        private void SetConsecutiveHits(int value)
+        {
+            this.consecutiveHits = value;
+            MessageDispatcher.Instance.DispatchMsg(SetConsecutiveHitsMessage, 0f, null, "Hud Controller", value);
         }
 
         private void Log()
@@ -40,6 +51,7 @@ namespace BlueOrb.Controller.Manager
         private void IncrementPointsMultiplier()
         {
             this.pointsMultiplier++;
+            SetMultiplierInUI();
             SendNotification();
         }
 
@@ -47,13 +59,14 @@ namespace BlueOrb.Controller.Manager
         {
             this.pointsMultiplier = 1;
             SendNotification();
+            SetMultiplierInUI();
         }
 
         private void SendNotification()
             => MessageDispatcher.Instance.DispatchMsg("Notification", 0f, null, "Hud Controller", $"x{this.pointsMultiplier}");
 
         private void SetMultiplierInUI()
-            => MessageDispatcher.Instance.DispatchMsg("SetMultiplier", 0f, null, "Hud Controller", $"x{this.pointsMultiplier}");
+            => MessageDispatcher.Instance.DispatchMsg(SetMultiplierMessage, 0f, null, "Hud Controller", $"x{this.pointsMultiplier}");
 
         public int GetPointsMultiplier => this.pointsMultiplier;
     }

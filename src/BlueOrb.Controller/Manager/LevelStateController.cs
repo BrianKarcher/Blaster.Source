@@ -84,6 +84,11 @@ namespace BlueOrb.Controller.Manager
             GameStateController.Instance.LevelStateController = this;
         }
 
+        private void Start()
+        {
+            this.pointsMultiplier.Clear();
+        }
+
         /// <summary>
         /// Get called after the countdown is complete
         /// </summary>
@@ -92,11 +97,6 @@ namespace BlueOrb.Controller.Manager
             Debug.Log("(LevelStateController) Set Level Begun variable");
             hasLevelBegun = true;
             this.pointsMultiplier.Clear();
-        }
-
-        public void EndLevel()
-        {
-
         }
 
         //public void SetCurrentHp(float hp)
@@ -139,6 +139,7 @@ namespace BlueOrb.Controller.Manager
             _addPointsIndex = MessageDispatcher.Instance.StartListening("AddPoints", Id, (data) =>
             {
                 var points = (PointsData)data.ExtraInfo;
+                points.Points *= pointsMultiplier.GetPointsMultiplier;
                 _currentScore += points.Points;
                 MessageDispatcher.Instance.DispatchMsg("SetCurrentScore", 0f, _componentRepository.GetId(), "UI Controller", (_currentScore, false));
                 MessageDispatcher.Instance.DispatchMsg("CreatePointsLabel", 0f, _componentRepository.GetId(), "UI Controller", points);
@@ -182,6 +183,7 @@ namespace BlueOrb.Controller.Manager
                 GameStateController.Instance.EnterHighScore(sceneConfig.UniqueId, this._currentScore);
             }
             MessageDispatcher.Instance.DispatchMsg("LevelDetail", 0f, this.GetId(), "UI Controller", null);
+            this.pointsMultiplier.Clear();
         }
 
         public void OnDiedOkClicked()
