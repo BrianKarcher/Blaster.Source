@@ -17,7 +17,7 @@ namespace BlueOrb.Controller.Block
         {
             base.StartListening();
 
-            MessageDispatcher.Instance.StartListening("SetSecondaryProjectile", _componentRepository.GetId(), (data) =>
+            MessageDispatcher.Instance.StartListening("AcquireItem", _componentRepository.GetId(), (data) =>
             {
                 Debug.Log($"(EntityItem) Shot Ammo Box {_item?.Name}");
                 MessageDispatcher.Instance.DispatchMsg(this.ammoBoxShotMessage, 0f, _componentRepository.GetId(), "Shooter Controller", _item);

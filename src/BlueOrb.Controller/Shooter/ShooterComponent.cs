@@ -43,6 +43,9 @@ namespace BlueOrb.Controller.Component
 
         [SerializeField] private string _setAmmoMessage = "SetAmmo";
 
+        [SerializeField]
+        private string removeProjectileTypeHudMessage = "RemoveProjectileType";
+
         private long ammoBoxShotIndex, toggleProjectileIndex;
 
         public IProjectileItem CurrentSecondaryProjectile => projectileToggle.GetSelectedProjectile();
@@ -102,6 +105,7 @@ namespace BlueOrb.Controller.Component
             if (projectileItem.CurrentAmmo <= 0)
             {
                 this.projectileToggle.Remove(projectileItem);
+                MessageDispatcher.Instance.DispatchMsg(this.removeProjectileTypeHudMessage, 0f, null, "Hud Controller", projectileItem.ProjectileConfig.UniqueId);
             }
             else
             {
