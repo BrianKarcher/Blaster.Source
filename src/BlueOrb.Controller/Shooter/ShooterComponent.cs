@@ -4,7 +4,6 @@ using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.Player;
-using BlueOrb.Controller.Shooter;
 using BlueOrb.Messaging;
 using BlueOrb.Physics;
 using System;
@@ -29,9 +28,6 @@ namespace BlueOrb.Controller.Component
         [SerializeField]
         private string MessageId = "Shooter Controller";
 
-        [SerializeField]
-        private ProjectileToggle projectileToggle;
-
         [SerializeField] private ProjectileConfig _currentMainProjectileConfig;
         public ProjectileConfig CurrentMainProjectileConfig => _currentMainProjectileConfig;
 
@@ -39,16 +35,34 @@ namespace BlueOrb.Controller.Component
 
         [SerializeField] private string toggleProjectileMessage = "ToggleProjectile";
 
+        [SerializeField] private string toggleProjectileHudMessage = "ToggleProjectile";
+
         [SerializeField] private string _hudControllerName;
 
         [SerializeField] private string _setAmmoMessage = "SetAmmo";
+
+        [SerializeField]
+        private string addProjectileTypeHudMessage = "AddProjectileType";
 
         [SerializeField]
         private string removeProjectileTypeHudMessage = "RemoveProjectileType";
 
         private long ammoBoxShotIndex, toggleProjectileIndex;
 
-        public IProjectileItem CurrentSecondaryProjectile => projectileToggle.GetSelectedProjectile();
+        private Dictionary<string, ProjectileItem> projectileItems = new Dictionary<string, ProjectileItem>();
+
+        private string currentSecondaryProjectile;
+
+        public void SetSecondaryProjectile(string uniqueId) => this.currentSecondaryProjectile = uniqueId;
+
+        public IProjectileItem GetSecondaryProjectile()
+        {
+            if (this.currentSecondaryProjectile == null)
+            {
+                return null;
+            }
+            return this.projectileItems[this.currentSecondaryProjectile];
+        }
 
         public override void StartListening()
         {
@@ -63,20 +77,20 @@ namespace BlueOrb.Controller.Component
                     throw new Exception("No Projectile Config");
                 }
 
-                if (!this.projectileToggle.Contains(projectileConfig.UniqueId))
+                if (!this.projectileItems.TryGetValue(projectileConfig.UniqueId, out ProjectileItem projectileItem))
                 {
                     Debug.Log($"(ShooterComponent) Projectile Toggle does NOT contain {projectileConfig.Name}, adding to toggle list");
-                    ProjectileItem projectileItem = new ProjectileItem()
+                    projectileItem = new ProjectileItem()
                     {
                         CurrentAmmo = projectileConfig.Ammo,
                         ProjectileConfig = projectileConfig
                     };
-                    this.projectileToggle.Add(projectileItem);
+                    projectileItems.Add(projectileConfig.UniqueId, projectileItem);
+                    MessageDispatcher.Instance.DispatchMsg(this.addProjectileTypeHudMessage, 0f, null, "Hud Controller", projectileItem);
                 }
                 else
                 {
                     Debug.Log($"(ShooterComponent) Projectile Toggle DOES contain {projectileConfig.Name}, adding to ammo");
-                    IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
                     Debug.Log($"(ShooterComponent) Adding {projectileConfig.Ammo} ammo to {projectileItem.CurrentAmmo} for {projectileItem.ProjectileConfig.name}");
                     projectileItem.CurrentAmmo += projectileConfig.Ammo;
                     MessageDispatcher.Instance.DispatchMsg(_setAmmoMessage, 0f, _componentRepository.GetId(), _hudControllerName, (projectileItem.ProjectileConfig.UniqueId, projectileItem.CurrentAmmo));
@@ -87,7 +101,7 @@ namespace BlueOrb.Controller.Component
             {
                 float direction = (float)data.ExtraInfo;
                 Debug.Log($"(Shooter Controller) Toggle Projectile to direction: {direction}");
-                projectileToggle.Toggle(direction > 0);
+                MessageDispatcher.Instance.DispatchMsg(this.toggleProjectileHudMessage, 0f, null, "Hud Controller", direction > 0);
             });
         }
 
@@ -100,11 +114,10 @@ namespace BlueOrb.Controller.Component
 
         public void AddAmmoToSelected(int ammo)
         {
-            IProjectileItem projectileItem = this.projectileToggle.GetSelectedProjectile();
+            IProjectileItem projectileItem = this.GetSecondaryProjectile();
             projectileItem.CurrentAmmo += ammo;
             if (projectileItem.CurrentAmmo <= 0)
             {
-                this.projectileToggle.Remove(projectileItem);
                 MessageDispatcher.Instance.DispatchMsg(this.removeProjectileTypeHudMessage, 0f, null, "Hud Controller", projectileItem.ProjectileConfig.UniqueId);
             }
             else

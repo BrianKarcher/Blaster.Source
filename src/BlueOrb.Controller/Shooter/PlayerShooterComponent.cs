@@ -140,7 +140,11 @@ namespace BlueOrb.Controller.Component
         public void ShootSecondaryProjectile()
         {
             //Debug.Log("Shooting Secondary Projectile");
-            var projectileInventory = GameStateController.Instance.LevelStateController.ShooterComponent.CurrentSecondaryProjectile;
+            var projectileInventory = GameStateController.Instance.LevelStateController.ShooterComponent.GetSecondaryProjectile();
+            if (projectileInventory == null)
+            {
+                return;
+            }
             ProcessShoot(projectileInventory.ProjectileConfig);
             if (this.infniteAmmoBuffConfig != null
                 && GameStateController.Instance.LevelStateController.InventoryComponent.ContainsItem(this.infniteAmmoBuffConfig.UniqueId))

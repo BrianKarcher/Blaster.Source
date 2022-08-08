@@ -5,7 +5,8 @@ namespace BlueOrb.Base.Interfaces
     public interface IShooterComponent
     {
         ProjectileConfig CurrentMainProjectileConfig { get; }
-        IProjectileItem CurrentSecondaryProjectile { get; }
+        IProjectileItem GetSecondaryProjectile();
+        void SetSecondaryProjectile(string uniqueId);
         void AddAmmoToSelected(int ammo);
     }
 }
