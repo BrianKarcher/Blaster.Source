@@ -58,7 +58,6 @@ namespace BlueOrb.Controller.Manager
         private void ResetPointsMultiplier()
         {
             this.pointsMultiplier = 1;
-            SendNotification();
             SetMultiplierInUI();
         }
 

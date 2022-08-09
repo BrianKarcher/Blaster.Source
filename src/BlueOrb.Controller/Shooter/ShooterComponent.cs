@@ -1,11 +1,7 @@
 ﻿using BlueOrb.Base.Interfaces;
 using BlueOrb.Base.Item;
-using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
-using BlueOrb.Common.Container;
-using BlueOrb.Controller.Player;
 using BlueOrb.Messaging;
-using BlueOrb.Physics;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,7 +57,12 @@ namespace BlueOrb.Controller.Component
             {
                 return null;
             }
-            return this.projectileItems[this.currentSecondaryProjectile];
+            this.projectileItems.TryGetValue(this.currentSecondaryProjectile, out ProjectileItem item);
+            if (item == null)
+            {
+                Debug.LogError("Could not find projectile " + this.currentSecondaryProjectile);
+            }
+            return item;
         }
 
         public override void StartListening()
@@ -118,6 +119,7 @@ namespace BlueOrb.Controller.Component
             projectileItem.CurrentAmmo += ammo;
             if (projectileItem.CurrentAmmo <= 0)
             {
+                projectileItems.Remove(projectileItem.ProjectileConfig.UniqueId);
                 MessageDispatcher.Instance.DispatchMsg(this.removeProjectileTypeHudMessage, 0f, null, "Hud Controller", projectileItem.ProjectileConfig.UniqueId);
             }
             else
