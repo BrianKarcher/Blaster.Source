@@ -113,6 +113,12 @@ namespace BlueOrb.Controller.Component
             MessageDispatcher.Instance.StopListening(this.toggleProjectileMessage, MessageId, this.toggleProjectileIndex);
         }
 
+        public void Clear()
+        {
+            projectileItems.Clear();
+            this.currentSecondaryProjectile = null;
+        }
+
         public void AddAmmoToSelected(int ammo)
         {
             IProjectileItem projectileItem = this.GetSecondaryProjectile();

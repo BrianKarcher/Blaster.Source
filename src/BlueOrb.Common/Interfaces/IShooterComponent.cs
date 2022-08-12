@@ -8,5 +8,6 @@ namespace BlueOrb.Base.Interfaces
         IProjectileItem GetSecondaryProjectile();
         void SetSecondaryProjectile(string uniqueId);
         void AddAmmoToSelected(int ammo);
+        void Clear();
     }
 }
