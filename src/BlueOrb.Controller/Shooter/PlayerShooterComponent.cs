@@ -267,13 +267,13 @@ namespace BlueOrb.Controller.Component
             //if (!_camera.Raycast(1000f, _layerMask, out var hitInfo))
             if (!rtn)
             {
-                Debug.Log("Shooter Raycast No Hit");
+                //Debug.Log("Shooter Raycast No Hit");
                 // If raycast no-hit, just point down the camera forward direction very far
                 return _camera.transform.TransformPoint(new Vector3(0f, 0f, 1000f)) - _spawnPointPosition.transform.position;
             }
             else
             {
-                Debug.Log($"Shooter Raycast Hit {(hitInfo.collider.attachedRigidbody != null ? hitInfo.collider.attachedRigidbody.name : hitInfo.collider.name)}");
+                //Debug.Log($"Shooter Raycast Hit {(hitInfo.collider.attachedRigidbody != null ? hitInfo.collider.attachedRigidbody.name : hitInfo.collider.name)}");
                 return hitInfo.point - _spawnPointPosition.transform.position;
             }
         }

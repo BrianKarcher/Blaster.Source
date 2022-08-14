@@ -1,5 +1,6 @@
 ﻿using BlueOrb.Base.Global;
 using BlueOrb.Common.Container;
+using BlueOrb.Messaging;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -70,6 +71,7 @@ namespace BlueOrb.Controller
                     yield return SceneManager.UnloadSceneAsync(scene.name);
                 }
             }
+            MessageDispatcher.Instance.DispatchMsg("SceneUnloaded", 0f, null, "Game Controller", null);
             yield return StartCoroutine(LoadSceneAndSetActive(sceneName));
             if (AfterSceneLoad != null)
                 AfterSceneLoad();

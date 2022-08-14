@@ -182,7 +182,6 @@ namespace BlueOrb.Controller.Manager
             {
                 GameStateController.Instance.EnterHighScore(sceneConfig.UniqueId, this._currentScore);
             }
-            MessageDispatcher.Instance.DispatchMsg("LevelDetail", 0f, this.GetId(), "UI Controller", null);
             this.pointsMultiplier.Clear();
             this.ShooterComponent.Clear();
             MessageDispatcher.Instance.DispatchMsg("Clear", 0f, this.GetId(), "Hud Controller", null);

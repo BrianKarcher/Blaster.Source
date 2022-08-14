@@ -5,5 +5,6 @@
         public float MaxSpeed = 200f;
         public int Ammo = 5;
         public bool IsSecondary = true;
+        public float Cooldown = 1f;
     }
 }

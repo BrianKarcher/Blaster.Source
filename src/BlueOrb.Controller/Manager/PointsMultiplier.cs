@@ -25,7 +25,6 @@ namespace BlueOrb.Controller.Manager
         {
             SetConsecutiveHits(this.consecutiveHits + 1);
             
-            Log();
             if (this.consecutiveHits % 5 == 0)
             {
                 IncrementPointsMultiplier();
@@ -35,7 +34,6 @@ namespace BlueOrb.Controller.Manager
         public void ResetConsecutiveHits()
         {
             SetConsecutiveHits(0);
-            Log();
             ResetPointsMultiplier();
         }
 
