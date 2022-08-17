@@ -1,11 +1,6 @@
-﻿using BlueOrb.Base.Item;
-using BlueOrb.Common.Components;
+﻿using BlueOrb.Common.Components;
 using BlueOrb.Messaging;
 using Cinemachine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace BlueOrb.Controller
@@ -38,6 +33,16 @@ namespace BlueOrb.Controller
         [SerializeField]
         private bool _speedDecreasing = false;
 
+        private GameObject cinemachineDollyCartGameObject;
+        private Vector3 oldDollyCartPosition;
+        //private Vector3 oldDollyCartRotation;
+        public float yaw;
+        public float pitch;
+        public float roll;
+        public float oldyaw;
+        public float oldpitch;
+        public float oldroll;
+
         public enum LerpType
         {
             Lerp = 0,
@@ -52,12 +57,13 @@ namespace BlueOrb.Controller
             public float TargetSpeed;
         }
 
-        public void SetDollyCartParent(GameObject dolly)
-        {
-            _dollyJoint.transform.parent = dolly.transform;
-            //_componentRepository.transform.parent = dolly.transform;
-            _cinemachineDollyCart = dolly.GetComponent<CinemachineDollyCart>();
-        }
+        //public void SetDollyCartParent(GameObject dolly)
+        //{
+        //    _dollyJoint.transform.parent = dolly.transform;
+        //    //_cinemachineDollyCart.
+        //    //_componentRepository.transform.parent = dolly.transform;
+        //    _cinemachineDollyCart = dolly.GetComponent<CinemachineDollyCart>();
+        //}
 
         public float GetSpeed()
         {
@@ -73,6 +79,26 @@ namespace BlueOrb.Controller
             _running = false;
 
             //ItemsByType = new Dictionary<ItemTypeEnum, ItemDesc>();
+        }
+
+        private void LateUpdate()
+        {
+            // Directly translate the position and rotation based on the delta for the Dolly Cart.
+            Vector3 distanceDelta = this._dollyJoint.transform.position - this.oldDollyCartPosition;
+            //Quaternion rotationDelta = this.oldDollyCartRotation * Quaternion.Inverse(this.oldDollyCartRotation);
+            //Quaternion rotationDelta = this._dollyJoint.transform.rotation.to - this.oldDollyCartRotation;
+            //Vector3 forwardDelta = this._dollyJoint.transform.forward - this.oldDollyCartRotation;
+            //Quaternion newQ = rotationDelta + this._dollyJoint.transform.rotation;
+            //_dollyJoint.transform.Translate()
+            //Mathf.MoveTowardsAngle()
+
+            //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
+            //since compilers can be finicky about % modulus with negative numbers. Then % 360 normalizes the difference to [0, 360).
+            //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
+            float deltaYaw = (this.cinemachineDollyCartGameObject.transform.eulerAngles.y - this.oldyaw + 540) % 360 - 180;
+            yaw += deltaYaw;
+
+            SetOldPositionAndRotation(this.cinemachineDollyCartGameObject.gameObject);
         }
 
         public override void StartListening()
@@ -106,14 +132,17 @@ namespace BlueOrb.Controller
 
             _setCineCart = MessageDispatcher.Instance.StartListening("SetCineCart", _componentRepository.GetId(), (data) =>
             {
-                var cartGO = (GameObject)data.ExtraInfo;
-                var cart = cartGO.GetComponent<Cinemachine.CinemachineDollyCart>();
+                this.cinemachineDollyCartGameObject = (GameObject)data.ExtraInfo;
+                var cart = this.cinemachineDollyCartGameObject.GetComponent<CinemachineDollyCart>();
+                _cinemachineDollyCart.m_Position = 0;
                 _cinemachineDollyCart = cart;
+                // The old cart is disabled, new deltas will come from the new cart
+                SetOldPositionAndRotation(this.cinemachineDollyCartGameObject);
             });
             _setTrack = MessageDispatcher.Instance.StartListening("SetTrack", _componentRepository.GetId(), (data) =>
             {
-                var trackGO = (GameObject)data.ExtraInfo;
-                SetDollyCartParent(trackGO);
+                //var trackGO = (GameObject)data.ExtraInfo;
+                //SetDollyCartParent(trackGO);
             });
             //_addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
             //{
@@ -123,6 +152,15 @@ namespace BlueOrb.Controller
             //});
         }
 
+        private void SetOldPositionAndRotation(GameObject go)
+        {
+            this.oldDollyCartPosition = go.transform.position;
+            this.oldpitch = go.transform.localRotation.eulerAngles.x;
+            this.oldyaw = go.transform.localRotation.eulerAngles.y;
+            this.oldroll = go.transform.localRotation.eulerAngles.z;
+            //this.oldDollyCartRotation = go.transform.forward;
+        }
+
         public override void StopListening()
         {
             base.StopListening();
@@ -130,6 +168,15 @@ namespace BlueOrb.Controller
             MessageDispatcher.Instance.StopListening("SetSpeed", _componentRepository.GetId(), _setSpeedId);
             MessageDispatcher.Instance.StopListening("SetCineCart", _componentRepository.GetId(), _setCineCart);
             MessageDispatcher.Instance.StopListening("SetTrack", _componentRepository.GetId(), _setTrack);
+        }
+
+        public void RotateTo(Vector3 dir, float time)
+        {
+            Debug.Log($"Rotating to {dir}");
+            this._cinemachineDollyCart.m_Speed = 0f;
+            gameObject.transform.rotation = Quaternion.Euler(dir.x, dir.y, dir.z);
+            this._cinemachineDollyCart.m_Speed = 5f;
+            //iTween.RotateTo(gameObject, dir, time);
         }
 
         protected void FixedUpdate()
