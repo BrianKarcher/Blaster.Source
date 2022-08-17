@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BlueOrb.Base.Components
 {
-    [AddComponentMenu("RQ/Components/Entity Common")]
+    [AddComponentMenu("BlueOrb/Components/Entity Common")]
     [Serializable]
     public class EntityCommonComponent : ComponentRepository
     {
