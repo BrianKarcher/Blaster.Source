@@ -65,10 +65,7 @@ namespace BlueOrb.Controller
         //    _cinemachineDollyCart = dolly.GetComponent<CinemachineDollyCart>();
         //}
 
-        public float GetSpeed()
-        {
-            return _cinemachineDollyCart.m_Speed;
-        }
+        public float GetSpeed() => _cinemachineDollyCart.m_Speed;
 
         //[SerializeField]
         //private InventoryData _inventoryData;
@@ -81,10 +78,14 @@ namespace BlueOrb.Controller
             //ItemsByType = new Dictionary<ItemTypeEnum, ItemDesc>();
         }
 
-        private void LateUpdate()
+        private void Update()
         {
+            if (this.cinemachineDollyCartGameObject == null)
+            {
+                return;
+            }
             // Directly translate the position and rotation based on the delta for the Dolly Cart.
-            Vector3 distanceDelta = this._dollyJoint.transform.position - this.oldDollyCartPosition;
+            Vector3 distanceDelta = this.cinemachineDollyCartGameObject.transform.position - this.oldDollyCartPosition;
             //Quaternion rotationDelta = this.oldDollyCartRotation * Quaternion.Inverse(this.oldDollyCartRotation);
             //Quaternion rotationDelta = this._dollyJoint.transform.rotation.to - this.oldDollyCartRotation;
             //Vector3 forwardDelta = this._dollyJoint.transform.forward - this.oldDollyCartRotation;
@@ -92,12 +93,18 @@ namespace BlueOrb.Controller
             //_dollyJoint.transform.Translate()
             //Mathf.MoveTowardsAngle()
 
+            if (distanceDelta.sqrMagnitude < 0.01f)
+            {
+                return;
+            }
+
             //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
             //since compilers can be finicky about % modulus with negative numbers. Then % 360 normalizes the difference to [0, 360).
             //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
-            float deltaYaw = (this.cinemachineDollyCartGameObject.transform.eulerAngles.y - this.oldyaw + 540) % 360 - 180;
-            yaw += deltaYaw;
+            //float deltaYaw = (this.cinemachineDollyCartGameObject.transform.eulerAngles.y - this.oldyaw + 540) % 360 - 180;
+            //yaw += deltaYaw;
 
+            _dollyJoint.transform.localPosition += distanceDelta;
             SetOldPositionAndRotation(this.cinemachineDollyCartGameObject.gameObject);
         }
 
@@ -132,12 +139,7 @@ namespace BlueOrb.Controller
 
             _setCineCart = MessageDispatcher.Instance.StartListening("SetCineCart", _componentRepository.GetId(), (data) =>
             {
-                this.cinemachineDollyCartGameObject = (GameObject)data.ExtraInfo;
-                var cart = this.cinemachineDollyCartGameObject.GetComponent<CinemachineDollyCart>();
-                _cinemachineDollyCart.m_Position = 0;
-                _cinemachineDollyCart = cart;
-                // The old cart is disabled, new deltas will come from the new cart
-                SetOldPositionAndRotation(this.cinemachineDollyCartGameObject);
+                SetDollyCart((GameObject)data.ExtraInfo);
             });
             _setTrack = MessageDispatcher.Instance.StartListening("SetTrack", _componentRepository.GetId(), (data) =>
             {
@@ -150,6 +152,19 @@ namespace BlueOrb.Controller
             //    Debug.Log($"Adding item {item.ItemConfig.name}, qty {item.Qty}");
             //    //AddItem(item);
             //});
+        }
+
+        public void SetDollyCart(GameObject dollyCart, bool resetCartPosition = true)
+        {
+            this.cinemachineDollyCartGameObject = dollyCart;
+            var cart = this.cinemachineDollyCartGameObject.GetComponent<CinemachineDollyCart>();
+            _cinemachineDollyCart = cart;
+            if (resetCartPosition)
+            {
+                _cinemachineDollyCart.m_Position = 0;
+            }
+            // The old cart is disabled, new deltas will come from the new cart
+            SetOldPositionAndRotation(this.cinemachineDollyCartGameObject);
         }
 
         private void SetOldPositionAndRotation(GameObject go)

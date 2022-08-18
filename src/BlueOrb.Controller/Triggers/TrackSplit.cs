@@ -43,6 +43,11 @@ namespace BlueOrb.Controller.Triggers
             //other.transform.parent = _cartJoint;
             var otherEntity = other.GetComponent<IEntity>();
             otherEntity = otherEntity ?? other.attachedRigidbody.GetComponent<IEntity>();
+            if (otherEntity == null)
+            {
+                Debug.LogError($"TrackSplit could not find entity for {other.name}");
+                return;
+            }
             MessageDispatcher.Instance.DispatchMsg("SetTrack", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
             //var cart = otherEntity.Components.GetComponent<DollyCartComponent>();
             //cart.
