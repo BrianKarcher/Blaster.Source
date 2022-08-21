@@ -74,7 +74,9 @@ namespace BlueOrb.Controller
         {
             base.Awake();
             _running = false;
-
+            pitch = _dollyJoint.transform.eulerAngles.x;
+            yaw = _dollyJoint.transform.eulerAngles.y;
+            roll = _dollyJoint.transform.eulerAngles.z;
             //ItemsByType = new Dictionary<ItemTypeEnum, ItemDesc>();
         }
 
@@ -93,19 +95,21 @@ namespace BlueOrb.Controller
             //_dollyJoint.transform.Translate()
             //Mathf.MoveTowardsAngle()
 
-            if (distanceDelta.sqrMagnitude < 0.01f)
-            {
-                return;
-            }
+            //if (distanceDelta.sqrMagnitude < Mathf.)
+            //{
+            //    return;
+            //}
+            _dollyJoint.transform.localPosition += distanceDelta;
 
             //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
             //since compilers can be finicky about % modulus with negative numbers. Then % 360 normalizes the difference to [0, 360).
             //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
-            //float deltaYaw = (this.cinemachineDollyCartGameObject.transform.eulerAngles.y - this.oldyaw + 540) % 360 - 180;
-            //yaw += deltaYaw;
-
-            _dollyJoint.transform.localPosition += distanceDelta;
-            SetOldPositionAndRotation(this.cinemachineDollyCartGameObject.gameObject);
+            float deltaYaw = (this.cinemachineDollyCartGameObject.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
+            yaw += deltaYaw;
+            float deltaPitch = (this.cinemachineDollyCartGameObject.transform.localEulerAngles.x - this.oldpitch + 540) % 360 - 180;
+            pitch += deltaPitch;
+            _dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
+            SetOldPositionAndRotation(this.cinemachineDollyCartGameObject);
         }
 
         public override void StartListening()
@@ -170,9 +174,9 @@ namespace BlueOrb.Controller
         private void SetOldPositionAndRotation(GameObject go)
         {
             this.oldDollyCartPosition = go.transform.position;
-            this.oldpitch = go.transform.localRotation.eulerAngles.x;
-            this.oldyaw = go.transform.localRotation.eulerAngles.y;
-            this.oldroll = go.transform.localRotation.eulerAngles.z;
+            this.oldpitch = go.transform.localEulerAngles.x;
+            this.oldyaw = go.transform.localEulerAngles.y;
+            this.oldroll = go.transform.localEulerAngles.z;
             //this.oldDollyCartRotation = go.transform.forward;
         }
 
