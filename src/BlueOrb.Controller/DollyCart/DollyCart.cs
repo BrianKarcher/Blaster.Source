@@ -52,6 +52,11 @@ namespace BlueOrb.Controller.DollyCart
 
         public float GetSpeed() => _cinemachineDollyCart.m_Speed;
 
+        private void Awake()
+        {
+            _cinemachineDollyCart = GetComponent<CinemachineDollyCart>();
+        }
+
         public void SetSpeed(float speed)
         {
             this.speed = speed;
