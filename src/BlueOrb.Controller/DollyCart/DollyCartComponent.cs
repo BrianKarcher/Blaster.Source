@@ -6,44 +6,32 @@ using UnityEngine;
 
 namespace BlueOrb.Controller
 {
-    [AddComponentMenu("BlueOrb/Components/Dolly Cart")]
+    [AddComponentMenu("BlueOrb/Components/Dolly Cart Joint")]
     public class DollyCartComponent : ComponentBase<DollyCartComponent>
     {
         private float _targetTime;
         private bool _running;
-        [SerializeField]
-        private CinemachineDollyCart _cinemachineDollyCart;
+
         [SerializeField]
         public LerpType _speedChangeType = LerpType.SmoothDamp;
         [SerializeField]
+        private DollyCart.DollyCart dollyCart;
+
+        public bool HasCart => this.dollyCart != null;
+
+        [SerializeField]
         private GameObject _dollyJoint;
 
-        [SerializeField]
-        private float _targetSpeed;
-        public float GetTargetSpeed => _targetSpeed;
-
-        [SerializeField]
-        private float _startSpeed;
-        [SerializeField]
-        private float _currentSpeed;
-
         private long _setSpeedTargetId, _setSpeedId, _setCineCart, _setTrack;
-        [SerializeField]
-        private bool _updatingSpeed = false;
-        private float _velocity;
-        [SerializeField]
-        private float _smoothTime = 2f;
-        public float SmoothTime => _smoothTime;
-
-        [SerializeField]
-        private bool _speedDecreasing = false;
-        [SerializeField]
-        private float emergencyBrakeTime = 1.0f;
 
         [SerializeField]
         [Tag]
         private string enemyTag;
         public string EnemyTag => this.enemyTag;
+
+        public float Speed => this.dollyCart?.Speed ?? 0f;
+
+        public void Stop() => this.dollyCart?.Stop();
 
         //[SerializeField]
         ////[Layer]
@@ -57,7 +45,6 @@ namespace BlueOrb.Controller
         private Vector3 enemyCheckHalfExtents = new Vector3(0.5f, 1f, 1f);
         public Vector3 EnemyCheckHalfExtents => this.enemyCheckHalfExtents;
 
-        private GameObject cinemachineDollyCartGameObject;
         private Vector3 oldDollyCartPosition;
         //private Vector3 oldDollyCartRotation;
         public float yaw;
@@ -66,6 +53,10 @@ namespace BlueOrb.Controller
         public float oldyaw;
         public float oldpitch;
         public float oldroll;
+
+        public float SmoothTime => this.dollyCart?.SmoothTime ?? 0f;
+        public float TargetSpeed => this.dollyCart?.TargetSpeed ?? 0f;
+        public void SetTargetSpeed(float speed) => this.dollyCart?.SetTargetSpeed(speed);
 
         public enum LerpType
         {
@@ -89,9 +80,6 @@ namespace BlueOrb.Controller
         //    _cinemachineDollyCart = dolly.GetComponent<CinemachineDollyCart>();
         //}
 
-        public float GetSpeed() => cinemachineDollyCartGameObject == null ? 0 : _cinemachineDollyCart.m_Speed;
-        private float SetSpeed(float speed) => _cinemachineDollyCart.m_Speed = speed;
-
         //[SerializeField]
         //private InventoryData _inventoryData;
 
@@ -111,15 +99,13 @@ namespace BlueOrb.Controller
             _setSpeedTargetId = MessageDispatcher.Instance.StartListening("SetSpeedTarget", _componentRepository.GetId(), (data) =>
             {
                 var speedData = data.ExtraInfo as SetSpeedData;
-                StartAcceleration(speedData);
+                this.dollyCart?.StartAcceleration(speedData.TargetSpeed, speedData.SmoothTime);
             });
 
             _setSpeedId = MessageDispatcher.Instance.StartListening("SetSpeed", _componentRepository.GetId(), (data) =>
             {
                 var speed = (float)data.ExtraInfo;
-                _startSpeed = speed;
-                _currentSpeed = speed;
-                SetSpeed(speed);
+                this.dollyCart?.SetSpeed(speed);
             });
 
             _setCineCart = MessageDispatcher.Instance.StartListening("SetCineCart", _componentRepository.GetId(), (data) =>
@@ -139,36 +125,21 @@ namespace BlueOrb.Controller
             //});
         }
 
-        public void Brake() => StartAcceleration(new SetSpeedData { TargetSpeed = 0, SmoothTime = this.emergencyBrakeTime });
+        public void ProcessDollyCartSpeedChange() => this.dollyCart?.ProcessDollyCartSpeedChange();
 
-        public void StartAcceleration(SetSpeedData speedData)
-        {
-            _updatingSpeed = true;
-            _startSpeed = GetSpeed();
-            _currentSpeed = _startSpeed;
-            _smoothTime = speedData.SmoothTime;
-            _targetSpeed = speedData.TargetSpeed;
-            if (_startSpeed < _targetSpeed)
-            {
-                _speedDecreasing = false;
-            }
-            else
-            {
-                _speedDecreasing = true;
-            }
-        }
+        public void Brake() => this.dollyCart?.Brake();
+
+        public void StartAcceleration(float speed, float time) => this.dollyCart.StartAcceleration(speed, time);
 
         public void SetDollyCart(GameObject dollyCart, bool resetCartPosition = true)
         {
-            this.cinemachineDollyCartGameObject = dollyCart;
-            var cart = this.cinemachineDollyCartGameObject.GetComponent<CinemachineDollyCart>();
-            _cinemachineDollyCart = cart;
+            this.dollyCart = dollyCart.GetComponent<DollyCart.DollyCart>();
             if (resetCartPosition)
             {
-                _cinemachineDollyCart.m_Position = 0;
+                this.dollyCart.Reset();
             }
             // The old cart is disabled, new deltas will come from the new cart
-            SetOldPositionAndRotation(this.cinemachineDollyCartGameObject);
+            SetOldPositionAndRotation(this.dollyCart.gameObject);
         }
 
         private void SetOldPositionAndRotation(GameObject go)
@@ -189,14 +160,14 @@ namespace BlueOrb.Controller
             MessageDispatcher.Instance.StopListening("SetTrack", _componentRepository.GetId(), _setTrack);
         }
 
-        public void RotateTo(Vector3 dir, float time)
-        {
-            Debug.Log($"Rotating to {dir}");
-            SetSpeed(0f);
-            gameObject.transform.rotation = Quaternion.Euler(dir.x, dir.y, dir.z);
-            SetSpeed(5f);
-            //iTween.RotateTo(gameObject, dir, time);
-        }
+        //public void RotateTo(Vector3 dir, float time)
+        //{
+        //    Debug.Log($"Rotating to {dir}");
+        //    SetSpeed(0f);
+        //    gameObject.transform.rotation = Quaternion.Euler(dir.x, dir.y, dir.z);
+        //    SetSpeed(5f);
+        //    //iTween.RotateTo(gameObject, dir, time);
+        //}
 
         protected void FixedUpdate()
         {
@@ -208,48 +179,14 @@ namespace BlueOrb.Controller
             UpdatePositionAndRotation();
         }
 
-        public void Stop()
-        {
-            _updatingSpeed = false;
-            SetSpeed(0f);
-        }
-
-        public void ProcessDollyCartSpeedChange()
-        {
-            switch (_speedChangeType)
-            {
-                case LerpType.Lerp:
-                    SetSpeed(Mathf.Lerp(GetSpeed(), _targetSpeed, 1f / _smoothTime * Time.deltaTime));
-                    //_cinemachineDollyCart.m_Speed = Mathf.Lerp(_startSpeed, _targetSpeed, 1f / _smoothTime * Time.deltaTime);
-                    //_cinemachineDollyCart.m_Speed = Mathf.Lerp(_cinemachineDollyCart.m_Speed, _targetSpeed, _smoothTime * Time.deltaTime);
-
-                    _currentSpeed = GetSpeed();
-                    break;
-                case LerpType.SmoothDamp:
-                    SetSpeed(Mathf.SmoothDamp(_currentSpeed, _targetSpeed, ref _velocity, _smoothTime));
-                    _currentSpeed = GetSpeed();
-                    break;
-            }
-            if (Mathf.Approximately(_currentSpeed, _targetSpeed) || (_speedDecreasing && _currentSpeed <= _targetSpeed + 0.01f))
-            {
-                _currentSpeed = _targetSpeed;
-                _updatingSpeed = false;
-            }
-            else if (Mathf.Approximately(_currentSpeed, _targetSpeed) || (!_speedDecreasing && _currentSpeed >= _targetSpeed - 0.01f))
-            {
-                _currentSpeed = _targetSpeed;
-                _updatingSpeed = false;
-            }
-        }
-
         private void UpdatePositionAndRotation()
         {
-            if (this.cinemachineDollyCartGameObject == null)
+            if (this.dollyCart == null)
             {
                 return;
             }
             // Directly translate the position and rotation based on the delta for the Dolly Cart.
-            Vector3 distanceDelta = this.cinemachineDollyCartGameObject.transform.position - this.oldDollyCartPosition;
+            Vector3 distanceDelta = this.dollyCart.transform.position - this.oldDollyCartPosition;
             //Quaternion rotationDelta = this.oldDollyCartRotation * Quaternion.Inverse(this.oldDollyCartRotation);
             //Quaternion rotationDelta = this._dollyJoint.transform.rotation.to - this.oldDollyCartRotation;
             //Vector3 forwardDelta = this._dollyJoint.transform.forward - this.oldDollyCartRotation;
@@ -266,12 +203,12 @@ namespace BlueOrb.Controller
             //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
             //since compilers can be finicky about % modulus with negative numbers. Then % 360 normalizes the difference to [0, 360).
             //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
-            float deltaYaw = (this.cinemachineDollyCartGameObject.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
+            float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
             yaw += deltaYaw;
-            float deltaPitch = (this.cinemachineDollyCartGameObject.transform.localEulerAngles.x - this.oldpitch + 540) % 360 - 180;
+            float deltaPitch = (this.dollyCart.transform.localEulerAngles.x - this.oldpitch + 540) % 360 - 180;
             pitch += deltaPitch;
             _dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
-            SetOldPositionAndRotation(this.cinemachineDollyCartGameObject);
+            SetOldPositionAndRotation(this.dollyCart.gameObject);
         }
     }
 }

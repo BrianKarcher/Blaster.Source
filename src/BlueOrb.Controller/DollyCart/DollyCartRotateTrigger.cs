@@ -28,7 +28,7 @@ namespace BlueOrb.Controller.DollyCart
                 {
                     return;
                 }
-                dollyCartComponent.RotateTo(this.rotateTo, 2f);
+                //dollyCartComponent.RotateTo(this.rotateTo, 2f);
             }
         }
     }
