@@ -217,8 +217,9 @@ namespace BlueOrb.Controller
             //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
             if (this.isCorrecting)
             {
-                this.correctiveTimer += ((float)1f / (float)2f) * Time.deltaTime;
-                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.transform.position, this.correctiveTimer);
+                this.correctiveTimer += ((float)1f / (float)5f) * Time.deltaTime;
+                float smoothTimer = Mathf.SmoothStep(0f, 1f, this.correctiveTimer);
+                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.transform.position, smoothTimer);
 
                 //float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
                 //yaw += deltaYaw;
@@ -230,7 +231,7 @@ namespace BlueOrb.Controller
                 //pitch = Mathf.LerpAngle(pitch, this.dollyCart.transform.eulerAngles.x, 2f);
                 //_dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
                 //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, Time.deltaTime);
-                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, this.correctiveTimer);
+                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, smoothTimer);
                 if (this.correctiveTimer >= 1f)
                 //if (_dollyJoint.transform.rotation - )
                 {
