@@ -12,7 +12,8 @@ namespace BlueOrb.Controller.DollyCart
         Lerp = 0,
         Slerp = 1,
         SmoothDamp = 2,
-        InverseLerp = 3
+        InverseLerp = 3,
+        SmoothStep = 4
     }
 
     [AddComponentMenu("BlueOrb/Components/Dolly Cart")]
@@ -104,6 +105,9 @@ namespace BlueOrb.Controller.DollyCart
                 case LerpType.SmoothDamp:
                     SetSpeed(Mathf.SmoothDamp(this.speed, targetSpeed, ref _velocity, _smoothTime));
                     this.speed = GetSpeed();
+                    break;
+                case LerpType.SmoothStep:
+                    SetSpeed(Mathf.SmoothStep(this.speed, targetSpeed, _smoothTime));
                     break;
             }
             if (Mathf.Approximately(this.speed, targetSpeed) || (_speedDecreasing && this.speed <= targetSpeed + 0.01f))

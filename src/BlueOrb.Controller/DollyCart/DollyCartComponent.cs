@@ -63,7 +63,8 @@ namespace BlueOrb.Controller
             Lerp = 0,
             Slerp = 1,
             SmoothDamp = 2,
-            InverseLerp = 3
+            InverseLerp = 3,
+            SmoothStep = 4
         }
 
         public class SetSpeedData
@@ -131,6 +132,9 @@ namespace BlueOrb.Controller
 
         public void StartAcceleration(float speed, float time) => this.dollyCart.StartAcceleration(speed, time);
 
+        private float correctiveTimer;
+        private bool isCorrecting = false;
+        private Quaternion correctiveOriginalRotation;
         public void SetDollyCart(GameObject dollyCart, bool resetCartPosition = true)
         {
             this.dollyCart = dollyCart.GetComponent<DollyCart.DollyCart>();
@@ -138,6 +142,9 @@ namespace BlueOrb.Controller
             {
                 this.dollyCart.Reset();
             }
+            correctiveTimer = 0f;
+            isCorrecting = true;
+            correctiveOriginalRotation = this._dollyJoint.transform.rotation;
             // The old cart is disabled, new deltas will come from the new cart
             SetOldPositionAndRotation(this.dollyCart.gameObject);
         }
@@ -199,15 +206,49 @@ namespace BlueOrb.Controller
             //    return;
             //}
             _dollyJoint.transform.localPosition += distanceDelta;
+            // Corrective position
+            //Vector3.SmoothDamp()
+            if (isCorrecting)
+            {
+                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.transform.position, 2f * Time.deltaTime);
+            }
+            else
+            {
+                _dollyJoint.transform.position = this.dollyCart.transform.position;
+            }
+            //Vector3.MoveTowards()
+            //_dollyJoint.transform.position.
 
             //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
             //since compilers can be finicky about % modulus with negative numbers. Then % 360 normalizes the difference to [0, 360).
             //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
-            float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
-            yaw += deltaYaw;
-            float deltaPitch = (this.dollyCart.transform.localEulerAngles.x - this.oldpitch + 540) % 360 - 180;
-            pitch += deltaPitch;
-            _dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
+            if (this.isCorrecting)
+            {
+                //float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
+                //yaw += deltaYaw;
+                //float deltaPitch = (this.dollyCart.transform.localEulerAngles.x - this.oldpitch + 540) % 360 - 180;
+                //pitch += deltaPitch;
+                //// Corrective rotation (errors occur when a cart switches from one joint to another, this corrects that)
+                //yaw = Mathf.LerpAngle(yaw, this.dollyCart.transform.eulerAngles.y, 2f);
+                ////Mathf.Smooth
+                //pitch = Mathf.LerpAngle(pitch, this.dollyCart.transform.eulerAngles.x, 2f);
+                //_dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
+                this.correctiveTimer += ((float)1f / (float)2f) * Time.deltaTime;
+                //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, Time.deltaTime);
+                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, this.correctiveTimer);
+                if (this.correctiveTimer >= 1f)
+                //if (_dollyJoint.transform.rotation - )
+                {
+                    this.isCorrecting = false;
+                }
+            }
+            else
+            {
+                this._dollyJoint.transform.rotation = this.dollyCart.transform.rotation;
+            }
+
+            //Quaternion.RotateTowards
+            //_dollyJoint.transform.rotation.
             SetOldPositionAndRotation(this.dollyCart.gameObject);
         }
     }
