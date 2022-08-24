@@ -48,23 +48,20 @@ namespace BlueOrb.Controller.Triggers
                 Debug.LogError($"TrackSplit could not find entity for {other.name}");
                 return;
             }
-            MessageDispatcher.Instance.DispatchMsg("SetTrack", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
+            //MessageDispatcher.Instance.DispatchMsg("SetTrack", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
             //var cart = otherEntity.Components.GetComponent<DollyCartComponent>();
             //cart.
 
             //var cart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
-            MessageDispatcher.Instance.DispatchMsg("SetCineCart", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
-            if (_immediate)
+            MessageDispatcher.Instance.DispatchMsg("SetJoint", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
+
+            SetSpeedData data = new SetSpeedData
             {
-                MessageDispatcher.Instance.DispatchMsg("SetSpeed", 0f, string.Empty, otherEntity.GetId(), _speed);
-            }
-            else
-            {
-                SetSpeedData data = new SetSpeedData();
-                data.TargetSpeed = _speed;
-                data.SmoothTime = _smoothTime;
-                MessageDispatcher.Instance.DispatchMsg("SetSpeedTarget", 0f, string.Empty, otherEntity.GetId(), data);
-            }
+                TargetSpeed = _speed,
+                SmoothTime = _smoothTime,
+                Immediate = _immediate
+            };
+            MessageDispatcher.Instance.DispatchMsg("SetSpeed", 0f, string.Empty, otherEntity.GetId(), data);
             //_cartJoint.gameObject.SetActive(true);
             //var dollyCart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
             //dollyCart.m_Speed = _speed;

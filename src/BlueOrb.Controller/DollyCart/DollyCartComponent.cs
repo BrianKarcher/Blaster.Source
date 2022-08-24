@@ -71,6 +71,7 @@ namespace BlueOrb.Controller
         {
             public float SmoothTime = 2f;
             public float TargetSpeed;
+            public bool Immediate;
         }
 
         //public void SetDollyCartParent(GameObject dolly)
@@ -97,27 +98,26 @@ namespace BlueOrb.Controller
         public override void StartListening()
         {
             base.StartListening();
-            _setSpeedTargetId = MessageDispatcher.Instance.StartListening("SetSpeedTarget", _componentRepository.GetId(), (data) =>
+            _setSpeedTargetId = MessageDispatcher.Instance.StartListening("SetJoint", _componentRepository.GetId(), (data) =>
             {
-                var speedData = data.ExtraInfo as SetSpeedData;
-                this.dollyCart?.StartAcceleration(speedData.TargetSpeed, speedData.SmoothTime);
+                SetDollyCart((GameObject)data.ExtraInfo);
             });
 
             _setSpeedId = MessageDispatcher.Instance.StartListening("SetSpeed", _componentRepository.GetId(), (data) =>
             {
-                var speed = (float)data.ExtraInfo;
-                this.dollyCart?.SetSpeed(speed);
+                var speedData = data.ExtraInfo as SetSpeedData;
+                this.dollyCart?.StartAcceleration(speedData.TargetSpeed, speedData.SmoothTime, speedData.Immediate);
             });
 
-            _setCineCart = MessageDispatcher.Instance.StartListening("SetCineCart", _componentRepository.GetId(), (data) =>
-            {
-                SetDollyCart((GameObject)data.ExtraInfo);
-            });
-            _setTrack = MessageDispatcher.Instance.StartListening("SetTrack", _componentRepository.GetId(), (data) =>
-            {
-                //var trackGO = (GameObject)data.ExtraInfo;
-                //SetDollyCartParent(trackGO);
-            });
+            //_setCineCart = MessageDispatcher.Instance.StartListening("SetCineCart", _componentRepository.GetId(), (data) =>
+            //{
+            //    SetDollyCart((GameObject)data.ExtraInfo);
+            //});
+            //_setTrack = MessageDispatcher.Instance.StartListening("SetTrack", _componentRepository.GetId(), (data) =>
+            //{
+            //    //var trackGO = (GameObject)data.ExtraInfo;
+            //    //SetDollyCartParent(trackGO);
+            //});
             //_addItemId = MessageDispatcher.Instance.StartListening("AddItem", _componentRepository.GetId(), (data) =>
             //{
             //    var item = (ItemDesc)data.ExtraInfo;
@@ -161,10 +161,10 @@ namespace BlueOrb.Controller
         public override void StopListening()
         {
             base.StopListening();
-            MessageDispatcher.Instance.StopListening("SetSpeedTarget", _componentRepository.GetId(), _setSpeedTargetId);
+            MessageDispatcher.Instance.StopListening("SetJoint", _componentRepository.GetId(), _setSpeedTargetId);
             MessageDispatcher.Instance.StopListening("SetSpeed", _componentRepository.GetId(), _setSpeedId);
-            MessageDispatcher.Instance.StopListening("SetCineCart", _componentRepository.GetId(), _setCineCart);
-            MessageDispatcher.Instance.StopListening("SetTrack", _componentRepository.GetId(), _setTrack);
+            //MessageDispatcher.Instance.StopListening("SetCineCart", _componentRepository.GetId(), _setCineCart);
+            //MessageDispatcher.Instance.StopListening("SetTrack", _componentRepository.GetId(), _setTrack);
         }
 
         //public void RotateTo(Vector3 dir, float time)
@@ -208,14 +208,7 @@ namespace BlueOrb.Controller
             _dollyJoint.transform.localPosition += distanceDelta;
             // Corrective position
             //Vector3.SmoothDamp()
-            if (isCorrecting)
-            {
-                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.transform.position, 2f * Time.deltaTime);
-            }
-            else
-            {
-                _dollyJoint.transform.position = this.dollyCart.transform.position;
-            }
+
             //Vector3.MoveTowards()
             //_dollyJoint.transform.position.
 
@@ -224,6 +217,9 @@ namespace BlueOrb.Controller
             //And finally the - 180 subtracts the 180 added at the first step, and shifts the range to [-180, 180).
             if (this.isCorrecting)
             {
+                this.correctiveTimer += ((float)1f / (float)2f) * Time.deltaTime;
+                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.transform.position, this.correctiveTimer);
+
                 //float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
                 //yaw += deltaYaw;
                 //float deltaPitch = (this.dollyCart.transform.localEulerAngles.x - this.oldpitch + 540) % 360 - 180;
@@ -233,7 +229,6 @@ namespace BlueOrb.Controller
                 ////Mathf.Smooth
                 //pitch = Mathf.LerpAngle(pitch, this.dollyCart.transform.eulerAngles.x, 2f);
                 //_dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
-                this.correctiveTimer += ((float)1f / (float)2f) * Time.deltaTime;
                 //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, Time.deltaTime);
                 _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, this.correctiveTimer);
                 if (this.correctiveTimer >= 1f)
@@ -244,6 +239,7 @@ namespace BlueOrb.Controller
             }
             else
             {
+                _dollyJoint.transform.position = this.dollyCart.transform.position;
                 this._dollyJoint.transform.rotation = this.dollyCart.transform.rotation;
             }
 

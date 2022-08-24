@@ -72,11 +72,12 @@ namespace BlueOrb.Controller.DollyCart
             SetSpeed(0f);
         }
 
-        public void StartAcceleration(float speed, float time = 1f)
+        public void StartAcceleration(float speed, float time = 1f, bool immediate = false)
         {
             updatingSpeed = true;
             startSpeed = GetSpeed();
-            this.speed = startSpeed;
+            this.speed = immediate ? speed : startSpeed;
+            SetSpeed(this.speed);
             _smoothTime = time;
             targetSpeed = speed;
             if (startSpeed < targetSpeed)
