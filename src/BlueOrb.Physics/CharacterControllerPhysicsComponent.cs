@@ -12,6 +12,7 @@ namespace BlueOrb.Physics
     {
         [SerializeField]
         private PhysicsLogic _controller;
+
         [SerializeField]
         private bool _applySpeedLimit = true;
 
@@ -283,7 +284,7 @@ namespace BlueOrb.Physics
             //    this.steeringVelocity = this.steeringVelocity.normalized * maxSpeed;
             //}
             //this.characterController.Move(this.steeringVelocity * Time.deltaTime);
-            if (this.velocity.magnitude > maxSpeed)
+            if (this.velocity.sqrMagnitude > maxSpeed * maxSpeed)
             {
                 this.velocity = this.velocity.normalized * maxSpeed;
             }
@@ -392,6 +393,8 @@ namespace BlueOrb.Physics
         public void SetVelocity3(Vector3 velocity) => this.velocity = velocity;
 
         public void SetVelocity2(Vector2 velocity) => this.velocity = new Vector3(velocity.x, this.velocity.y, velocity.y);
+
+        public float MaxSpeed => this.GetPhysicsData().MaxSpeed;
 
         public void AccelerateTo(Vector3 targetVelocity, float maxAccel)
         {

@@ -167,11 +167,11 @@ namespace BlueOrb.Physics
             if (!_applySpeedLimit)
                 return;
 
-            float speed = velocity2.magnitude;  // test current object speed
+            float speed = velocity2.sqrMagnitude;  // test current object speed
             //var maxS
-            if (speed > _controller.GetPhysicsData().MaxSpeed)
+            if (speed > _controller.GetPhysicsData().MaxSpeed * _controller.GetPhysicsData().MaxSpeed)
             {
-                float brakeSpeed = speed - maxSpeed; // calculate the speed decrease
+                float brakeSpeed = Mathf.Sqrt(speed) - maxSpeed; // calculate the speed decrease
                 var velocity3 = velocity2.xz();
                 Vector3 normalisedVelocity = velocity3.normalized;
                 Vector3 brakeVelocity = normalisedVelocity * brakeSpeed * 50f; // make the brake Vector3 value
@@ -367,6 +367,8 @@ namespace BlueOrb.Physics
         public void SetVelocity3(Vector3 velocity) => _rigidBody3D.velocity = velocity;
 
         public void SetVelocity2(Vector2 velocity) => _rigidBody3D.velocity = new Vector3(velocity.x, _rigidBody3D.velocity.y, velocity.y);
+
+        public float MaxSpeed => this.GetPhysicsData().MaxSpeed;
 
         public void AccelerateTo(Vector3 targetVelocity, float maxAccel)
         {

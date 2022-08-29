@@ -37,5 +37,6 @@ namespace BlueOrb.Physics
         void RevertAutoApplyToAnimator();
         //IPhysicsAffector GetPhysicsAffector(string name);
         //void SetPhysicsAffector(string name, IPhysicsAffector physicsAffector);
+        float MaxSpeed { get; }
     }
 }

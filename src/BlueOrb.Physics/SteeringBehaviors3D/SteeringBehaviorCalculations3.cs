@@ -19,7 +19,7 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
         {
             //var physicsAffector = entity.GetSteering().SteeringPhysicsAffector;
             var DesiredVelocity = (TargetPos - entity.GetFeetWorldPosition3()).normalized
-                                    * entity.GetPhysicsData().MaxSpeed;
+                                    * entity.MaxSpeed;
 
             return (DesiredVelocity - entity.GetVelocity3());
         }
@@ -97,6 +97,12 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
         //------------------------------------------------------------------------
         public static Vector3 Pursuit(IPhysicsComponent evader, IPhysicsComponent entity)
         {
+            //now seek to the predicted future position of the evader
+            return Seek(CalculatePursuitPosition(evader, entity), entity);
+        }
+
+        public static Vector3 CalculatePursuitPosition(IPhysicsComponent evader, IPhysicsComponent entity)
+        {
             //var physicsAffector = entity.GetSteering().SteeringPhysicsAffector;
             //if the evader is ahead and facing the agent then we can just seek
             //for the evader's current position.
@@ -107,7 +113,7 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             if (Vector2.Dot(ToEvader, entity.transform.forward) > 0 &&
                  (RelativeHeading < -0.95f))  //acos(0.95)=18 degs
             {
-                return Seek(evader.GetWorldPos3(), entity);
+                return evader.GetWorldPos3();
             }
 
             //Not considered ahead so we predict where the evader will be.
@@ -116,10 +122,8 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             //and the pursuer; and is inversely proportional to the sum of the
             //agent's velocities
             float LookAheadTime = ToEvader.magnitude /
-                                  (entity.GetPhysicsData().MaxSpeed + evader.GetVelocity3().magnitude);
-
-            //now seek to the predicted future position of the evader
-            return Seek(evader.GetFeetWorldPosition3() + evader.GetVelocity3() * LookAheadTime, entity);
+                                  (entity.MaxSpeed + evader.GetVelocity3().magnitude);
+            return evader.GetFeetWorldPosition3() + evader.GetVelocity3() * LookAheadTime;
         }
 
         //----------------------------- Evade ------------------------------------

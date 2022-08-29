@@ -112,6 +112,12 @@ namespace BlueOrb.Physics.SteeringBehaviors2D
         //------------------------------------------------------------------------
         public static Vector2 Pursuit(IPhysicsComponent evader, IPhysicsComponent entity)
         {
+            //now seek to the predicted future position of the evader
+            return Seek(CalculatePursuitPosition(evader, entity), entity);
+        }
+
+        public static Vector2 CalculatePursuitPosition(IPhysicsComponent evader, IPhysicsComponent entity)
+        {
             //var physicsAffector = entity.GetSteering().SteeringPhysicsAffector;
             //if the evader is ahead and facing the agent then we can just seek
             //for the evader's current position.
@@ -122,19 +128,18 @@ namespace BlueOrb.Physics.SteeringBehaviors2D
             if (Vector2.Dot(ToEvader, entity.transform.forward) > 0 &&
                  (RelativeHeading < -0.95f))  //acos(0.95)=18 degs
             {
-                return Seek(evader.GetWorldPos2(), entity);
+                return evader.GetWorldPos2();
             }
 
             //Not considered ahead so we predict where the evader will be.
-            
+
             //the lookahead time is propotional to the distance between the evader
             //and the pursuer; and is inversely proportional to the sum of the
             //agent's velocities
             float LookAheadTime = ToEvader.magnitude /
                                   (entity.GetPhysicsData().MaxSpeed + evader.GetVelocity2().magnitude);
 
-            //now seek to the predicted future position of the evader
-            return Seek(evader.GetFeetWorldPosition2() + evader.GetVelocity2() * LookAheadTime, entity);
+            return evader.GetFeetWorldPosition2() + evader.GetVelocity2() * LookAheadTime;
         }
 
         //----------------------------- Evade ------------------------------------
