@@ -108,13 +108,13 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             //for the evader's current position.
             var ToEvader = evader.GetWorldPos3() - entity.GetWorldPos3();
 
-            float RelativeHeading = Vector2.Dot(entity.transform.forward, evader.transform.forward);
+            float RelativeHeading = Vector3.Dot(entity.transform.forward, evader.transform.forward);
 
-            if (Vector2.Dot(ToEvader, entity.transform.forward) > 0 &&
-                 (RelativeHeading < -0.95f))  //acos(0.95)=18 degs
-            {
-                return evader.GetWorldPos3();
-            }
+            //if (Vector2.Dot(ToEvader, entity.transform.forward) > 0 &&
+            //     (RelativeHeading < -0.95f))  //acos(0.95)=18 degs
+            //{
+            //    return evader.GetWorldPos3();
+            //}
 
             //Not considered ahead so we predict where the evader will be.
 
@@ -123,6 +123,10 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             //agent's velocities
             float LookAheadTime = ToEvader.magnitude /
                                   (entity.MaxSpeed + evader.GetVelocity3().magnitude);
+            float evaderSpeed = evader.GetVelocity3().magnitude;
+            //float LookAheadTime = evaderSpeed == 0 ? 0 : ToEvader.magnitude /
+            //          evaderSpeed;
+            Debug.Log($"Look ahead time: {LookAheadTime}, evader speed: {evaderSpeed}");
             return evader.GetFeetWorldPosition3() + evader.GetVelocity3() * LookAheadTime;
         }
 

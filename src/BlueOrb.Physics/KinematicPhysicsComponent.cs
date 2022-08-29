@@ -39,10 +39,20 @@ namespace BlueOrb.Physics
             previousPos = transform.position;
         }
 
+        float timeSinceUpdate = 0f;
+
         protected void FixedUpdate()
         {
             // Record the world-space velocity movement since this is not controlled by this class
-            this.velocity = (transform.position - this.previousPos) * (1f / Time.fixedDeltaTime);
+            timeSinceUpdate += Time.fixedDeltaTime;
+            if (timeSinceUpdate > 1.0f)
+            {
+                Vector3 posDelta = transform.position - this.previousPos;
+                //this.velocity = posDelta * (1f / Time.fixedDeltaTime);
+                SetVelocity3(posDelta);
+                this.previousPos = transform.position;
+                timeSinceUpdate = 0f;
+            }
         }
 
         public bool AutoApplyToAnimator
