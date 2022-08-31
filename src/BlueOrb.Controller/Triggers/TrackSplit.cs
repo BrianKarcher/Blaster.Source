@@ -1,11 +1,9 @@
 ﻿using BlueOrb.Base.Attributes;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using static BlueOrb.Controller.DollyCartComponent;
+using static BlueOrb.Controller.DollyCartComponent.SetJointData;
 
 namespace BlueOrb.Controller.Triggers
 {
@@ -23,6 +21,9 @@ namespace BlueOrb.Controller.Triggers
         private bool _immediate = false;
         [SerializeField]
         private float _smoothTime = 1;
+
+        [SerializeField]
+        private CartAction cartAction = CartAction.Reset;
 
         void Awake()
         {
@@ -53,7 +54,13 @@ namespace BlueOrb.Controller.Triggers
             //cart.
 
             //var cart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
-            MessageDispatcher.Instance.DispatchMsg("SetJoint", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
+            SetJointData setJointData = new SetJointData()
+            {
+                Action = cartAction,
+                Joint = _cartJoint.gameObject
+            };
+
+            MessageDispatcher.Instance.DispatchMsg("SetJoint", 0f, string.Empty, otherEntity.GetId(), setJointData);
 
             SetSpeedData data = new SetSpeedData
             {

@@ -1,7 +1,7 @@
 ﻿using BlueOrb.Base.Attributes;
 using BlueOrb.Common.Components;
+using BlueOrb.Controller.DollyCart;
 using BlueOrb.Messaging;
-using Cinemachine;
 using UnityEngine;
 
 namespace BlueOrb.Controller
@@ -15,7 +15,7 @@ namespace BlueOrb.Controller
         [SerializeField]
         public LerpType _speedChangeType = LerpType.SmoothDamp;
         [SerializeField]
-        private DollyCart.DollyCart dollyCart;
+        private IDollyCart dollyCart;
 
         public bool HasCart => this.dollyCart != null;
 
@@ -50,9 +50,9 @@ namespace BlueOrb.Controller
         public float yaw;
         public float pitch;
         public float roll;
-        public float oldyaw;
-        public float oldpitch;
-        public float oldroll;
+        //public float oldyaw;
+        //public float oldpitch;
+        //public float oldroll;
 
         public float SmoothTime => this.dollyCart?.SmoothTime ?? 0f;
         public float TargetSpeed => this.dollyCart?.TargetSpeed ?? 0f;
@@ -72,6 +72,17 @@ namespace BlueOrb.Controller
             public float SmoothTime = 2f;
             public float TargetSpeed;
             public bool Immediate;
+        }
+
+        public class SetJointData
+        {
+            public GameObject Joint { get; set; }
+            public CartAction Action { get; set; }
+            public enum CartAction
+            {
+                Reset = 0,
+                ClosestToPlayer = 1
+            }
         }
 
         //public void SetDollyCartParent(GameObject dolly)
@@ -100,7 +111,7 @@ namespace BlueOrb.Controller
             base.StartListening();
             _setSpeedTargetId = MessageDispatcher.Instance.StartListening("SetJoint", _componentRepository.GetId(), (data) =>
             {
-                SetDollyCart((GameObject)data.ExtraInfo);
+                SetDollyCart((SetJointData)data.ExtraInfo);
             });
 
             _setSpeedId = MessageDispatcher.Instance.StartListening("SetSpeed", _componentRepository.GetId(), (data) =>
@@ -135,26 +146,31 @@ namespace BlueOrb.Controller
         private float correctiveTimer;
         private bool isCorrecting = false;
         private Quaternion correctiveOriginalRotation;
-        public void SetDollyCart(GameObject dollyCart, bool resetCartPosition = true)
+
+        public void SetDollyCart(SetJointData setJointData)
         {
-            this.dollyCart = dollyCart.GetComponent<DollyCart.DollyCart>();
-            if (resetCartPosition)
+            this.dollyCart = setJointData.Joint.GetComponent<IDollyCart>();
+            if (setJointData.Action == SetJointData.CartAction.Reset)
             {
                 this.dollyCart.Reset();
+            }
+            else if (setJointData.Action == SetJointData.CartAction.ClosestToPlayer)
+            {
+                this.dollyCart.SetPosition(this.dollyCart.FindPositionClosestToPoint(this._dollyJoint.transform.position));
             }
             correctiveTimer = 0f;
             isCorrecting = true;
             correctiveOriginalRotation = this._dollyJoint.transform.rotation;
             // The old cart is disabled, new deltas will come from the new cart
-            SetOldPositionAndRotation(this.dollyCart.gameObject);
+            SetOldPositionAndRotation(this.dollyCart.GetWorldPosition());
         }
 
-        private void SetOldPositionAndRotation(GameObject go)
+        private void SetOldPositionAndRotation(Vector3 pos)
         {
-            this.oldDollyCartPosition = go.transform.position;
-            this.oldpitch = go.transform.localEulerAngles.x;
-            this.oldyaw = go.transform.localEulerAngles.y;
-            this.oldroll = go.transform.localEulerAngles.z;
+            this.oldDollyCartPosition = pos;
+            //this.oldpitch = go.transform.localEulerAngles.x;
+            //this.oldyaw = go.transform.localEulerAngles.y;
+            //this.oldroll = go.transform.localEulerAngles.z;
             //this.oldDollyCartRotation = go.transform.forward;
         }
 
@@ -193,7 +209,7 @@ namespace BlueOrb.Controller
                 return;
             }
             // Directly translate the position and rotation based on the delta for the Dolly Cart.
-            Vector3 distanceDelta = this.dollyCart.transform.position - this.oldDollyCartPosition;
+            Vector3 distanceDelta = this.dollyCart.GetWorldPosition() - this.oldDollyCartPosition;
             //Quaternion rotationDelta = this.oldDollyCartRotation * Quaternion.Inverse(this.oldDollyCartRotation);
             //Quaternion rotationDelta = this._dollyJoint.transform.rotation.to - this.oldDollyCartRotation;
             //Vector3 forwardDelta = this._dollyJoint.transform.forward - this.oldDollyCartRotation;
@@ -219,7 +235,7 @@ namespace BlueOrb.Controller
             {
                 this.correctiveTimer += ((float)1f / (float)5f) * Time.deltaTime;
                 float smoothTimer = Mathf.SmoothStep(0f, 1f, this.correctiveTimer);
-                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.transform.position, smoothTimer);
+                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.GetWorldPosition(), smoothTimer);
 
                 //float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
                 //yaw += deltaYaw;
@@ -231,7 +247,7 @@ namespace BlueOrb.Controller
                 //pitch = Mathf.LerpAngle(pitch, this.dollyCart.transform.eulerAngles.x, 2f);
                 //_dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
                 //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, Time.deltaTime);
-                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, smoothTimer);
+                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.GetWorldRotation(), smoothTimer);
                 if (this.correctiveTimer >= 1f)
                 //if (_dollyJoint.transform.rotation - )
                 {
@@ -240,13 +256,13 @@ namespace BlueOrb.Controller
             }
             else
             {
-                _dollyJoint.transform.position = this.dollyCart.transform.position;
-                this._dollyJoint.transform.rotation = this.dollyCart.transform.rotation;
+                _dollyJoint.transform.position = this.dollyCart.GetWorldPosition();
+                this._dollyJoint.transform.rotation = this.dollyCart.GetWorldRotation();
             }
 
             //Quaternion.RotateTowards
             //_dollyJoint.transform.rotation.
-            SetOldPositionAndRotation(this.dollyCart.gameObject);
+            SetOldPositionAndRotation(this.dollyCart.GetWorldPosition());
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BlueOrb.Controller.DollyCart
     }
 
     [AddComponentMenu("BlueOrb/Components/Dolly Cart")]
-    public class DollyCart : MonoBehaviour
+    public class DollyCart : MonoBehaviour, IDollyCart
     {
         [SerializeField]
         private CinemachineDollyCart _cinemachineDollyCart;
@@ -63,6 +63,14 @@ namespace BlueOrb.Controller.DollyCart
             this.speed = speed;
             _cinemachineDollyCart.m_Speed = speed;
         }
+
+        public float FindPositionClosestToPoint(Vector3 pos) => 0;
+
+        public Vector3 GetWorldPosition() => this.transform.position;
+
+        public Quaternion GetWorldRotation() => this.transform.rotation;
+
+        public void SetPosition(float pos) => _cinemachineDollyCart.m_Position = pos;
 
         public void Reset() => this._cinemachineDollyCart.m_Position = 0;
 
