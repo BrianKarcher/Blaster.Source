@@ -23,7 +23,7 @@ namespace BlueOrb.Controller.Triggers
         private float _smoothTime = 1;
 
         [SerializeField]
-        private CartAction cartAction = CartAction.Reset;
+        private CartStartPosition cartStartPosition = CartStartPosition.Reset;
 
         void Awake()
         {
@@ -56,7 +56,7 @@ namespace BlueOrb.Controller.Triggers
             //var cart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
             SetJointData setJointData = new SetJointData()
             {
-                Action = cartAction,
+                CartStartPosition = cartStartPosition,
                 Joint = _cartJoint.gameObject
             };
 

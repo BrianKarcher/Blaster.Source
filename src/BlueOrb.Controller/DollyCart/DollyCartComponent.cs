@@ -77,12 +77,13 @@ namespace BlueOrb.Controller
         public class SetJointData
         {
             public GameObject Joint { get; set; }
-            public CartAction Action { get; set; }
-            public enum CartAction
-            {
-                Reset = 0,
-                ClosestToPlayer = 1
-            }
+            public CartStartPosition CartStartPosition { get; set; }
+        }
+
+        public enum CartStartPosition
+        {
+            Reset = 0,
+            ClosestToPlayer = 1
         }
 
         //public void SetDollyCartParent(GameObject dolly)
@@ -150,13 +151,15 @@ namespace BlueOrb.Controller
         public void SetDollyCart(SetJointData setJointData)
         {
             this.dollyCart = setJointData.Joint.GetComponent<IDollyCart>();
-            if (setJointData.Action == SetJointData.CartAction.Reset)
+            if (setJointData.CartStartPosition == CartStartPosition.Reset)
             {
                 this.dollyCart.Reset();
             }
-            else if (setJointData.Action == SetJointData.CartAction.ClosestToPlayer)
+            else if (setJointData.CartStartPosition == CartStartPosition.ClosestToPlayer)
             {
-                this.dollyCart.SetPosition(this.dollyCart.FindPositionClosestToPoint(this._dollyJoint.transform.position));
+                float pos = this.dollyCart.FindPositionClosestToPoint(this._dollyJoint.transform.position);
+                Debug.Log($"Player position: {this._dollyJoint.transform.position}, placing dolly cart at pos {pos}");
+                this.dollyCart.SetPosition(pos);
             }
             correctiveTimer = 0f;
             isCorrecting = true;
