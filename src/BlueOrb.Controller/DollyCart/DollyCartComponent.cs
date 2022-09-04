@@ -234,6 +234,7 @@ namespace BlueOrb.Controller
             //    return;
             //}
             //_dollyJoint.transform.localPosition += distanceDelta;
+            distanceDelta.y = 0;
             this.physicsComponent.Move(distanceDelta / Time.deltaTime);
             // Corrective position
             //Vector3.SmoothDamp()
@@ -256,6 +257,7 @@ namespace BlueOrb.Controller
                 float smoothTimer = Mathf.SmoothStep(0f, 1f, this.correctiveTimer);
                 Vector3 targetPos = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.GetWorldPosition(), smoothTimer);
                 Vector3 dir = targetPos - _dollyJoint.transform.position;
+                dir.y = 0;
                 this.physicsComponent.Move(dir / Time.deltaTime);
                 //_dollyJoint.transform.position = 
 
