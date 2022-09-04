@@ -328,6 +328,10 @@ namespace BlueOrb.Physics
 
         private void ApplyValuesToAnimator(float forwardSpeed, float sideSpeed, float turnSpeed)
         {
+            if (_animationComponent == null)
+            {
+                return;
+            }
             _animationComponent.SetForwardSpeed(forwardSpeed);
             _animationComponent.SetTurnSpeed(turnSpeed);
             _animationComponent.SetSideSpeed(sideSpeed);

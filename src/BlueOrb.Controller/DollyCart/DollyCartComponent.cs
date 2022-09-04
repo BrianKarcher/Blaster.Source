@@ -1,7 +1,9 @@
 ﻿using BlueOrb.Base.Attributes;
+using BlueOrb.Base.Extensions;
 using BlueOrb.Common.Components;
 using BlueOrb.Controller.DollyCart;
 using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using UnityEngine;
 
 namespace BlueOrb.Controller
@@ -58,6 +60,9 @@ namespace BlueOrb.Controller
         public float TargetSpeed => this.dollyCart?.TargetSpeed ?? 0f;
         public void SetTargetSpeed(float speed) => this.dollyCart?.SetTargetSpeed(speed);
 
+        [SerializeField]
+        private IPhysicsComponent physicsComponent;
+
         public enum LerpType
         {
             Lerp = 0,
@@ -100,6 +105,10 @@ namespace BlueOrb.Controller
         protected override void Awake()
         {
             base.Awake();
+            if (physicsComponent == null)
+            {
+                physicsComponent = GetComponent<IPhysicsComponent>();
+            }
             _running = false;
             pitch = _dollyJoint.transform.eulerAngles.x;
             yaw = _dollyJoint.transform.eulerAngles.y;
@@ -224,12 +233,19 @@ namespace BlueOrb.Controller
             //{
             //    return;
             //}
-            _dollyJoint.transform.localPosition += distanceDelta;
+            //_dollyJoint.transform.localPosition += distanceDelta;
+            this.physicsComponent.Move(distanceDelta / Time.deltaTime);
             // Corrective position
             //Vector3.SmoothDamp()
 
             //Vector3.MoveTowards()
             //_dollyJoint.transform.position.
+
+            // Player got off track? Time to correct
+            if ((_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude > 0.01f)
+            {
+                this.isCorrecting = true;
+            }
 
             //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
             //since compilers can be finicky about % modulus with negative numbers. Then % 360 normalizes the difference to [0, 360).
@@ -238,7 +254,10 @@ namespace BlueOrb.Controller
             {
                 this.correctiveTimer += ((float)1f / (float)5f) * Time.deltaTime;
                 float smoothTimer = Mathf.SmoothStep(0f, 1f, this.correctiveTimer);
-                _dollyJoint.transform.position = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.GetWorldPosition(), smoothTimer);
+                Vector3 targetPos = Vector3.Lerp(_dollyJoint.transform.position, this.dollyCart.GetWorldPosition(), smoothTimer);
+                Vector3 dir = targetPos - _dollyJoint.transform.position;
+                this.physicsComponent.Move(dir / Time.deltaTime);
+                //_dollyJoint.transform.position = 
 
                 //float deltaYaw = (this.dollyCart.transform.localEulerAngles.y - this.oldyaw + 540) % 360 - 180;
                 //yaw += deltaYaw;
@@ -250,8 +269,9 @@ namespace BlueOrb.Controller
                 //pitch = Mathf.LerpAngle(pitch, this.dollyCart.transform.eulerAngles.x, 2f);
                 //_dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
                 //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, Time.deltaTime);
-                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.GetWorldRotation(), smoothTimer);
-                if (this.correctiveTimer >= 1f)
+
+                //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.GetWorldRotation(), smoothTimer);
+                if ((_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude < 0.005f)
                 //if (_dollyJoint.transform.rotation - )
                 {
                     this.isCorrecting = false;
@@ -259,8 +279,11 @@ namespace BlueOrb.Controller
             }
             else
             {
-                _dollyJoint.transform.position = this.dollyCart.GetWorldPosition();
-                this._dollyJoint.transform.rotation = this.dollyCart.GetWorldRotation();
+                //Vector3 dir = this.dollyCart.GetWorldPosition() - _dollyJoint.transform.position;
+                //this.physicsComponent.Move(dir / Time.deltaTime);
+                //_dollyJoint.transform.position = this.dollyCart.GetWorldPosition();
+
+                //this._dollyJoint.transform.rotation = this.dollyCart.GetWorldRotation();
             }
 
             //Quaternion.RotateTowards
