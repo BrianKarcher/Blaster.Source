@@ -7,11 +7,11 @@ namespace BlueOrb.Controller.DollyCart
         float SmoothTime { get; }
         float Speed { get; }
         float TargetSpeed { get; }
-
+        string GetId();
         void Brake();
         float GetSpeed();
         void ProcessDollyCartSpeedChange();
-        void Reset();
+        void ResetPosition();
         void SetSpeed(float speed);
         void SetPosition(float pos);
         Vector3 GetWorldPosition();

@@ -2,8 +2,7 @@
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
 using UnityEngine;
-using static BlueOrb.Controller.DollyCartComponent;
-using static BlueOrb.Controller.DollyCartComponent.SetJointData;
+using static BlueOrb.Controller.DollyCartJointComponent;
 
 namespace BlueOrb.Controller.Triggers
 {

@@ -23,7 +23,7 @@ namespace BlueOrb.Controller.DollyCart
                 {
                     return;
                 }
-                var dollyCartComponent = otherEntity.Components.GetComponent<DollyCartComponent>();
+                var dollyCartComponent = otherEntity.Components.GetComponent<DollyCartJointComponent>();
                 if (dollyCartComponent == null)
                 {
                     return;
