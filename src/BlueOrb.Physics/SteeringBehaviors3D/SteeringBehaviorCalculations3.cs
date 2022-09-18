@@ -126,7 +126,7 @@ namespace BlueOrb.Physics.SteeringBehaviors3D
             float evaderSpeed = evader.GetVelocity3().magnitude;
             //float LookAheadTime = evaderSpeed == 0 ? 0 : ToEvader.magnitude /
             //          evaderSpeed;
-            Debug.Log($"Look ahead time: {LookAheadTime}, evader speed: {evaderSpeed}");
+            //Debug.Log($"Look ahead time: {LookAheadTime}, evader speed: {evaderSpeed}");
             return evader.GetFeetWorldPosition3() + evader.GetVelocity3() * LookAheadTime;
         }
 

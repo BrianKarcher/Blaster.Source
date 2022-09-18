@@ -1,4 +1,6 @@
 ﻿using BlueOrb.Base.Attributes;
+using BlueOrb.Base.Manager;
+using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
 using UnityEngine;
@@ -24,9 +26,27 @@ namespace BlueOrb.Controller.Triggers
         [SerializeField]
         private CartStartPosition cartStartPosition = CartStartPosition.Reset;
 
-        void Awake()
+        private Collider splitCollider;
+        private bool hasBegun = false;
+
+        protected void Awake()
         {
             Debug.Log("TrackSplit is awake");
+            splitCollider = GetComponent<Collider>();
+            splitCollider.enabled = false;
+        }
+
+        public void FixedUpdate()
+        {
+            if (hasBegun)
+            {
+                return;
+            }
+            if (GameStateController.Instance.LevelStateController.HasLevelBegun)
+            {
+                splitCollider.enabled = true;
+                hasBegun = true;
+            }
         }
 
         private void OnTriggerEnter(Collider other)
