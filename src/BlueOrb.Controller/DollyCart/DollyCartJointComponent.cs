@@ -154,11 +154,13 @@ namespace BlueOrb.Controller
         public void StartAcceleration(float speed, float time) => this.dollyCart.StartAcceleration(speed, time);
 
         private float correctiveTimer;
+        [SerializeField]
         private bool isCorrecting = false;
         private Quaternion correctiveOriginalRotation;
 
         public void SetDollyCart(SetJointData setJointData)
         {
+            Debug.Log("SetDollyCart called");
             if (this.dollyCart != null)
             {
                 MessageDispatcher.Instance.DispatchMsg("DetachJoint", 0f, _componentRepository.GetId(), this.dollyCart.GetId(), null);
@@ -251,8 +253,10 @@ namespace BlueOrb.Controller
             if (!isCorrecting && ((_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude > 0.01f
                 || Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) > 0.02f))
             {
+                Debug.Log("Correcting the Joint!");
                 this.isCorrecting = true;
                 this.correctiveTimer = 0f;
+                correctiveOriginalRotation = this._dollyJoint.transform.rotation;
             }
 
             //Short explanation: targetAngle - myAngle + 540 calculates targetAngle -myAngle + 180 and adds 360 to ensure it's a positive number,
