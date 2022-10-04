@@ -31,7 +31,6 @@ namespace BlueOrb.Controller.Triggers
 
         protected void Awake()
         {
-            Debug.Log("TrackSplit is awake");
             splitCollider = GetComponent<Collider>();
             splitCollider.enabled = false;
         }

@@ -11,8 +11,11 @@ namespace BlueOrb.Controller
     [AddComponentMenu("BlueOrb/Components/Dolly Cart Joint")]
     public class DollyCartJointComponent : ComponentBase<DollyCartJointComponent>
     {
-        private float _targetTime;
-        private bool _running;
+        private const string StopTimeMessage = "StopForTimer";
+
+        private float _stopTime;
+        public float StopTime => this._stopTime;
+        //private bool _running;
 
         [SerializeField]
         public LerpType _speedChangeType = LerpType.SmoothDamp;
@@ -109,7 +112,7 @@ namespace BlueOrb.Controller
             {
                 physicsComponent = GetComponent<IPhysicsComponent>();
             }
-            _running = false;
+            //_running = false;
             pitch = _dollyJoint.transform.eulerAngles.x;
             yaw = _dollyJoint.transform.eulerAngles.y;
             roll = _dollyJoint.transform.eulerAngles.z;
@@ -150,6 +153,14 @@ namespace BlueOrb.Controller
         //public void ProcessDollyCartSpeedChange() => this.dollyCart?.ProcessDollyCartSpeedChange();
 
         public void Brake() => this.dollyCart?.Brake();
+
+        public void StopViaTime(float time)
+        {
+            Debug.Log($"StopViaTime called ({time})");
+            this._stopTime = time;
+            //Brake();
+            MessageDispatcher.Instance.DispatchMsg(StopTimeMessage, 0f, _componentRepository.GetId(), _componentRepository.GetId(), null);
+        }
 
         public void StartAcceleration(float speed, float time) => this.dollyCart.StartAcceleration(speed, time);
 
@@ -251,7 +262,7 @@ namespace BlueOrb.Controller
             
             // Player got off track? Time to correct
             if (!isCorrecting && ((_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude > 0.01f
-                || Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) > 0.02f))
+                || Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) > 0.05f))
             {
                 Debug.Log("Correcting the Joint!");
                 this.isCorrecting = true;
