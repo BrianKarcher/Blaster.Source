@@ -1,6 +1,5 @@
 ﻿using BlueOrb.Base.Attributes;
 using BlueOrb.Base.Manager;
-using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
 using UnityEngine;
@@ -24,10 +23,15 @@ namespace BlueOrb.Controller.Triggers
         private float _smoothTime = 1;
 
         [SerializeField]
+        private float deactivateTime = 3.0f;
+
+        [SerializeField]
         private CartStartPosition cartStartPosition = CartStartPosition.Reset;
 
         private Collider splitCollider;
         private bool hasBegun = false;
+        private bool isPaused = false;
+        private float unPauseTime = 0;
 
         protected void Awake()
         {
@@ -50,6 +54,10 @@ namespace BlueOrb.Controller.Triggers
 
         private void OnTriggerEnter(Collider other)
         {
+            if (this.isPaused && Time.time < this.unPauseTime)
+            {
+                return;
+            }
             if (!gameObject.activeInHierarchy)
                 return;
             Debug.Log($"Trigger entered: {other.name}");
@@ -91,6 +99,8 @@ namespace BlueOrb.Controller.Triggers
             //var dollyCart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
             //dollyCart.m_Speed = _speed;
             //other.transform.rotation = worldRotation;
+            this.isPaused = true;
+            this.unPauseTime = Time.time + this.deactivateTime;
         }
     }
 }
