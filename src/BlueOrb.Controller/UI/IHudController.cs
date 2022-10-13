@@ -5,5 +5,6 @@ namespace BlueOrb.Controller.UI
     public interface IHudController
     {
         GameObject CreateBuffUI();
+        void CreateAlert(string text);
     }
 }
