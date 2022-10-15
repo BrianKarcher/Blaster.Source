@@ -14,6 +14,9 @@ namespace BlueOrb.Physics
         private PhysicsLogic _controller;
 
         [SerializeField]
+        private bool startOnGround = false;
+
+        [SerializeField]
         private bool _applySpeedLimit = true;
 
         public PhysicsLogic Controller => _controller;
@@ -53,6 +56,22 @@ namespace BlueOrb.Physics
             _controller.Awake();
             _steering.Setup(this, transform);
             _animator = GetComponent<Animator>();
+            if (this.startOnGround)
+            {
+                PlaceOnGround();
+            }
+        }
+
+        private void PlaceOnGround()
+        {
+            Vector3 checkPos = this.GetFeetWorldPosition3() + new Vector3(0f, 0.5f, 0f);
+            Debug.Log($"Checking distance for {_componentRepository.name} at {checkPos}");
+            if (UnityEngine.Physics.Raycast(checkPos, _controller.GroundNormal, out RaycastHit raycastHit, 1000f, this.GetOriginalPhysicsData().GroundLayer))
+            {
+                Debug.Log($"Placing on ground at {raycastHit.point}");
+                characterController.Move(raycastHit.point - this.GetFeetWorldPosition3());
+                //SetFeetWorldPosition3(raycastHit.point);
+            }
         }
 
         protected void Start()

@@ -16,7 +16,7 @@ namespace BlueOrb.Physics
         // TODO: Remove this
         [SerializeField] private bool _isGrounded;
         [SerializeField]
-        public Vector3 GroundNormal { get; private set; }
+        public Vector3 GroundNormal = new Vector3(0f, -1f, 0f);
 
         [SerializeField] private PhysicsData _physicsData;
         public PhysicsData OriginalPhysicsData { get; private set; }
