@@ -379,6 +379,8 @@ namespace BlueOrb.Physics
                 _animationComponent.SetForwardSpeed(speed);
         }
 
+        public float GetSpeed() => this.velocity.magnitude;
+
         public bool AutoApplyToAnimator {
             get => this.Controller.GetPhysicsData().AutoApplyToAnimator;
             set => this.Controller.GetPhysicsData().AutoApplyToAnimator = value;

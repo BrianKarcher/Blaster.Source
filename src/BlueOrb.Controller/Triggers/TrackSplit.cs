@@ -2,6 +2,7 @@
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
+using BlueOrb.Physics;
 using UnityEngine;
 using static BlueOrb.Controller.DollyCartJointComponent;
 
@@ -15,6 +16,8 @@ namespace BlueOrb.Controller.Triggers
         private string _tag;
         [SerializeField]
         private Transform _cartJoint;
+        [SerializeField]
+        private bool setSpeed = true;
         [SerializeField]
         private float _speed = 5;
         [SerializeField]
@@ -75,6 +78,11 @@ namespace BlueOrb.Controller.Triggers
                 Debug.LogError($"TrackSplit could not find entity for {other.name}");
                 return;
             }
+
+            // Get the speed of the other entity
+            DollyCartJointComponent dollyComponent = otherEntity.Components.GetComponent<DollyCartJointComponent>();
+            float currentTargetSpeed = dollyComponent.TargetSpeed;
+
             //MessageDispatcher.Instance.DispatchMsg("SetTrack", 0f, string.Empty, otherEntity.GetId(), _cartJoint.gameObject);
             //var cart = otherEntity.Components.GetComponent<DollyCartComponent>();
             //cart.
@@ -88,17 +96,32 @@ namespace BlueOrb.Controller.Triggers
 
             MessageDispatcher.Instance.DispatchMsg("SetJoint", 0f, string.Empty, otherEntity.GetId(), setJointData);
 
-            SetSpeedData data = new SetSpeedData
+            if (this.setSpeed)
             {
-                TargetSpeed = _speed,
-                SmoothTime = _smoothTime,
-                Immediate = _immediate
-            };
-            MessageDispatcher.Instance.DispatchMsg("SetSpeed", 0f, string.Empty, otherEntity.GetId(), data);
-            //_cartJoint.gameObject.SetActive(true);
-            //var dollyCart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
-            //dollyCart.m_Speed = _speed;
-            //other.transform.rotation = worldRotation;
+                SetSpeedData data = new SetSpeedData
+                {
+                    TargetSpeed = _speed,
+                    SmoothTime = _smoothTime,
+                    Immediate = _immediate
+                };
+                MessageDispatcher.Instance.DispatchMsg("SetSpeed", 0f, string.Empty, otherEntity.GetId(), data);
+                //_cartJoint.gameObject.SetActive(true);
+                //var dollyCart = _cartJoint.GetComponent<Cinemachine.CinemachineDollyCart>();
+                //dollyCart.m_Speed = _speed;
+                //other.transform.rotation = worldRotation;
+            }
+            else
+            {
+                Debug.Log($"Setting cart target speed to {currentTargetSpeed}");
+                SetSpeedData data = new SetSpeedData
+                {
+                    TargetSpeed = currentTargetSpeed,
+                    SmoothTime = _smoothTime,
+                    Immediate = true
+                };
+                MessageDispatcher.Instance.DispatchMsg("SetSpeed", 0f, string.Empty, otherEntity.GetId(), data);
+            }
+
             this.isPaused = true;
             this.unPauseTime = Time.time + this.deactivateTime;
         }

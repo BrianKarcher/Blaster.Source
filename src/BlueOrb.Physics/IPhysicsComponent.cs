@@ -24,6 +24,8 @@ namespace BlueOrb.Physics
         Vector3 GetWorldPos3();
         Vector2 GetWorldPos2();
 
+        float GetSpeed();
+
         bool GetIsGrounded();
         void Jump();
         void SetEnabled(bool enabled);

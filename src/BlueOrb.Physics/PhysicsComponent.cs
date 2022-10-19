@@ -337,6 +337,8 @@ namespace BlueOrb.Physics
                 _animationComponent.SetForwardSpeed(speed);
         }
 
+        public float GetSpeed() => this._rigidBody3D.velocity.magnitude;
+
         public Vector3 GetWorldPos3()
         {
             var height = _componentRepository.GetHeight();

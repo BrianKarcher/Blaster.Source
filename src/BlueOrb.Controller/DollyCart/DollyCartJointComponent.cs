@@ -152,7 +152,7 @@ namespace BlueOrb.Controller
 
         //public void ProcessDollyCartSpeedChange() => this.dollyCart?.ProcessDollyCartSpeedChange();
 
-        public void Brake() => this.dollyCart?.Brake();
+        public void SetBrake(bool brake) => this.dollyCart?.SetBrake(brake);
 
         public void StopViaTime(float time)
         {

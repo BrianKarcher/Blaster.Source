@@ -83,6 +83,8 @@ namespace BlueOrb.Physics
 
         public Vector3 GetVelocity3() => this.velocity;
 
+        public float GetSpeed() => this.velocity.magnitude;
+
         public bool GetIsGrounded() => this._controller.GetIsGrounded();
 
         public void SetVelocity3(Vector3 velocity) => this.velocity = velocity;

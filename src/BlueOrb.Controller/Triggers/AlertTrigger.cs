@@ -49,13 +49,13 @@ namespace BlueOrb.Controller.Triggers
             {
                 return;
             }
-            Debug.Log($"Reparenting to {other.name}");
+            Debug.Log($"Trigger: {other.name}");
 
             var otherEntity = other.GetComponent<IEntity>();
             otherEntity = otherEntity ?? other.attachedRigidbody.GetComponent<IEntity>();
             if (otherEntity == null)
             {
-                Debug.LogError($"TrackSplit could not find entity for {other.name}");
+                Debug.LogError($"Could not find entity for {other.name}");
                 return;
             }
 
