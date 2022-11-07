@@ -4,6 +4,7 @@ using BlueOrb.Common.Components;
 using BlueOrb.Controller.DollyCart;
 using BlueOrb.Messaging;
 using BlueOrb.Physics;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlueOrb.Controller
@@ -53,6 +54,9 @@ namespace BlueOrb.Controller
         [SerializeField]
         private float enemyPushRadius = 1.0f;
 
+        [SerializeField]
+        private LayerMask enemyLayer;
+
         private Vector3 oldDollyCartPosition;
         //private Vector3 oldDollyCartRotation;
         public float yaw;
@@ -68,6 +72,8 @@ namespace BlueOrb.Controller
 
         [SerializeField]
         private IPhysicsComponent physicsComponent;
+
+        private CharacterController characterController;
 
         public enum LerpType
         {
@@ -115,6 +121,7 @@ namespace BlueOrb.Controller
             {
                 physicsComponent = GetComponent<IPhysicsComponent>();
             }
+            this.characterController = GetComponent<CharacterController>();
             //_running = false;
             pitch = _dollyJoint.transform.eulerAngles.x;
             yaw = _dollyJoint.transform.eulerAngles.y;
@@ -124,17 +131,10 @@ namespace BlueOrb.Controller
 
         // Move other CharacterControllers the player collides with. This should get rid of the jitter that we get
         // when we run into an enemy and suddenly stop and then have to start back up again when the enemy dies.
-        void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            CharacterController con = hit.transform.GetComponent<CharacterController>();
+        //void OnControllerColliderHit(ControllerColliderHit hit)
+        //{
 
-            if (con == null) { return; }
-            //if (hit.moveDirection.y < -0.3F) { return; }
-
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-            //con.Move(pushDir * Time.deltaTime * pushSpeed);
-            con.Move(pushDir * enemyPushRadius);
-        }
+        //}
 
         public override void StartListening()
         {
@@ -239,12 +239,36 @@ namespace BlueOrb.Controller
         //    //iTween.RotateTo(gameObject, dir, time);
         //}
 
+        Collider[] pushColliderStore = new Collider[50];
+        HashSet<int> enemiesChecked = new HashSet<int>();
+
         protected void FixedUpdate()
         {
             //if (_updatingSpeed)
             //{
             //    ProcessDollyCartSpeed();
             //}
+            int count = UnityEngine.Physics.OverlapCapsuleNonAlloc(transform.position, transform.position + new Vector3(0f, this.characterController.height, 0f),
+                this.enemyPushRadius, this.pushColliderStore, enemyLayer.value);
+            this.enemiesChecked.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                Collider collider = this.pushColliderStore[i];
+                CharacterController con = collider.attachedRigidbody?.GetComponent<CharacterController>();
+                con = con ?? collider.GetComponent<CharacterController>();
+
+                if (con == null) { continue; }
+                //if (hit.moveDirection.y < -0.3F) { return; }
+                if (this.enemiesChecked.Contains(con.GetInstanceID()))
+                {
+                    continue;
+                }
+                Vector3 pushDir = collider.transform.position - this.transform.position; //new Vector3(hit.point.x - this.transform.position.x, 0, hit.point.z - this.transform.position.z);
+                                                                                         //con.Move(pushDir * Time.deltaTime * pushSpeed);
+                Debug.LogError($"Moving {con.name}");
+                con.Move(pushDir.normalized * enemyPushRadius * Time.deltaTime);
+                this.enemiesChecked.Add(con.GetInstanceID());
+            }
 
             UpdatePositionAndRotation();
         }
