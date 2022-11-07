@@ -50,6 +50,9 @@ namespace BlueOrb.Controller
         private Vector3 enemyCheckHalfExtents = new Vector3(0.5f, 1f, 1f);
         public Vector3 EnemyCheckHalfExtents => this.enemyCheckHalfExtents;
 
+        [SerializeField]
+        private float enemyPushRadius = 1.0f;
+
         private Vector3 oldDollyCartPosition;
         //private Vector3 oldDollyCartRotation;
         public float yaw;
@@ -117,6 +120,20 @@ namespace BlueOrb.Controller
             yaw = _dollyJoint.transform.eulerAngles.y;
             roll = _dollyJoint.transform.eulerAngles.z;
             //ItemsByType = new Dictionary<ItemTypeEnum, ItemDesc>();
+        }
+
+        // Move other CharacterControllers the player collides with. This should get rid of the jitter that we get
+        // when we run into an enemy and suddenly stop and then have to start back up again when the enemy dies.
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            CharacterController con = hit.transform.GetComponent<CharacterController>();
+
+            if (con == null) { return; }
+            //if (hit.moveDirection.y < -0.3F) { return; }
+
+            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            //con.Move(pushDir * Time.deltaTime * pushSpeed);
+            con.Move(pushDir * enemyPushRadius);
         }
 
         public override void StartListening()
