@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BlueOrb.Common.Components;
-using BlueOrb.Messaging;
+﻿using System.Collections.Generic;
 
 namespace BlueOrb.Common.Container
 {
@@ -13,6 +9,7 @@ namespace BlueOrb.Common.Container
         bool Contains(string id);
         Dictionary<string, IEntity> GetAllEntities();
         Dictionary<string, IEntity> GetBosses();
+        Dictionary<string, IEntity> GetEnemies();
         IEntity GetCompanionCharacter();
         //IEnumerable<IEntity> GetEntitiesFromTag(string tag);
         IEntity GetEntityFromTag(string tag);

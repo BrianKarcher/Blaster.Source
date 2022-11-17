@@ -12,6 +12,7 @@ namespace BlueOrb.Common.Container
         private IEntity MainCharacter { get; set; }
         private IEntity CompanionCharacter { get; set; }
         private Dictionary<string, IEntity> Bosses { get; set; }
+        private Dictionary<string, IEntity> Enemies { get; set; }
 
         //const string _idToCheck = "8da840b9-43f6-4bae-9e63-a3ceee1cb493";
 
@@ -29,6 +30,7 @@ namespace BlueOrb.Common.Container
         {
             //Log.Info("EntityController instantiated");
             Bosses = new Dictionary<string, IEntity>();
+            Enemies = new Dictionary<string, IEntity>();
         }
 
         public void AddEntity(IEntity entity)
@@ -67,6 +69,9 @@ namespace BlueOrb.Common.Container
                     break;
                 case "Boss":
                     SetBossCharacter(entity);
+                    break;
+                case "Enemy":
+                    AddEnemy(entity);
                     break;
                 default:
 
@@ -132,6 +137,13 @@ namespace BlueOrb.Common.Container
             else
                 boss = repo;
             //CompanionCharacter = repo;
+        }
+
+        public void AddEnemy(IEntity repo)
+        {
+            string name = repo == null ? "(null)" : repo.name;
+            if (!Enemies.TryGetValue(repo.GetId(), out var boss))
+                Enemies.Add(repo.GetId(), repo);
         }
 
         public IEntity GetEntity(string id)
@@ -238,6 +250,10 @@ namespace BlueOrb.Common.Container
                     if (Bosses.ContainsKey(entity.GetId()))
                         Bosses.Remove(entity.GetId());
                     break;
+                case "Enemy":
+                    if (Enemies.ContainsKey(entity.GetId()))
+                        Enemies.Remove(entity.GetId());
+                    break;
                 default:
 
                     break;
@@ -266,6 +282,11 @@ namespace BlueOrb.Common.Container
             return Bosses;
         }
 
+        public Dictionary<string, IEntity> GetEnemies()
+        {
+            return Enemies;
+        }
+
         public void ResetEntityList()
         {
             //Log.Info("Resetting entity list");
@@ -274,6 +295,7 @@ namespace BlueOrb.Common.Container
             SetMainCharacter(null);
             SetCompanionCharacter(null);
             Bosses.Clear();
+            Enemies.Clear();
             //MainCharacter = null;
             //CompanionCharacter = null;
             //Log.Info("Entity Count " + EntityInstanceMap.Count);
