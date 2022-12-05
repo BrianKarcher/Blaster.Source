@@ -3,6 +3,7 @@ using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Enemy
@@ -16,9 +17,10 @@ namespace BlueOrb.Controller.Enemy
         [SerializeField]
         private float maxDistanceFromPlayer = 300f;
         private float maxDistanceFromPlayerSquared;
+        [SerializeField]
+        private float FovCheckDegrees = 60f;
 
-        private float lifeEndTime;
-        private bool lifeCountdownStarted = false;
+        private float? lifeEndTime;
 
         protected override void Awake()
         {
@@ -26,24 +28,41 @@ namespace BlueOrb.Controller.Enemy
             maxDistanceFromPlayerSquared = maxDistanceFromPlayer * maxDistanceFromPlayer;
         }
 
-        private void OnUpdate()
+        private void Start()
         {
-            if (!GameStateController.Instance.LevelStateController.HasLevelBegun)
+            StartCoroutine(Check());
+        }
+
+        private IEnumerator Check()
+        {
+            while (true)
             {
-                return;
-            }
-            if (!lifeCountdownStarted)
-            {
-                this.lifeEndTime = Time.time + lifetimeSeconds;
-            }
-            if (Time.time > this.lifeEndTime)
-            {
-                this.GetComponentRepository().Destroy();
-            }
-            // TODO Add a field of view check to this
-            if (Vector2.SqrMagnitude(this.GetComponentRepository().GetFootPosition().xz() - EntityContainer.Instance.GetMainCharacter().GetFootPosition().xz()) > maxDistanceFromPlayerSquared)
-            {
-                this.GetComponentRepository().Destroy();
+                if (!GameStateController.Instance.LevelStateController.HasLevelBegun)
+                {
+                    yield return new WaitForSeconds(1f);
+                }
+                if (lifeEndTime == null)
+                {
+                    this.lifeEndTime = Time.time + lifetimeSeconds;
+                }
+                if (Time.time > this.lifeEndTime)
+                {
+                    this.GetComponentRepository().Destroy();
+                    break;
+                }
+                // TODO Add a field of view check to this
+                if (Vector2.SqrMagnitude(this.GetComponentRepository().GetFootPosition().xz() - EntityContainer.Instance.GetMainCharacter().GetFootPosition().xz()) > maxDistanceFromPlayerSquared)
+                {
+                    float angle = Vector3.Angle(this.transform.forward, EntityContainer.Instance.GetMainCharacter().transform.forward);
+                    if (angle <= FovCheckDegrees)
+                    {
+                        yield return new WaitForSeconds(1f);
+                        continue;
+                    }
+                    this.GetComponentRepository().Destroy();
+                    break;
+                }
+                yield return new WaitForSeconds(1f);
             }
         }
     }

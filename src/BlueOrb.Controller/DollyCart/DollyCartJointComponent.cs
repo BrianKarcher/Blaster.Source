@@ -265,7 +265,7 @@ namespace BlueOrb.Controller
                 }
                 Vector3 pushDir = collider.transform.position - this.transform.position; //new Vector3(hit.point.x - this.transform.position.x, 0, hit.point.z - this.transform.position.z);
                                                                                          //con.Move(pushDir * Time.deltaTime * pushSpeed);
-                Debug.LogError($"Moving {con.name}");
+                //Debug.LogError($"Moving {con.name}");
                 con.Move(pushDir.normalized * enemyPushRadius * Time.deltaTime);
                 this.enemiesChecked.Add(con.GetInstanceID());
             }
