@@ -26,35 +26,35 @@ namespace BlueOrb.Controller.Enemy
         [SerializeField]
         private EnemyGroupConfig[] enemyGroupForLap;
 
-        [SerializeField]
-        private float maxDistanceFromPlayer = 300f;
-        private float maxDistanceFromPlayerSquared;
-        [SerializeField]
-        private float FovCheckDegrees = 60f;
-
         //private float? lifeEndTime;
 
         private float nextSpawnTime;
+        private int entityCreatedCount = 0;
 
         protected override void Awake()
         {
             base.Awake();
-            maxDistanceFromPlayerSquared = maxDistanceFromPlayer * maxDistanceFromPlayer;
+            //this.gameObject.SetActive(false);
         }
 
         private void Start()
         {
             //StartCoroutine(Check());
+            this.enabled = false;
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.LogError($"Wave Spawner: Collided with {other.tag}");
             if (!other.CompareTag(otherTag))
             {
                 return;
             }
             this.nextSpawnTime = Time.time + this.initialDelay;
-            this.gameObject.SetActive(true);
+            this.entityCreatedCount = 0;
+            //this.gameObject.SetActive(true);
+            this.enabled = true;
+            Debug.LogError($"Wave Spawner set to Active");
         }
 
         private void OnTriggerExit(Collider other)
@@ -63,10 +63,12 @@ namespace BlueOrb.Controller.Enemy
             {
                 return;
             }
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
+            this.enabled = false;
+            Debug.LogError($"Wave Spawner set to Deactive");
         }
 
-        private void OnUpdate()
+        private void Update()
         {
             if (Time.time < this.nextSpawnTime)
             {
@@ -77,9 +79,21 @@ namespace BlueOrb.Controller.Enemy
                 Debug.LogError($"No enemies to instantiate");
                 return;
             }
+            if (this.spawnPoints.Length == 0)
+            {
+                Debug.LogError($"No spawn points for WaveSpawner");
+                return;
+            }
             GameObject toInstantiate = enemyGroupForLap[0].GetRandom(0);
             int spawnRnd = UnityEngine.Random.Range(0, this.spawnPoints.Length);
+            // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
             GameObject.Instantiate(toInstantiate, this.spawnPoints[spawnRnd].transform.position, Quaternion.identity);
+            entityCreatedCount++;
+            if (entityCreatedCount >= this.entitiesToCreate)
+            {
+                this.gameObject.SetActive(false);
+                return;
+            }
             this.nextSpawnTime = Time.time + UnityEngine.Random.Range(this.minDelay, this.maxDelay);
         }
 
