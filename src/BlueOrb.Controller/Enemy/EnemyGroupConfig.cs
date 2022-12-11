@@ -8,7 +8,7 @@ namespace BlueOrb.Controller.Enemy
         [SerializeField]
         private EnemyVariantConfig[] variants;
 
-        public GameObject[] GetWholeGroup(int level)
+        public GameObject[] GetAll(int level)
         {
             GameObject[] group = new GameObject[variants.Length];
             for (int i = 0; i < group.Length; i++)
@@ -16,6 +16,14 @@ namespace BlueOrb.Controller.Enemy
                 group[i] = variants[i].GetVariant(level);
             }
             return group;
+        }
+
+        public GameObject GetRandom(int level)
+        {
+            if (variants.Length == 0)
+                return null;
+            int rnd = Random.Range(0, variants.Length);
+            return variants[rnd].GetVariant(level);
         }
     }
 }
