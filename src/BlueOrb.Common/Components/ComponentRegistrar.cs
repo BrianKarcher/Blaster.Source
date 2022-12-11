@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
+using UnityEngine;
 
 namespace BlueOrb.Common.Components
 {
@@ -51,7 +52,10 @@ namespace BlueOrb.Common.Components
             if (component == null)
                 throw new Exception("Component is null in UnRegisterComponent");
             if (!_dictEntityComponents.TryGetValue(typeof(T), out var components))
+            {
+                Debug.LogError($"Could not locate component for type {nameof(component)}");
                 return;
+            }
 
             _entityComponents.Remove(component);
             _dictEntityComponents[typeof(T)].Remove(component);
@@ -92,6 +96,7 @@ namespace BlueOrb.Common.Components
 
             if (!_dictEntityComponents.TryGetValue(typeof(T), out var components))
             {
+                Debug.LogError($"Could not locate component for {name}");
                 components = _entityComponents;
             }
 
@@ -136,6 +141,7 @@ namespace BlueOrb.Common.Components
         {
             if (!_dictEntityComponents.TryGetValue(typeof(T), out var components))
             {
+                Debug.LogError($"Could not locate component for type {nameof(T)}");
                 components = new List<IComponentBase>();
                 foreach (var component in _entityComponents)
                 {

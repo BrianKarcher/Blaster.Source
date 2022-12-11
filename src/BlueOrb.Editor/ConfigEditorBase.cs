@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace BlueOrb.Editor
@@ -25,7 +26,7 @@ namespace BlueOrb.Editor
             EditorUtility.SetDirty(target);
             if (makeSceneDirty && !Application.isPlaying)
             {
-                EditorApplication.MarkSceneDirty();
+                EditorSceneManager.MarkAllScenesDirty();
             }
         }
 
