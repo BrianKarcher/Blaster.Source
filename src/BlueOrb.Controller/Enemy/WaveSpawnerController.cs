@@ -24,9 +24,9 @@ namespace BlueOrb.Controller.Enemy
         [SerializeField]
         private string otherTag = "Cart";
         [SerializeField]
+        private string enemyTag = "Enemy";
+        [SerializeField]
         private EnemyGroupConfig[] enemyGroupForLap;
-
-        //private float? lifeEndTime;
 
         private float nextSpawnTime;
         private int entityCreatedCount = 0;
@@ -34,12 +34,10 @@ namespace BlueOrb.Controller.Enemy
         protected override void Awake()
         {
             base.Awake();
-            //this.gameObject.SetActive(false);
         }
 
         private void Start()
         {
-            //StartCoroutine(Check());
             this.enabled = false;
         }
 
@@ -52,7 +50,6 @@ namespace BlueOrb.Controller.Enemy
             }
             this.nextSpawnTime = Time.time + this.initialDelay;
             this.entityCreatedCount = 0;
-            //this.gameObject.SetActive(true);
             this.enabled = true;
             Debug.LogError($"Wave Spawner set to Active");
         }
@@ -63,14 +60,13 @@ namespace BlueOrb.Controller.Enemy
             {
                 return;
             }
-            //this.gameObject.SetActive(false);
             this.enabled = false;
             Debug.LogError($"Wave Spawner set to Deactive");
         }
 
         private void Update()
         {
-            if (Time.time < this.nextSpawnTime)
+            if (Time.time < this.nextSpawnTime || !GameStateController.Instance.LevelStateController.HasLevelBegun)
             {
                 return;
             }
@@ -91,43 +87,10 @@ namespace BlueOrb.Controller.Enemy
             entityCreatedCount++;
             if (entityCreatedCount >= this.entitiesToCreate)
             {
-                this.gameObject.SetActive(false);
+                this.enabled = false;
                 return;
             }
             this.nextSpawnTime = Time.time + UnityEngine.Random.Range(this.minDelay, this.maxDelay);
         }
-
-        //private IEnumerator Check()
-        //{
-        //    while (true)
-        //    {
-        //        if (!GameStateController.Instance.LevelStateController.HasLevelBegun)
-        //        {
-        //            yield return new WaitForSeconds(1f);
-        //        }
-        //        if (lifeEndTime == null)
-        //        {
-        //            this.lifeEndTime = Time.time + lifetimeSeconds;
-        //        }
-        //        if (Time.time > this.lifeEndTime)
-        //        {
-        //            this.GetComponentRepository().Destroy();
-        //            break;
-        //        }
-        //        // TODO Add a field of view check to this
-        //        if (Vector2.SqrMagnitude(this.GetComponentRepository().GetFootPosition().xz() - EntityContainer.Instance.GetMainCharacter().GetFootPosition().xz()) > maxDistanceFromPlayerSquared)
-        //        {
-        //            float angle = Vector3.Angle(this.transform.forward, EntityContainer.Instance.GetMainCharacter().transform.forward);
-        //            if (angle <= FovCheckDegrees)
-        //            {
-        //                yield return new WaitForSeconds(1f);
-        //                continue;
-        //            }
-        //            this.GetComponentRepository().Destroy();
-        //            break;
-        //        }
-        //        yield return new WaitForSeconds(1f);
-        //    }
-        //}
-        }
+    }
 }
