@@ -4,6 +4,7 @@ using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Enemy
@@ -20,7 +21,7 @@ namespace BlueOrb.Controller.Enemy
         [SerializeField]
         private int entitiesToCreate = 10;
         [SerializeField]
-        private GameObject[] spawnPoints;
+        private Transform[] spawnPoints;
         [SerializeField]
         private string otherTag = "Cart";
         [SerializeField]
@@ -34,6 +35,15 @@ namespace BlueOrb.Controller.Enemy
         protected override void Awake()
         {
             base.Awake();
+            if (spawnPoints.Length == 0)
+            {
+                List<Transform> spawn = new List<Transform>();
+                foreach (Transform child in transform)
+                {
+                    spawn.Add(child);
+                }
+                this.spawnPoints = spawn.ToArray();
+            }
         }
 
         private void Start()
@@ -83,7 +93,7 @@ namespace BlueOrb.Controller.Enemy
             GameObject toInstantiate = enemyGroupForLap[0].GetRandom(0);
             int spawnRnd = UnityEngine.Random.Range(0, this.spawnPoints.Length);
             // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
-            GameObject.Instantiate(toInstantiate, this.spawnPoints[spawnRnd].transform.position, Quaternion.identity);
+            GameObject.Instantiate(toInstantiate, this.spawnPoints[spawnRnd].position, Quaternion.identity);
             entityCreatedCount++;
             if (entityCreatedCount >= this.entitiesToCreate)
             {
