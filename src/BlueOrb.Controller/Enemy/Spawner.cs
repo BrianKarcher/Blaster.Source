@@ -5,6 +5,8 @@ using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Enemy
@@ -22,7 +24,13 @@ namespace BlueOrb.Controller.Enemy
         private string spawnEvent = "SpawnEnemy";
         [SerializeField]
         private EnemyVariantConfig[] enemyVariantConfigs;
+        [SerializeField]
+        private bool allLaps = true;
+        [SerializeField]
+        private int[] laps;
         private float nextSpawnTime;
+        private long spawnEventId;
+        private HashSet<int> lapsHash = new HashSet<int>();
         //[SerializeField]
         //private int entitiesToCreate = 10;
         //[SerializeField]
@@ -39,6 +47,15 @@ namespace BlueOrb.Controller.Enemy
         //    base.Awake();
         //}
 
+        protected override void Awake()
+        {
+            base.Awake();
+            for (int i = 0; i < this.laps.Length; i++)
+            {
+                this.lapsHash.Add(this.laps[i]);
+            }
+        }
+
         private void Start()
         {
             this.enabled = false;
@@ -47,17 +64,27 @@ namespace BlueOrb.Controller.Enemy
         public override void StartListening()
         {
             base.StartListening();
-            MessageDispatcher.Instance.StartListening(spawnEvent, _componentRepository.GetId(), (data) =>
+            this.spawnEventId = MessageDispatcher.Instance.StartListening(spawnEvent, _componentRepository.GetId(), (data) =>
             {
-                this.enabled = true;
-                this.nextSpawnTime = Time.time + this.initialDelay + UnityEngine.Random.Range(minDelay, maxDelay);
-
+                // TODO Implement laps
+                Spawn(0);
             });
         }
 
         public override void StopListening()
         {
             base.StopListening();
+            MessageDispatcher.Instance.StopListening(spawnEvent, _componentRepository.GetId(), this.spawnEventId);
+        }
+
+        public void Spawn(int lap)
+        {
+            if (!this.allLaps && !this.lapsHash.Contains(lap))
+            {
+                return;
+            }
+            this.enabled = true;
+            this.nextSpawnTime = Time.time + this.initialDelay + UnityEngine.Random.Range(minDelay, maxDelay);
         }
 
         private void Update()
