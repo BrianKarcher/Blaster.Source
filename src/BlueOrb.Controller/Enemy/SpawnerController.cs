@@ -56,7 +56,7 @@ namespace BlueOrb.Controller.Enemy
             this.nextSpawnTime = Time.time + this.initialDelay;
             //this.entityCreatedCount = 0;
             this.enabled = true;
-            Debug.LogError($"SpawnerController set to Active");
+            //Debug.LogError($"SpawnerController set to Active");
         }
 
         private void OnTriggerExit(Collider other)
@@ -66,7 +66,7 @@ namespace BlueOrb.Controller.Enemy
                 return;
             }
             this.enabled = false;
-            Debug.LogError($"SpawnerController set to Deactive");
+            //Debug.LogError($"SpawnerController set to Deactive");
         }
 
         private void Update()

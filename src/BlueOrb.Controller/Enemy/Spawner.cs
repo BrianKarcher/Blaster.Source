@@ -25,6 +25,10 @@ namespace BlueOrb.Controller.Enemy
         [SerializeField]
         private EnemyVariantConfig[] enemyVariantConfigs;
         [SerializeField]
+        private GameObject spawnGameObject;
+        [SerializeField]
+        private EnemyGroupConfig spawnFromEnemyGroup;
+        [SerializeField]
         private bool allLaps = true;
         [SerializeField]
         private int[] laps;
@@ -93,10 +97,6 @@ namespace BlueOrb.Controller.Enemy
             {
                 return;
             }
-            if (this.enemyVariantConfigs.Length == 0)
-            {
-                return;
-            }
             //if (enemyGroupForLap.Length == 0)
             //{
             //    Debug.LogError($"No enemies to instantiate");
@@ -107,11 +107,25 @@ namespace BlueOrb.Controller.Enemy
             //    Debug.LogError($"No spawn points for WaveSpawner");
             //    return;
             //}
-            EnemyVariantConfig enemyVariantConfig = enemyVariantConfigs[UnityEngine.Random.Range(0, this.enemyVariantConfigs.Length)];
-            GameObject toInstantiate = enemyVariantConfig.GetVariant(0);
-            //int spawnRnd = UnityEngine.Random.Range(0, this.spawnPoints.Length);
-            // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
-            GameObject.Instantiate(toInstantiate, this.transform.position, Quaternion.identity);
+            if (this.enemyVariantConfigs.Length != 0)
+            {
+                EnemyVariantConfig enemyVariantConfig = enemyVariantConfigs[UnityEngine.Random.Range(0, this.enemyVariantConfigs.Length)];
+                GameObject toInstantiate = enemyVariantConfig.GetVariant(0);
+                //int spawnRnd = UnityEngine.Random.Range(0, this.spawnPoints.Length);
+                // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
+                GameObject.Instantiate(toInstantiate, this.transform.position, Quaternion.identity);
+            }
+            if (this.spawnGameObject != null)
+            {
+                GameObject.Instantiate(this.spawnGameObject, this.transform.position, Quaternion.identity);
+            }
+            if (spawnFromEnemyGroup != null)
+            {
+                // TODO Supply lap
+                GameObject go = this.spawnFromEnemyGroup.GetRandom(0);
+                // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
+                GameObject.Instantiate(go, this.transform.position, Quaternion.identity);
+            }
             //entityCreatedCount++;
             //if (entityCreatedCount >= this.entitiesToCreate)
             //{
