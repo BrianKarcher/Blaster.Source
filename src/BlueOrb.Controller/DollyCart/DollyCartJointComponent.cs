@@ -22,6 +22,10 @@ namespace BlueOrb.Controller
         public LerpType _speedChangeType = LerpType.SmoothDamp;
         [SerializeField]
         private IDollyCart dollyCart;
+        [SerializeField]
+        private bool autoRotate = false;
+        [SerializeField]
+        private bool zeroY = true;
 
         public bool HasCart => this.dollyCart != null;
 
@@ -293,7 +297,10 @@ namespace BlueOrb.Controller
             //    return;
             //}
             //_dollyJoint.transform.localPosition += distanceDelta;
-            distanceDelta.y = 0;
+            if (zeroY)
+            {
+                distanceDelta.y = 0;
+            }
             this.physicsComponent.Move(distanceDelta / Time.deltaTime);
             // Corrective position
             //Vector3.SmoothDamp()
@@ -302,8 +309,8 @@ namespace BlueOrb.Controller
             //_dollyJoint.transform.position.
             
             // Player got off track? Time to correct
-            if (!isCorrecting && ((_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude > 0.01f
-                || Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) > 0.05f))
+            if (!isCorrecting && (PosOffTrack
+                || RotOffTrack))
             {
                 Debug.Log("Correcting the Joint!");
                 this.isCorrecting = true;
@@ -335,9 +342,12 @@ namespace BlueOrb.Controller
                 //_dollyJoint.transform.eulerAngles = new Vector3(pitch, yaw, 0);
                 //_dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.transform.rotation, Time.deltaTime);
 
-                _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.GetWorldRotation(), smoothTimer);
-                if ((_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude < 0.005f
-                    && Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) < 0.005f)
+                if (this.autoRotate)
+                {
+                    _dollyJoint.transform.rotation = Quaternion.Slerp(correctiveOriginalRotation, this.dollyCart.GetWorldRotation(), smoothTimer);
+                }
+
+                if (PosOnTrack && RotOnTrack)
                 //if (_dollyJoint.transform.rotation - )
                 {
                     this.isCorrecting = false;
@@ -356,5 +366,11 @@ namespace BlueOrb.Controller
             //_dollyJoint.transform.rotation.
             SetOldPositionAndRotation(this.dollyCart.GetWorldPosition());
         }
+
+        private bool PosOffTrack => (_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude > 0.01f;
+        private bool PosOnTrack => (_dollyJoint.transform.position.xz() - this.dollyCart.GetWorldPosition().xz()).magnitude < 0.005f;
+
+        private bool RotOffTrack => this.autoRotate && Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) > 0.05f;
+        private bool RotOnTrack => !this.autoRotate || Mathf.Abs(Quaternion.Angle(_dollyJoint.transform.rotation, this.dollyCart.GetWorldRotation())) < 0.005f;
     }
 }
