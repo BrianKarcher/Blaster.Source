@@ -151,6 +151,11 @@ namespace BlueOrb.Controller
             _setSpeedId = MessageDispatcher.Instance.StartListening("SetSpeed", _componentRepository.GetId(), (data) =>
             {
                 var speedData = data.ExtraInfo as SetSpeedData;
+                Debug.Log($"Setting dolly target speed to {speedData.TargetSpeed}");
+                if (this.dollyCart == null)
+                {
+                    Debug.LogError($"(DollyCartJointComponent SetSpeed, no Dolly Cart located");
+                }
                 this.dollyCart?.StartAcceleration(speedData.TargetSpeed, speedData.SmoothTime, speedData.Immediate);
             });
 
@@ -358,8 +363,10 @@ namespace BlueOrb.Controller
                 //Vector3 dir = this.dollyCart.GetWorldPosition() - _dollyJoint.transform.position;
                 //this.physicsComponent.Move(dir / Time.deltaTime);
                 //_dollyJoint.transform.position = this.dollyCart.GetWorldPosition();
-
-                this._dollyJoint.transform.rotation = this.dollyCart.GetWorldRotation();
+                if (this.autoRotate)
+                {
+                    this._dollyJoint.transform.rotation = this.dollyCart.GetWorldRotation();
+                }
             }
 
             //Quaternion.RotateTowards

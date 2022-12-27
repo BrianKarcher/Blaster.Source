@@ -11,6 +11,15 @@ namespace BlueOrb.Controller.Triggers
     [AddComponentMenu("BlueOrb/Components/Dolly Cart Track Split Trigger")]
     public class TrackSplit : MonoBehaviour
     {
+        public enum State
+        {
+            Enabled = 1,
+            Disabled = 0
+        }
+
+        [SerializeField]
+        private State StartState = State.Enabled;
+
         [SerializeField]
         [Tag]
         private string _tag;
@@ -29,12 +38,22 @@ namespace BlueOrb.Controller.Triggers
         private float deactivateTime = 3.0f;
 
         [SerializeField]
+        private bool disableAfterTrigger = false;
+
+        [SerializeField]
         private CartStartPosition cartStartPosition = CartStartPosition.Reset;
 
         private Collider splitCollider;
         private bool hasBegun = false;
         private bool isPaused = false;
         private float unPauseTime = 0;
+        private bool firstRun = true;
+
+        private bool disableTimerEnabled = false;
+        /// <summary>
+        /// When the time is up, the collider will become disabled.
+        /// </summary>
+        private float disableTime;
 
         protected void Awake()
         {
@@ -44,15 +63,33 @@ namespace BlueOrb.Controller.Triggers
 
         public void FixedUpdate()
         {
+            if (this.disableTimerEnabled && Time.time > this.disableTime)
+            {
+                EnableCollider(false);
+                this.disableTimerEnabled = false;
+            }
             if (hasBegun)
             {
                 return;
             }
-            if (GameStateController.Instance.LevelStateController.HasLevelBegun)
+            if (!GameStateController.Instance.LevelStateController.HasLevelBegun)
             {
-                splitCollider.enabled = true;
-                hasBegun = true;
+                return;
             }
+            if (firstRun)
+            {
+                if (StartState == State.Enabled)
+                {
+                    splitCollider.enabled = true;
+                }
+                else
+                {
+                    splitCollider.enabled = false;
+                }
+                hasBegun = true;
+                firstRun = false;
+            }
+
         }
 
         private void OnTriggerEnter(Collider other)
@@ -62,7 +99,10 @@ namespace BlueOrb.Controller.Triggers
                 return;
             }
             if (!gameObject.activeInHierarchy)
+            {
+                Debug.Log($"TrackSplit Trigger Enter aborting because this game object is not active. Other collider {other.name}");
                 return;
+            }
             Debug.Log($"Trigger entered: {other.name}");
             if (!other.CompareTag(_tag))
             {
@@ -124,6 +164,22 @@ namespace BlueOrb.Controller.Triggers
 
             this.isPaused = true;
             this.unPauseTime = Time.time + this.deactivateTime;
+            if (disableAfterTrigger)
+            {
+                splitCollider.enabled = false;
+                //this.gameObject.SetActive(false);
+            }
+        }
+
+        public void EnableCollider(bool enabled)
+        {
+            splitCollider.enabled = enabled;
+        }
+
+        public void SetDisabledTimer()
+        {
+            this.disableTimerEnabled = true;
+            this.disableTime = Time.time + this.deactivateTime;
         }
     }
 }
