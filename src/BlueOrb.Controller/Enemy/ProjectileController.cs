@@ -8,7 +8,7 @@ using UnityEngine;
 namespace BlueOrb.Controller.Enemy
 {
     [AddComponentMenu("Blue Orb/Components/Projectile Controller")]
-    public class ProjectileController : ComponentBase<EnemyController>
+    public class ProjectileController : ComponentBase<ProjectileController>
     {
         [SerializeField]
         private float lifetimeSeconds = 60f;
