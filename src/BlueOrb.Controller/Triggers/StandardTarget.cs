@@ -10,8 +10,12 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Triggers
 {
-    public class ProjectileTrigger : ComponentBase<ProjectileTrigger>
+    public class StandardTarget : ComponentBase<StandardTarget>
     {
+        [SerializeField]
+        private bool allProjectiles = true;
+        [SerializeField]
+        private string allProjectileHitMessage = "ProjectileHit";
         [SerializeField]
         private ProjectileConfig[] projectiles;
         [SerializeField]
@@ -24,28 +28,64 @@ namespace BlueOrb.Controller.Triggers
         private AudioClip shotAudioClip;
         [SerializeField]
         private AudioClip deathAudioClip;
+        [SerializeField]
+        private Material deathMaterial;
         private long[] projectileMessageIds;
+        private long allProjectileMessageId;
 
         public override void StartListening()
         {
             base.StartListening();
+            if (this.allProjectiles)
+            {
+                this.allProjectileMessageId = MessageDispatcher.Instance.StartListening(allProjectileHitMessage,
+                    _componentRepository.GetId(), MessageCallback);
+            }
             this.projectileMessageIds = new long[projectiles.Length];
             for (int i = 0; i < this.projectiles.Length; i++)
             {
                 projectileMessageIds[i] = MessageDispatcher.Instance.StartListening(projectiles[i].Message,
-                    _componentRepository.GetId(), (data) =>
-                    {
-                        hp--;
-                        if (hp <= 0)
-                        {
-                            DeathNotification();
-                            PlayDeathAudioClip();
-                        }
-                        else
-                        {
-                            PlayShotAudioClip();
-                        }
-                    });
+                    _componentRepository.GetId(), MessageCallback);
+            }
+        }
+
+        public override void StopListening()
+        {
+            base.StopListening();
+            if (this.allProjectiles)
+            {
+                MessageDispatcher.Instance.StopListening(this.allProjectileHitMessage, _componentRepository.GetId(),
+                    this.allProjectileMessageId);
+            }
+
+            for (int i = 0; i < this.projectiles.Length; i++)
+            {
+                MessageDispatcher.Instance.StopListening(this.projectiles[i].Message, _componentRepository.GetId(),
+                    this.projectileMessageIds[i]);
+            }
+        }
+
+        private void MessageCallback(Telegram data)
+        {
+            hp--;
+            if (hp <= 0)
+            {
+                DeathNotification();
+                PlayDeathAudioClip();
+                SetDeathMaterial();
+            }
+            else
+            {
+                PlayShotAudioClip();
+            }
+        }
+
+        private void SetDeathMaterial()
+        {
+            Renderer mr = GetComponent<Renderer>();
+            for (int i = 0; i < mr.materials.Length; i++)
+            {
+                mr.materials[i] = this.deathMaterial;
             }
         }
 
@@ -72,16 +112,6 @@ namespace BlueOrb.Controller.Triggers
                 return;
             MessageDispatcher.Instance.DispatchMsg(this.notificationDeathMessage, 0f, _componentRepository.GetId(),
                 deathId, null);
-        }
-
-        public override void StopListening()
-        {
-            base.StopListening();
-            for (int i = 0; i < this.projectiles.Length; i++)
-            {
-                MessageDispatcher.Instance.StopListening(this.projectiles[i].Message, _componentRepository.GetId(),
-                    this.projectileMessageIds[i]);
-            }
         }
     }
 }
