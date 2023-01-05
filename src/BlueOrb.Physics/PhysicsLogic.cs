@@ -128,63 +128,6 @@ namespace BlueOrb.Physics
             //}
         }
 
-        public bool PosInFOV2(Vector2 pos)
-        {
-            var vectorToTarget = pos - _movementController.GetWorldPos2();
-
-            var angle = Vector2.Angle(_movementController.transform.forward.xz(), vectorToTarget);
-
-            return angle <= GetPhysicsData().FieldOfView;
-        }
-
-        public bool PosInFOV3(Vector3 pos)
-        {
-            var vectorToTarget = pos - _movementController.GetWorldPos3();
-
-            var angle = Vector3.Angle(_movementController.transform.forward, vectorToTarget);
-
-            return angle <= GetPhysicsData().FieldOfView;
-        }
-
-        public bool CheckLOSDistance(GameObject entity)
-        {
-            // Using distance squared space because a square root is slow
-            var distanceSq = (_movementController.GetWorldPos3() - entity.transform.position).sqrMagnitude;
-            //Debug.Log($"(CheckLOS Distance: {distanceSq}");
-            return distanceSq <= _physicsData.LOSSquared;
-        }
-
-        public bool HasLineOfSight(Vector3 target, int obstacleLayerMask)
-        {
-            var currentPos = _movementController.GetComponentRepository().GetHeadPosition();
-            //var layerMask = 1 << _obstacleLayerMask;
-
-            
-
-            bool hasLineOfSight = !UnityEngine.Physics.Raycast(currentPos, target - currentPos, (target - currentPos).magnitude, obstacleLayerMask);
-            if (hasLineOfSight)
-                Debug.DrawLine(currentPos, target, Color.blue);
-            else
-                Debug.DrawLine(currentPos, target, Color.red);
-            return hasLineOfSight;
-        }
-
-        public bool HasLineOfSight(GameObject target, int obstacleLayerMask)
-        {
-            var targetEntity = target.GetComponent<IEntity>();
-            if (targetEntity == null)
-                return HasLineOfSight(target.transform.position, obstacleLayerMask);
-            //if (targetEntity == null)
-            //    return HasLineOfSight(targetEntity.GetHeadPosition(), obstacleLayerMask);
-            //var otherPhysicsComponent = entity.Components.GetComponent<PhysicsComponent>();
-            //if (otherPhysicsComponent == null)
-            //    return HasLineOfSight(target.transform.position, obstacleLayerMask);
-            //var otherPos = otherPhysicsComponent.GetWorldPos3();
-            var otherPos = targetEntity.GetHeadPosition();
-
-            return HasLineOfSight(otherPos, obstacleLayerMask);
-        }
-
         public bool IsFacingBigDrop(float distance)
         {
             var componentBase = (IComponentBase)_movementController;
