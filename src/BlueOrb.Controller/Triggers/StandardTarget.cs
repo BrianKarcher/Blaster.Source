@@ -29,9 +29,23 @@ namespace BlueOrb.Controller.Triggers
         [SerializeField]
         private AudioClip deathAudioClip;
         [SerializeField]
-        private Material deathMaterial;
+        private Material enableMaterial;
+        [SerializeField]
+        private Material disabledMaterial;
+        [SerializeField]
+        private string enableMessage = "Enable";
+        [SerializeField]
+        private string disableMessage = "Disable";
+
         private long[] projectileMessageIds;
-        private long allProjectileMessageId;
+        private long allProjectileMessageId, enableMessageId, disableMessageId;
+        private Collider collider;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            this.collider = GetComponent<Collider>();
+        }
 
         public override void StartListening()
         {
@@ -47,6 +61,14 @@ namespace BlueOrb.Controller.Triggers
                 projectileMessageIds[i] = MessageDispatcher.Instance.StartListening(projectiles[i].Message,
                     _componentRepository.GetId(), MessageCallback);
             }
+            enableMessageId = MessageDispatcher.Instance.StartListening(this.enableMessage, _componentRepository.GetId(), (data) =>
+            {
+                EnableCollider(true);
+            });
+            disableMessageId = MessageDispatcher.Instance.StartListening(this.disableMessage, _componentRepository.GetId(), (data) =>
+            {
+                EnableCollider(false);
+            });
         }
 
         public override void StopListening()
@@ -63,6 +85,17 @@ namespace BlueOrb.Controller.Triggers
                 MessageDispatcher.Instance.StopListening(this.projectiles[i].Message, _componentRepository.GetId(),
                     this.projectileMessageIds[i]);
             }
+            MessageDispatcher.Instance.StopListening(this.enableMessage, _componentRepository.GetId(), this.enableMessageId);
+            MessageDispatcher.Instance.StopListening(this.disableMessage, _componentRepository.GetId(), this.disableMessageId);
+        }
+
+        private void EnableCollider(bool enable)
+        {
+            if (this.collider != null)
+            {
+                this.collider.enabled = enable;
+            }
+            SetMaterial(enable ? this.enableMaterial : this.disabledMaterial);
         }
 
         private void MessageCallback(Telegram data)
@@ -72,7 +105,7 @@ namespace BlueOrb.Controller.Triggers
             {
                 DeathNotification();
                 PlayDeathAudioClip();
-                SetDeathMaterial();
+                SetMaterial(this.disabledMaterial);
             }
             else
             {
@@ -80,12 +113,15 @@ namespace BlueOrb.Controller.Triggers
             }
         }
 
-        private void SetDeathMaterial()
+        private void SetMaterial(Material material)
         {
-            Renderer mr = GetComponent<Renderer>();
+            if (material == null)
+                return;
+            MeshRenderer mr = GetComponent<MeshRenderer>();
+            mr.material = material;
             for (int i = 0; i < mr.materials.Length; i++)
             {
-                mr.materials[i] = this.deathMaterial;
+                mr.materials[i] = material;
             }
         }
 
