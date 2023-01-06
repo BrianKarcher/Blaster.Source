@@ -3,9 +3,6 @@ using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
 using BlueOrb.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace BlueOrb.Controller.Triggers
@@ -36,15 +33,19 @@ namespace BlueOrb.Controller.Triggers
         private string enableMessage = "Enable";
         [SerializeField]
         private string disableMessage = "Disable";
+        [SerializeField]
+        private string reviveMessage = "Revive";
 
         private long[] projectileMessageIds;
-        private long allProjectileMessageId, enableMessageId, disableMessageId;
+        private long allProjectileMessageId, enableMessageId, disableMessageId, reviveMessageId;
         private Collider collider;
+        private float currentHp;
 
         protected override void Awake()
         {
             base.Awake();
             this.collider = GetComponent<Collider>();
+            this.currentHp = hp;
         }
 
         public override void StartListening()
@@ -69,6 +70,10 @@ namespace BlueOrb.Controller.Triggers
             {
                 EnableCollider(false);
             });
+            reviveMessageId = MessageDispatcher.Instance.StartListening(this.reviveMessage, _componentRepository.GetId(), (data) =>
+            {
+                this.currentHp = hp;
+            });
         }
 
         public override void StopListening()
@@ -87,10 +92,12 @@ namespace BlueOrb.Controller.Triggers
             }
             MessageDispatcher.Instance.StopListening(this.enableMessage, _componentRepository.GetId(), this.enableMessageId);
             MessageDispatcher.Instance.StopListening(this.disableMessage, _componentRepository.GetId(), this.disableMessageId);
+            MessageDispatcher.Instance.StopListening(this.reviveMessage, _componentRepository.GetId(), this.reviveMessageId);
         }
 
         private void EnableCollider(bool enable)
         {
+            Debug.Log($"Setting Enable Collider on {this.name} to {enable}");
             if (this.collider != null)
             {
                 this.collider.enabled = enable;
@@ -100,8 +107,8 @@ namespace BlueOrb.Controller.Triggers
 
         private void MessageCallback(Telegram data)
         {
-            hp--;
-            if (hp <= 0)
+            currentHp--;
+            if (currentHp <= 0)
             {
                 DeathNotification();
                 PlayDeathAudioClip();
@@ -117,6 +124,7 @@ namespace BlueOrb.Controller.Triggers
         {
             if (material == null)
                 return;
+            Debug.Log($"Setting material on {this.name} to {material.name}");
             MeshRenderer mr = GetComponent<MeshRenderer>();
             mr.material = material;
             for (int i = 0; i < mr.materials.Length; i++)
