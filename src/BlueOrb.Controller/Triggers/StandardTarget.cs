@@ -22,6 +22,10 @@ namespace BlueOrb.Controller.Triggers
         [SerializeField]
         private string notificationDeathMessage;
         [SerializeField]
+        private GameObject deathVfx;
+        [SerializeField]
+        private GameObject deathVfxSpawnPoint;
+        [SerializeField]
         private AudioClip shotAudioClip;
         [SerializeField]
         private AudioClip deathAudioClip;
@@ -34,10 +38,12 @@ namespace BlueOrb.Controller.Triggers
         [SerializeField]
         private string disableMessage = "Disable";
         [SerializeField]
+        private string destroyMessage = "Destroy";
+        [SerializeField]
         private string reviveMessage = "Revive";
 
         private long[] projectileMessageIds;
-        private long allProjectileMessageId, enableMessageId, disableMessageId, reviveMessageId;
+        private long allProjectileMessageId, enableMessageId, disableMessageId, reviveMessageId, destroyMessageId;
         private Collider collider;
         private float currentHp;
 
@@ -73,6 +79,11 @@ namespace BlueOrb.Controller.Triggers
             reviveMessageId = MessageDispatcher.Instance.StartListening(this.reviveMessage, _componentRepository.GetId(), (data) =>
             {
                 this.currentHp = hp;
+            });
+            destroyMessageId = MessageDispatcher.Instance.StartListening(this.destroyMessage, _componentRepository.GetId(), (data) =>
+            {
+                DeathVfx();
+                GameObject.Destroy(gameObject);
             });
         }
 
@@ -145,6 +156,15 @@ namespace BlueOrb.Controller.Triggers
             if (this.deathAudioClip == null)
                 return;
             GameStateController.Instance.AudioSource.PlayOneShot(this.deathAudioClip);
+        }
+
+        private void DeathVfx()
+        {
+            if (this.deathVfx != null)
+            {
+                Vector3 pos = this.deathVfxSpawnPoint == null ? this.transform.position : this.deathVfxSpawnPoint.transform.position;
+                GameObject.Instantiate(this.deathVfx, pos, Quaternion.identity);
+            }
         }
 
         private void DeathNotification()
