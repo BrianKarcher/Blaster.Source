@@ -128,11 +128,11 @@ namespace BlueOrb.Controller.Damage
                 return;
             }
 
-            if (damageInfo.MyCollider == null)
-            {
-                Debug.Log($"Entity {_componentRepository.name} has no collider, not taking damage.");
-                return;
-            }
+            //if (damageInfo.MyCollider == null)
+            //{
+            //    Debug.Log($"Entity {_componentRepository.name} has no collider, not taking damage.");
+            //    return;
+            //}
 
             //if (damageInfo.MyCollider != null && !damageInfo.CollisionHit.ReceivesDamage())
             //    return false;
