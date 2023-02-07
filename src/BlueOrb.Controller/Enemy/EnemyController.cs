@@ -2,7 +2,6 @@
 using BlueOrb.Base.Manager;
 using BlueOrb.Common.Components;
 using BlueOrb.Common.Container;
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -28,10 +27,7 @@ namespace BlueOrb.Controller.Enemy
             maxDistanceFromPlayerSquared = maxDistanceFromPlayer * maxDistanceFromPlayer;
         }
 
-        private void Start()
-        {
-            StartCoroutine(Check());
-        }
+        private void Start() => StartCoroutine(Check());
 
         private IEnumerator Check()
         {

@@ -14,6 +14,9 @@ namespace BlueOrb.Physics
         private PhysicsLogic _controller;
 
         [SerializeField]
+        private Ragdoll ragdoll;
+
+        [SerializeField]
         private bool startOnGround = false;
 
         [SerializeField]
@@ -60,7 +63,12 @@ namespace BlueOrb.Physics
             {
                 PlaceOnGround();
             }
+
+            this._animationComponent = _componentRepository.GetComponent<AnimationComponent>();
+            this.ragdoll.Init(this._animationComponent);
         }
+
+        public void EnableRagdoll(bool enable) => this.ragdoll.EnableRagdoll(enable);
 
         private void PlaceOnGround()
         {

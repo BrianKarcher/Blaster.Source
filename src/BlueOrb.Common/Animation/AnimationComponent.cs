@@ -1,7 +1,5 @@
 ﻿using BlueOrb.Common.Components;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace BlueOrb.Controller
@@ -179,5 +177,7 @@ namespace BlueOrb.Controller
         public bool GetBool(string anim) => _animator.GetBool(anim);
 
         public void SetAttackTrigger(int num) => _animator.SetTrigger(_attackAnim[num]);
+
+        public void SetEnabled(bool enable) => enabled = enable;
     }
 }
