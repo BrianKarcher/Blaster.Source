@@ -15,6 +15,9 @@ namespace BlueOrb.Physics
         private GameObject ragdollRigidbodySource;
 
         [SerializeField]
+        private Rigidbody ragdollCenterRigidbody;
+
+        [SerializeField]
         // rigidbody that is  activated when not using ragdoll
         private Rigidbody mainRigidbody;
 
@@ -57,7 +60,7 @@ namespace BlueOrb.Physics
                 return;
             }
             // The animator needs to be disabled in order for Ragdoll to work.
-            this.animationComponent.SetEnabled(!enableRagdoll);
+            this.animationComponent?.SetEnabled(!enableRagdoll);
             List<Collider> mainColliders = GetMainColliders();
             EnableColliders(mainColliders, !enableRagdoll);
             EnableColliders(this.ragdollColliders, enableRagdoll);
@@ -68,6 +71,15 @@ namespace BlueOrb.Physics
             }
             mainRigidbody.useGravity = !enableRagdoll; // normal rigidbody dont use gravity when ragdoll is active
             mainRigidbody.isKinematic = enableRagdoll;
+        }
+
+        public void AddExplosionForce(float force, Vector3 position, float explosionRadius, float upwardsModifier)
+        {
+            this.ragdollCenterRigidbody.AddExplosionForce(force, position, explosionRadius, upwardsModifier);
+            //foreach (var ragdollRigidBody in this.ragdollRigidbodies)
+            //{
+            //    ragdollRigidBody.AddExplosionForce()
+            //}
         }
 
         private List<Collider> GetMainColliders()

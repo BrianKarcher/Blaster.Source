@@ -25,6 +25,7 @@ namespace BlueOrb.Physics
         public PhysicsLogic Controller => _controller;
 
         private CharacterController characterController;
+        //private Rigidbody rigidbody;
 
         [SerializeField]
         private SteeringBehaviorManager _steering;
@@ -54,6 +55,7 @@ namespace BlueOrb.Physics
             {
                 this.characterController = _componentRepository.GetComponent<CharacterController>();
             }
+            //this.rigidbody = GetComponent<Rigidbody>();
             _controller?.SetMovementController(this);
             _isEnabled = true;
             _controller.Awake();
@@ -63,12 +65,19 @@ namespace BlueOrb.Physics
             {
                 PlaceOnGround();
             }
-
-            this._animationComponent = _componentRepository.GetComponent<AnimationComponent>();
-            this.ragdoll.Init(this._animationComponent);
         }
 
-        public void EnableRagdoll(bool enable) => this.ragdoll.EnableRagdoll(enable);
+        public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
+        {
+            Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
+            EnableRagdoll(true);
+            AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
+        }
+
+        public void EnableRagdoll(bool enable) => this.ragdoll?.EnableRagdoll(enable);
+
+        private void AddExplosionForce(float force, Vector3 position, float explosionRadius, float upwardsModifier)
+            => this.ragdoll.AddExplosionForce(force, position, explosionRadius, upwardsModifier);
 
         private void PlaceOnGround()
         {
@@ -88,6 +97,7 @@ namespace BlueOrb.Physics
             {
                 _animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
             }
+            this.ragdoll.Init(this._animationComponent);
         }
 
         protected void FixedUpdate()
@@ -487,13 +497,6 @@ namespace BlueOrb.Physics
         public void SetEnabled(bool enabled) => _isEnabled = enabled;
 
         public bool GetEnabled() => _isEnabled;
-
-        public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
-        {
-            Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
-            Debug.LogError("TODO: Program Explode in CharacterControllerPhysicsComponent");
-            //_rigidBody3D.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
-        }
 
         public void OnDrawGizmos()
         {

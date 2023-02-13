@@ -47,7 +47,12 @@ namespace BlueOrb.Controller.Manager
         public int GetCurrentScore() => _currentScore;
         public void SetCurrentScore(int score) => _currentScore = score;
 
-        public void SetCurrentHp(float hp) => currentHp = hp;
+        public void SetCurrentHp(float hp)
+        {
+            hp = Mathf.Max(0, hp);
+            hp = Mathf.Min(this.maxHp, hp);
+            this.currentHp = hp;
+        }
 
         public float GetMaxHp() => maxHp;
         public void SetMaxHp(float hp) => maxHp = hp;

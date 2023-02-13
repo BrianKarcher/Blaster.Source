@@ -7,5 +7,6 @@ namespace BlueOrb.Controller.Damage
         void AddHp(float hp);
         EntityStatsData GetEntityStats();
         bool IsDead();
+        void Kill();
     }
 }

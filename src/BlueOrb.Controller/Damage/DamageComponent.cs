@@ -29,6 +29,11 @@ namespace BlueOrb.Controller.Damage
         [SerializeField]
         private BuffConfig immunityBuffConfig;
 
+        /// <summary>
+        /// Stored explode data
+        /// </summary>
+        private ExplodeData explodeData;
+
         protected override void Awake()
         {
             base.Awake();
@@ -223,6 +228,14 @@ namespace BlueOrb.Controller.Damage
         public DamageEntityInfo GetDamageInfo()
         {
             return DamageInfo;
+        }
+
+        public void StoreExplodeSelfData(ExplodeData explodeData) => this.explodeData = explodeData;
+
+        public void ProcessExplodeSelf()
+        {
+            this._entityStatsComponent.Kill();
+            this._physicsComponent.Explode(this.explodeData.Force, explodeData.ExplodePosition, explodeData.Radius, explodeData.UpwardModifier);
         }
     }
 

@@ -12,6 +12,10 @@ namespace BlueOrb.Physics
     {
         [SerializeField]
         private PhysicsLogic _controller;
+
+        [SerializeField]
+        private Ragdoll ragdoll;
+
         [SerializeField]
         private bool _applySpeedLimit = true;
 
@@ -56,7 +60,10 @@ namespace BlueOrb.Physics
             {
                 _animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
             }
+            this.ragdoll.Init(this._animationComponent);
         }
+
+        public void EnableRagdoll(bool enable) => this.ragdoll.EnableRagdoll(enable);
 
         protected void FixedUpdate()
         {
@@ -420,6 +427,7 @@ namespace BlueOrb.Physics
         public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
         {
             Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
+            this.ragdoll.EnableRagdoll(true);
             _rigidBody3D.AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
         }
 

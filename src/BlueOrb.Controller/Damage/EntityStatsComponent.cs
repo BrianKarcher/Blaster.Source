@@ -30,10 +30,16 @@ namespace BlueOrb.Controller.Damage
             _setCurrentHpId = MessageDispatcher.Instance.StartListening("SetCurrentHp", _componentRepository.GetId(), (data) =>
             {
                 float hp = (float)data.ExtraInfo;
-                _entityStats.CurrentHP = hp;
+                _entityStats.CurrentHP = Mathf.Min(_entityStats.MaxHP, hp);
                 Debug.Log($"Setting current hp to {hp}");
                 HpChanged();
             });
+        }
+
+        public void Kill()
+        {
+            SetCurrentHp(0);
+            HpChanged();
         }
 
         protected virtual void HpChanged()
@@ -77,6 +83,7 @@ namespace BlueOrb.Controller.Damage
         protected virtual void SetCurrentHp(float hp)
         {
             hp = Mathf.Max(0, hp);
+            hp = Mathf.Min(_entityStats.MaxHP, hp);
             _entityStats.CurrentHP = hp;
         }
 

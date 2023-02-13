@@ -11,6 +11,9 @@ namespace BlueOrb.Physics
         [SerializeField]
         private PhysicsLogic _controller;
 
+        [SerializeField]
+        private Ragdoll ragdoll;
+
         public PhysicsLogic Controller => _controller;
 
         [SerializeField]
@@ -37,7 +40,10 @@ namespace BlueOrb.Physics
                 _animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
             }
             previousPos = transform.position;
+            this.ragdoll.Init(this._animationComponent);
         }
+
+        public void EnableRagdoll(bool enable) => this.ragdoll?.EnableRagdoll(enable);
 
         float timeSinceUpdate = 0f;
 
