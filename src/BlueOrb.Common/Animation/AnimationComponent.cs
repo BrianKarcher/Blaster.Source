@@ -178,6 +178,10 @@ namespace BlueOrb.Controller
 
         public void SetAttackTrigger(int num) => _animator.SetTrigger(_attackAnim[num]);
 
-        public void SetEnabled(bool enable) => enabled = enable;
+        public void SetEnabled(bool enable)
+        {
+            this._animator.enabled = enable;
+            enabled = enable;
+        }
     }
 }

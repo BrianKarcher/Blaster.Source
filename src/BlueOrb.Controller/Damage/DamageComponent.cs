@@ -33,6 +33,7 @@ namespace BlueOrb.Controller.Damage
         /// Stored explode data
         /// </summary>
         private ExplodeData explodeData;
+        private RagdollController ragdollController;
 
         protected override void Awake()
         {
@@ -54,6 +55,8 @@ namespace BlueOrb.Controller.Damage
                 _entityStatsComponent = _componentRepository.Components.GetComponent<IEntityStatsComponent>();
             if (_physicsComponent == null)
                 _physicsComponent = _componentRepository.Components.GetComponent<IPhysicsComponent>();
+            if (ragdollController == null)
+                ragdollController = _componentRepository.Components.GetComponent<RagdollController>();
         }
 
         public override void StartListening()
@@ -235,6 +238,8 @@ namespace BlueOrb.Controller.Damage
         public void ProcessExplodeSelf()
         {
             this._entityStatsComponent.Kill();
+            this.ragdollController?.EnableRagdoll(true);
+            this.ragdollController?.AddExplosionForce(explodeData.Force, explodeData.ExplodePosition, explodeData.Radius, explodeData.UpwardModifier);
             this._physicsComponent.Explode(this.explodeData.Force, explodeData.ExplodePosition, explodeData.Radius, explodeData.UpwardModifier);
         }
     }

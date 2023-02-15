@@ -9,7 +9,6 @@ namespace BlueOrb.Physics
         public float Radius { get; set; }
         public float UpwardModifier { get; set; }
         public float Damage { get; set; }
-        public bool HasPoints { get; set; }
         public GameObject ExplodingEntity { get; set; }
     }
 }

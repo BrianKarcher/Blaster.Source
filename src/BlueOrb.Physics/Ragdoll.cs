@@ -46,7 +46,7 @@ namespace BlueOrb.Physics
                 }
             }
 
-            EnableColliders(ragdollColliders, false);
+            //EnableColliders(ragdollColliders, false);
             foreach (Rigidbody ragdollRigidBody in this.ragdollRigidbodies)
             {
                 ragdollRigidBody.useGravity = false; // make rigidbody use gravity if ragdoll is active
@@ -81,11 +81,11 @@ namespace BlueOrb.Physics
 
         public void AddExplosionForce(float force, Vector3 position, float explosionRadius, float upwardsModifier)
         {
-            this.ragdollCenterRigidbody.AddExplosionForce(force, position, explosionRadius, upwardsModifier);
-            //foreach (var ragdollRigidBody in this.ragdollRigidbodies)
-            //{
-            //    ragdollRigidBody.AddExplosionForce()
-            //}
+            //this.ragdollCenterRigidbody.AddExplosionForce(force, position, explosionRadius, upwardsModifier);
+            foreach (var ragdollRigidBody in this.ragdollRigidbodies)
+            {
+                ragdollRigidBody.AddExplosionForce(force, position, explosionRadius, upwardsModifier, ForceMode.VelocityChange);
+            }
         }
 
         private List<Collider> GetMainColliders()
@@ -106,6 +106,7 @@ namespace BlueOrb.Physics
         {
             foreach (Collider collider in colliders)
             {
+                Debug.Log($"Setting collider {collider.name} to {enable}");
                 collider.enabled = enable; // enable all colliders if ragdoll is set to enabled
             }
         }
