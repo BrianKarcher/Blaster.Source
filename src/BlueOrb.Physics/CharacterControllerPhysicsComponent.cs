@@ -1,6 +1,4 @@
 ﻿using BlueOrb.Common.Components;
-using BlueOrb.Common.Container;
-using System.Collections.Generic;
 using BlueOrb.Base.Extensions;
 using UnityEngine;
 using BlueOrb.Controller;
@@ -12,9 +10,6 @@ namespace BlueOrb.Physics
     {
         [SerializeField]
         private PhysicsLogic _controller;
-
-        [SerializeField]
-        private Ragdoll ragdoll;
 
         [SerializeField]
         private bool startOnGround = false;
@@ -69,15 +64,12 @@ namespace BlueOrb.Physics
 
         public void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier)
         {
-            Debug.Log($"Eploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
-            EnableRagdoll(true);
-            AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
+            Debug.Log($"Exploding {_componentRepository.name}, force: {explosionForce}, pos: {explosionPosition}, radius: {explosionRadius}, up: {upwardsModifier}");
+            //AddExplosionForce(explosionForce, explosionPosition, explosionRadius, upwardsModifier);
         }
 
-        public void EnableRagdoll(bool enable) => this.ragdoll?.EnableRagdoll(enable);
-
-        private void AddExplosionForce(float force, Vector3 position, float explosionRadius, float upwardsModifier)
-            => this.ragdoll.AddExplosionForce(force, position, explosionRadius, upwardsModifier);
+        //private void AddExplosionForce(float force, Vector3 position, float explosionRadius, float upwardsModifier)
+        //    => this.ragdoll.AddExplosionForce(force, position, explosionRadius, upwardsModifier);
 
         private void PlaceOnGround()
         {
@@ -97,7 +89,6 @@ namespace BlueOrb.Physics
             {
                 _animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
             }
-            this.ragdoll.Init(this._animationComponent);
         }
 
         protected void FixedUpdate()

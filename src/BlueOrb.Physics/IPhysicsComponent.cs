@@ -40,6 +40,5 @@ namespace BlueOrb.Physics
         //IPhysicsAffector GetPhysicsAffector(string name);
         //void SetPhysicsAffector(string name, IPhysicsAffector physicsAffector);
         float MaxSpeed { get; }
-        void EnableRagdoll(bool enable);
     }
 }

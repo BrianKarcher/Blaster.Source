@@ -1,4 +1,5 @@
-﻿using BlueOrb.Controller;
+﻿using BlueOrb.Common.Components;
+using BlueOrb.Controller;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace BlueOrb.Physics
 {
     [Serializable]
-    public class Ragdoll
+    public class RagdollController : ComponentBase<RagdollController>
     {
         [SerializeField]
         private GameObject[] mainColliders;
@@ -26,9 +27,9 @@ namespace BlueOrb.Physics
         private HashSet<Rigidbody> ragdollRigidbodies;
         private AnimationComponent animationComponent;
 
-        public void Init(AnimationComponent animationComponent)
+        protected override void Awake()
         {
-            this.animationComponent = animationComponent;
+            base.Awake();
             if (ragdollRigidbodySource == null)
             {
                 return;
@@ -51,6 +52,11 @@ namespace BlueOrb.Physics
                 ragdollRigidBody.useGravity = false; // make rigidbody use gravity if ragdoll is active
                 ragdollRigidBody.isKinematic = true; // enable or disable kinematic accordig to enableRagdoll variable
             }
+        }
+
+        public void Start()
+        {
+            this.animationComponent = _componentRepository.Components.GetComponent<AnimationComponent>();
         }
 
         public void EnableRagdoll(bool enableRagdoll)
