@@ -241,8 +241,8 @@ namespace BlueOrb.Physics
             //    SetHeading(velocity);
             //}
             //UpdateZ();
-
-            this.characterController.Move(this.velocity * Time.deltaTime);
+            if (this.characterController.enabled)
+                this.characterController.Move(this.velocity * Time.deltaTime);
         }
 
         //private void ProcessSteeringBehaviorForce()
