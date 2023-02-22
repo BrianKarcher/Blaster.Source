@@ -203,6 +203,10 @@ namespace BlueOrb.Controller
                 MessageDispatcher.Instance.DispatchMsg("DetachJoint", 0f, _componentRepository.GetId(), this.dollyCart.GetId(), null);
             }
             this.dollyCart = setJointData.Joint.GetComponent<IDollyCart>();
+            if (this.dollyCart == null)
+            {
+                throw new System.Exception($"No dolly cart sent to set the joint to in {setJointData.Joint.name}.");
+            }
             MessageDispatcher.Instance.DispatchMsg("AttachJoint", 0f, _componentRepository.GetId(), this.dollyCart.GetId(), null);
             if (setJointData.CartStartPosition == CartStartPosition.Reset)
             {
