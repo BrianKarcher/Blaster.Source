@@ -79,6 +79,9 @@ namespace BlueOrb.Physics
 
         public void SetWorldPos3(Vector3 new_pos) => this.transform.position = new_pos;
 
+        public void EnableGravity(bool enable)
+        { }
+
         public Vector2 GetVelocity2() => this.velocity.xz();
 
         public Vector3 GetVelocity3() => this.velocity;

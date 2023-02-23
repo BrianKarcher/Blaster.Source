@@ -245,6 +245,11 @@ namespace BlueOrb.Physics
                 this.characterController.Move(this.velocity * Time.deltaTime);
         }
 
+        public void EnableGravity(bool enable)
+        {
+            this.GetPhysicsData().ApplyGravity = false;
+        }
+
         //private void ProcessSteeringBehaviorForce()
         //{
         //    var steeringForce = _steering.Calculate();

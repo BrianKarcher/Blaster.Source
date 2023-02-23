@@ -201,6 +201,12 @@ namespace BlueOrb.Physics
             //UpdateZ();
         }
 
+        public void EnableGravity(bool enable)
+        {
+            this.GetPhysicsData().ApplyGravity = false;
+            this._rigidBody3D.useGravity = false;
+        }
+
         //private void ProcessSteeringBehaviorForce()
         //{
         //    var steeringForce = _steering.Calculate();

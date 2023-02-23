@@ -8,6 +8,8 @@ namespace BlueOrb.Physics
         PhysicsLogic Controller { get; }
         bool AutoApplyToAnimator { get; set; }
 
+        void EnableGravity(bool enable);
+
         void AddForce(Vector3 force);
         void AddForce2(Vector2 force);
         void Explode(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier);
