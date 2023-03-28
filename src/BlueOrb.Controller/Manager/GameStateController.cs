@@ -60,7 +60,6 @@ namespace BlueOrb.Base.Manager
 
         public ILevelStateController LevelStateController { get => _levelStateController; set => _levelStateController = value; }
 
-
         protected override void Awake()
         {
             base.Awake();

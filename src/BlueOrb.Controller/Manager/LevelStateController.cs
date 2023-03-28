@@ -18,6 +18,9 @@ namespace BlueOrb.Controller.Manager
     [AddComponentMenu("BlueOrb/Manager/Level State")]
     public class LevelStateController : ComponentBase<LevelStateController>, ILevelStateController
     {
+        [SerializeField]
+        private string winMessage = "Win";
+
         private int _currentScore;
         public const string Id = "Level Controller";
         private bool hasLevelBegun = false;
@@ -196,6 +199,8 @@ namespace BlueOrb.Controller.Manager
         {
             MessageDispatcher.Instance.DispatchMsg("OkClicked", 0f, this.GetId(), this.GetId(), null);
         }
+
+        public void Win() => MessageDispatcher.Instance.DispatchMsg(winMessage, 0f, _componentRepository.GetId(), _componentRepository.GetId(), null);
     }
 
     public class PointsData

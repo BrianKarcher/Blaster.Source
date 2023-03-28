@@ -21,5 +21,7 @@ namespace BlueOrb.Base.Interfaces
         bool HasLevelBegun { get; }
         bool EnableInput { get; set; }
         InventoryComponent InventoryComponent { get; }
+
+        void Win();
     }
 }

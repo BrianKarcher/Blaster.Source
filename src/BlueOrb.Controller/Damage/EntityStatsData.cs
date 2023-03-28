@@ -14,6 +14,10 @@ namespace BlueOrb.Controller.Damage
         private float _currentHP;
         public float CurrentHP { get { return _currentHP; } set { _currentHP = value; } }
 
+        [SerializeField]
+        private bool isInvincible = false;
+        public bool IsInvincible => isInvincible;
+
         public EntityStatsData Clone()
         {
             return new EntityStatsData()

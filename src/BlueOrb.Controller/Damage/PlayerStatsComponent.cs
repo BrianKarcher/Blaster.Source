@@ -30,7 +30,12 @@ namespace BlueOrb.Controller.Damage
 
         protected override float GetMaxHp() => GameStateController.Instance.LevelStateController.GetMaxHp();
 
-        protected override void SetCurrentHp(float hp) => GameStateController.Instance.LevelStateController.SetCurrentHp(hp);
+        protected override void SetCurrentHp(float hp)
+        {
+            if (!base.CanSubtractHp(hp))
+                return;
+            GameStateController.Instance.LevelStateController.SetCurrentHp(hp);
+        }
 
         private void SetCurrentScore(int score) => GameStateController.Instance.LevelStateController.SetCurrentScore(score);
 
