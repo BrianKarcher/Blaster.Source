@@ -7,7 +7,6 @@ namespace BlueOrb.Common.Container
     public interface IEntity : IMessagingObject
     {
         void Init();
-        void Reset();
         void ReAwaken();
         void Destroy();
         T GetComponent<T>();

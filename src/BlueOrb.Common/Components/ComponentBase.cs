@@ -164,9 +164,6 @@ namespace BlueOrb.Common.Components
             MessageDispatcher.Instance.StopListening("Kill", _componentRepository.GetId(), -1);
         }
 
-        public virtual void Reset()
-        { }
-
         /// <summary>
         /// This gets called right before a pooled entity is enabled
         /// </summary>

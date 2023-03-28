@@ -86,17 +86,6 @@ namespace BlueOrb.Common.Container
             InitComponents(components);
         }
 
-        public void Reset()
-        {
-            //foreach (var component in Components.GetComponents())
-            //{
-            for (int i = 0; i < Components.GetComponents().Count; i++)
-            {
-                var component = Components.GetComponents()[i];
-                (component as IComponentBase)?.Reset();
-            }
-        }
-
         public void ReAwaken()
         {
             //foreach (var component in Components.GetComponents())
