@@ -9,6 +9,9 @@ using BlueOrb.Base.Global;
 using BlueOrb.Common.Container;
 using BlueOrb.Controller.UI;
 using BlueOrb.Base.Interfaces;
+using UnityEngine.Audio;
+using BlueOrb.Controller.Audio;
+using System.Collections;
 
 namespace BlueOrb.Base.Manager
 {
@@ -46,7 +49,12 @@ namespace BlueOrb.Base.Manager
         private AudioSource audioSource;
         [SerializeField]
         private AudioSource musicAudioSource;
-        public AudioSource MusicAudioSource => musicAudioSource;
+
+        [SerializeField]
+        private AudioMixer musicAudioMixer;
+
+        [SerializeField]
+        private string musicMixerVolumeParam;
 
         public AudioSource AudioSource => audioSource;
 
@@ -148,6 +156,30 @@ namespace BlueOrb.Base.Manager
             int score;
             levelHighScores.TryGetValue(uniqueId, out score);
             return score;
+        }
+
+        public void PlayMusic(AudioClip audioClip)
+        {
+            if (this.musicAudioSource.clip == null)
+            {
+                this.musicAudioSource.clip = audioClip;
+                this.musicAudioSource.Play();
+                return;
+            }
+            if (this.musicAudioSource.clip == audioClip)
+                return;
+
+            StartCoroutine(FadeAndPlay(musicAudioMixer, this.musicAudioSource, audioClip, this.musicMixerVolumeParam, 1f, 1f));
+        }
+
+        public static IEnumerator FadeAndPlay(AudioMixer mixer, AudioSource source, AudioClip clip, string exposedParam, float duration, float targetVolume)
+        {
+            yield return FadeMixerGroup.StartFade(mixer, exposedParam, duration, 0);
+            source.clip = clip;
+            mixer.SetFloat(exposedParam, Mathf.Log10(targetVolume) * 20);
+            //source.volume = targetVolume;
+            source.Play();
+            yield break;
         }
     }
 }
