@@ -177,9 +177,7 @@ namespace BlueOrb.Base.Manager
             yield return FadeMixerGroup.StartFade(mixer, exposedParam, duration, 0);
             source.clip = clip;
             mixer.SetFloat(exposedParam, Mathf.Log10(targetVolume) * 20);
-            //source.volume = targetVolume;
             source.Play();
-            yield break;
         }
     }
 }

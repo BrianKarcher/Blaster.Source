@@ -10,6 +10,8 @@ namespace BlueOrb.Controller.Triggers
     public class StandardTarget : ComponentBase<StandardTarget>
     {
         [SerializeField]
+        private bool startEnabled = true;
+        [SerializeField]
         private bool allProjectiles = true;
         [SerializeField]
         private string allProjectileHitMessage = "ProjectileHit";
@@ -52,6 +54,11 @@ namespace BlueOrb.Controller.Triggers
             base.Awake();
             this.collider = GetComponent<Collider>();
             this.currentHp = hp;
+        }
+
+        private void Start()
+        {
+            EnableCollider(this.startEnabled);
         }
 
         public override void StartListening()
