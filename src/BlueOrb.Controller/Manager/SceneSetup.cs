@@ -5,6 +5,7 @@ using BlueOrb.Common.Container;
 using BlueOrb.Controller.Scene;
 using BlueOrb.Messaging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -22,6 +23,11 @@ namespace BlueOrb.Controller.Manager
 
         [SerializeField]
         private bool _startCountdownImmediately = false;
+
+        [SerializeField]
+        private Transform startPosition;
+
+        public Transform StartPosition => startPosition;
 
         public bool StartCoundownImmediately => _startCountdownImmediately;
 
