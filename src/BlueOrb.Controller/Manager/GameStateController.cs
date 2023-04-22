@@ -61,6 +61,9 @@ namespace BlueOrb.Base.Manager
         [SerializeField]
         private GameObject goUIController;
 
+        private int lap;
+        public int Lap => lap;
+
         private IUIController uiController;
         public IUIController UIController => uiController;
 
@@ -125,6 +128,7 @@ namespace BlueOrb.Base.Manager
 
         public void LoadScene(string sceneName, bool fade)
         {
+            this.lap = 1;
             EntityContainer.Instance.ResetEntityList();
             _sceneController.FadeAndLoadScene(sceneName, fade);
         }

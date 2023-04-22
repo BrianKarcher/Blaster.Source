@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace BlueOrb.Controller.Triggers
 {
-    [AddComponentMenu("BlueOrb/Components/Alert Trigger")]
-    public class AlertTrigger : MonoBehaviour
+    [AddComponentMenu("BlueOrb/Components/Notification Trigger")]
+    public class NotificationTrigger : MonoBehaviour
     {
         [SerializeField]
         private string message;
@@ -68,8 +68,11 @@ namespace BlueOrb.Controller.Triggers
                 Debug.LogError($"Could not find entity for {other.name}");
                 return;
             }
-            this.audioSource.PlayOneShot(this.audioClip);
-            GameStateController.Instance.UIController.HudController.CreateAlert(this.message);
+            if (this.audioClip != null)
+            {
+                this.audioSource.PlayOneShot(this.audioClip);
+            }
+            GameStateController.Instance.UIController.HudController.CreateNotification(this.message);
         }
     }
 }

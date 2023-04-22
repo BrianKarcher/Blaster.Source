@@ -87,8 +87,7 @@ namespace BlueOrb.Controller.Enemy
             }
             for (int i = 0; i < this.spawnPoints.Length; i++)
             {
-                // TODO Implement laps
-                this.spawnPoints[i].Spawn(0);
+                this.spawnPoints[i].Spawn(GameStateController.Instance.Lap);
             }
             //GameObject toInstantiate = enemyGroupForLap[0].GetRandom(0);
             //int spawnRnd = UnityEngine.Random.Range(0, this.spawnPoints.Length);

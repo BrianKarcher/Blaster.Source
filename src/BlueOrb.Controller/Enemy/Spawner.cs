@@ -32,6 +32,9 @@ namespace BlueOrb.Controller.Enemy
         private bool allLaps = true;
         [SerializeField]
         private int[] laps;
+        [SerializeField]
+        private bool facePlayer = true;
+
         private float nextSpawnTime;
         private long spawnEventId;
         private HashSet<int> lapsHash = new HashSet<int>();
@@ -107,24 +110,27 @@ namespace BlueOrb.Controller.Enemy
             //    Debug.LogError($"No spawn points for WaveSpawner");
             //    return;
             //}
+            Quaternion quaternion = this.facePlayer ? Quaternion.LookRotation(EntityContainer.Instance.GetMainCharacter().transform.position
+                - this.transform.position) : Quaternion.identity;
             if (this.enemyVariantConfigs.Length != 0)
             {
                 EnemyVariantConfig enemyVariantConfig = enemyVariantConfigs[UnityEngine.Random.Range(0, this.enemyVariantConfigs.Length)];
                 GameObject toInstantiate = enemyVariantConfig.GetVariant(0);
                 //int spawnRnd = UnityEngine.Random.Range(0, this.spawnPoints.Length);
                 // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
-                GameObject.Instantiate(toInstantiate, this.transform.position, Quaternion.identity);
+                GameObject.Instantiate(toInstantiate, this.transform.position, quaternion);
             }
             if (this.spawnGameObject != null)
             {
-                GameObject.Instantiate(this.spawnGameObject, this.transform.position, Quaternion.identity);
+                // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
+                GameObject.Instantiate(this.spawnGameObject, this.transform.position, quaternion);
             }
             if (spawnFromEnemyGroup != null)
             {
                 // TODO Supply lap
                 GameObject go = this.spawnFromEnemyGroup.GetRandom(0);
                 // TODO : Do a check if another entity is in this position. If there is, do NOT instantiate.
-                GameObject.Instantiate(go, this.transform.position, Quaternion.identity);
+                GameObject.Instantiate(go, this.transform.position, quaternion);
             }
             //entityCreatedCount++;
             //if (entityCreatedCount >= this.entitiesToCreate)

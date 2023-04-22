@@ -96,17 +96,16 @@ namespace BlueOrb.Physics
 
         public void CheckGroundStatus()
         {
-            RaycastHit hitInfo;
             //#if UNITY_EDITOR
             //			// helper to visualise the ground check ray in the scene view
-            Debug.DrawLine(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), _movementController.transform.position + new Vector3(0f, 0.2f, 0f) + (Vector3.down * _physicsData.GroundCheckDistance));
+            Debug.DrawLine(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), _movementController.transform.position + new Vector3(0f, 0.2f, 0f) + (Vector3.down * _physicsData.GroundCheckDistance), Color.blue);
             //Debug.
             //#endif
             // 0.1f is a small offset to start the ray from inside the character
             // it is also good to note that the transform position in the sample assets is at the base of the character
             //bool groundRaycast = UnityEngine.Physics.Raycast(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), Vector3.down, out hitInfo, _physicsData.GroundCheckDistance, _physicsData.GroundLayer);
             //bool groundRaycast = UnityEngine.Physics.SphereCast(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), .5f, Vector3.down, out hitInfo, _physicsData.GroundCheckDistance);
-            Collider[] colliders = UnityEngine.Physics.OverlapSphere(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), 0.5f, _physicsData.GroundLayer);
+            Collider[] colliders = UnityEngine.Physics.OverlapSphere(_movementController.transform.position + new Vector3(0f, 0.2f, 0f), _physicsData.GroundCheckDistance, _physicsData.GroundLayer);
             bool isGrounded = colliders.Length != 0;
             if (_isGrounded != isGrounded)
             {

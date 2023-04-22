@@ -6,5 +6,6 @@ namespace BlueOrb.Controller.UI
     {
         GameObject CreateBuffUI();
         void CreateAlert(string text);
+        void CreateNotification(string text);
     }
 }
