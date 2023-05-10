@@ -31,6 +31,8 @@ namespace BlueOrb.Controller.Enemy
 
         private float nextSpawnTime;
         //private int entityCreatedCount = 0;
+        private bool active = false;
+        private float awakeTime = 0f;
 
         protected override void Awake()
         {
@@ -43,7 +45,7 @@ namespace BlueOrb.Controller.Enemy
 
         private void Start()
         {
-            this.enabled = false;
+            this.enabled = true;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -53,9 +55,16 @@ namespace BlueOrb.Controller.Enemy
             {
                 return;
             }
+            if (Time.time < this.awakeTime)
+            {
+                return;
+            }
             this.nextSpawnTime = Time.time + this.initialDelay;
             //this.entityCreatedCount = 0;
-            this.enabled = true;
+            this.active = true;
+            // Sleep for 20 seconds.
+            this.awakeTime = Time.time + 20;
+            //this.enabled = true;
             //Debug.LogError($"SpawnerController set to Active");
         }
 
@@ -65,7 +74,7 @@ namespace BlueOrb.Controller.Enemy
             {
                 return;
             }
-            this.enabled = false;
+            //this.enabled = false;
             //Debug.LogError($"SpawnerController set to Deactive");
         }
 
@@ -75,6 +84,11 @@ namespace BlueOrb.Controller.Enemy
             {
                 return;
             }
+            if (!this.active)
+            {
+                return;
+            }
+            Debug.Log($"{this.name} is Spawning enemies!");
             //if (enemyGroupForLap.Length == 0)
             //{
             //    Debug.LogError($"No enemies to instantiate");
@@ -100,7 +114,8 @@ namespace BlueOrb.Controller.Enemy
             //    return;
             //}
             //this.nextSpawnTime = Time.time + UnityEngine.Random.Range(this.minDelay, this.maxDelay);
-            this.enabled = false;
+            this.active = false;
+            //this.enabled = false;
         }
     }
 }

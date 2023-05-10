@@ -34,6 +34,7 @@ namespace BlueOrb.Physics
         private Animator _animator;
         private AnimationComponent _animationComponent;
         private Vector3 _steeringForce;
+        [SerializeField]
         private Vector3 velocity;
         //private Vector3 steeringVelocity;
 
